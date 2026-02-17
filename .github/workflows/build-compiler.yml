@@ -120,7 +120,7 @@ jobs:
           zip -r compiler-coverage.zip coverage*
 
       - name: Upload Artifact - coverage report
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: Coverage Report
           path: compiler-coverage.zip
@@ -132,14 +132,14 @@ jobs:
           nix develop .#compiler --command yarn test
 
       - name: Upload CTRF test results
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: test-results-ctrf-summary
           path: tests-e2e/reports/ctrf-report.json
 
       - name: Upload Junit test results
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: test-results-junit-summary
