@@ -506,12 +506,12 @@ fn resolve_version(
             .compilers
             .remove_entry(version)
             .ok_or_else(|| anyhow!("Couldn't find version {version}")),
-        VersionSpec::Partial { major, minor } => {
+        _ => {
             let matched = artifacts
                 .compilers
                 .keys()
                 .rev()
-                .find(|v| v.major == *major && v.minor == *minor)
+                .find(|v| spec.matches(v))
                 .cloned();
 
             match matched {
@@ -519,7 +519,7 @@ fn resolve_version(
                     .compilers
                     .remove_entry(&version)
                     .ok_or_else(|| anyhow!("Couldn't find version {version}")),
-                None => bail!("No version matching {major}.{minor}.x found"),
+                None => bail!("No version matching {spec} found"),
             }
         }
     }
@@ -948,6 +948,31 @@ mod tests {
             minor: 30,
         };
         let err = resolve_version(&spec, &mut artifacts).unwrap_err();
-        assert!(err.to_string().contains("0.30.x"));
+        assert!(err.to_string().contains("0.30"));
+    }
+
+    #[test]
+    fn resolve_major_picks_latest() {
+        let mut artifacts =
+            make_artifacts(&["0.28.0", "0.29.0", "0.29.1", "1.0.0", "1.1.0", "1.1.1"]);
+        let spec = VersionSpec::Major { major: 1 };
+        let (v, _) = resolve_version(&spec, &mut artifacts).unwrap();
+        assert_eq!(v, Version::new(1, 1, 1));
+    }
+
+    #[test]
+    fn resolve_major_single_version() {
+        let mut artifacts = make_artifacts(&["0.28.0", "1.0.0"]);
+        let spec = VersionSpec::Major { major: 1 };
+        let (v, _) = resolve_version(&spec, &mut artifacts).unwrap();
+        assert_eq!(v, Version::new(1, 0, 0));
+    }
+
+    #[test]
+    fn resolve_major_not_found() {
+        let mut artifacts = make_artifacts(&["0.28.0", "0.29.0"]);
+        let spec = VersionSpec::Major { major: 1 };
+        let err = resolve_version(&spec, &mut artifacts).unwrap_err();
+        assert!(err.to_string().contains("No version matching 1 found"));
     }
 }

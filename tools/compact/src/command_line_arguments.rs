@@ -114,7 +114,7 @@ pub struct CheckCommand {}
 #[derive(Debug, Clone, Args)]
 #[command(version)]
 pub struct UpdateCommand {
-    /// Version to install, e.g. 0.29 or 0.29.0
+    /// Version to install, e.g. 0, 0.29, or 0.29.0
     #[arg(id = "COMPACT_VERSION")]
     pub version: Option<VersionSpec>,
 
@@ -126,30 +126,24 @@ pub struct UpdateCommand {
     pub config: CompactUpdateConfig,
 }
 
-/// A version specifier that is either an exact semver version or a
-/// partial `major.minor` prefix that resolves to the latest patch.
+/// A version specifier that is either an exact semver version, a
+/// `major.minor` prefix, or a `major`-only prefix.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum VersionSpec {
     Exact(Version),
     Partial { major: u64, minor: u64 },
+    Major { major: u64 },
 }
 
 impl VersionSpec {
-    /// True when this is an exact `major.minor.patch` specifier.
-    pub fn as_exact(&self) -> Option<&Version> {
-        match self {
-            VersionSpec::Exact(v) => Some(v),
-            VersionSpec::Partial { .. } => None,
-        }
-    }
-
-    /// True when `version` matches this specifier.
+    /// Returns true when `version` matches this specifier.
     pub fn matches(&self, version: &Version) -> bool {
         match self {
             VersionSpec::Exact(v) => v == version,
             VersionSpec::Partial { major, minor } => {
                 version.major == *major && version.minor == *minor
             }
+            VersionSpec::Major { major } => version.major == *major,
         }
     }
 }
@@ -170,6 +164,11 @@ impl FromStr for VersionSpec {
             }
         }
 
+        // Try parsing as "major" only
+        if let Ok(major) = s.parse::<u64>() {
+            return Ok(VersionSpec::Major { major });
+        }
+
         // Fall back to semver error for the original input
         Version::parse(s).map(VersionSpec::Exact)
     }
@@ -181,6 +180,9 @@ impl fmt::Display for VersionSpec {
             VersionSpec::Exact(v) => v.fmt(f),
             VersionSpec::Partial { major, minor } => {
                 write!(f, "{major}.{minor}")
+            }
+            VersionSpec::Major { major } => {
+                write!(f, "{major}")
             }
         }
     }
@@ -367,15 +369,19 @@ mod tests {
     }
 
     #[test]
-    fn as_exact_returns_version_for_exact() {
-        let v = Version::new(1, 2, 3);
-        let spec = VersionSpec::Exact(v.clone());
-        assert_eq!(spec.as_exact(), Some(&v));
+    fn parse_major_only_version() {
+        let spec: VersionSpec = "29".parse().unwrap();
+        assert_eq!(spec, VersionSpec::Major { major: 29 });
+        assert_eq!(spec.to_string(), "29");
     }
 
     #[test]
-    fn as_exact_returns_none_for_partial() {
-        let spec = VersionSpec::Partial { major: 1, minor: 2 };
-        assert_eq!(spec.as_exact(), None);
+    fn major_matches_any_minor_and_patch() {
+        let spec = VersionSpec::Major { major: 1 };
+        assert!(spec.matches(&Version::new(1, 0, 0)));
+        assert!(spec.matches(&Version::new(1, 2, 3)));
+        assert!(spec.matches(&Version::new(1, 99, 99)));
+        assert!(!spec.matches(&Version::new(0, 1, 0)));
+        assert!(!spec.matches(&Version::new(2, 0, 0)));
     }
 }
