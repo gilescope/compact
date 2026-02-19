@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `setOperation` is now emitted only for provable circuits (those in
   `proof-circuit-name*`) rather than for all impure circuits.  Previously,
-  witness-only impure circuits such as `compute_only` caused the runtime to look
+  witness-only impure circuits caused the runtime to look
   for a verifier key that does not exist.
 
 ## [Unreleased toolchain 0.29.103, language 0.21.101, runtime 0.14.101]
