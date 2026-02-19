@@ -49,7 +49,9 @@
               (try pathname)
               (ormap
                 (lambda (dir)
-                  (try (format "~a/~a" dir pathname)))
+                  (try (if (equal? dir "")
+                           pathname
+                           (format "~a/~a" dir pathname))))
                 (cons (assert (relative-path)) (compact-path))))
           (err pathname))))
 
