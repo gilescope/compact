@@ -10,9 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - The order of evaluation for `<=` and `>` differs in `print-typescript` and
-  `drop-ledger-runtime` passes.  This fix patches the order in `print-typescript`
-  pass.  However, a fundemantal fix should add a new pass earlier to fix
-  the order of evaluations of the lhs and rhs of these operations.
+  `drop-ledger-runtime` passes.  This fix forces the order of evaluation in 
+  `infer-types` to prevent the downstream passes to change the evaluation order.
 
 
 ## [Unreleased toolchain 0.29.110, language 0.21.101, runtime 0.14.102]
