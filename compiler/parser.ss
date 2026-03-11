@@ -308,8 +308,8 @@
     (GRAMMAR "Compact grammar"
              (EVAL (let () (import (language-version)) (format "Compact language version ~a." language-version-string)))
              (PRE
-               "Notational note: In the grammar below, terminals are in `monospaced` font."
-               "Non-terminals are in *emphasized* font."
+               "Notational note: In the grammar below, keywords and punctuation are in `monospaced` font."
+               "Terminal and nonterminal names are in *emphasized* font."
                "Alternation is indicated by a vertical bar (`|`)."
                "Optional items are indicated by the superscript <sup>opt</sup>."
                "Repetition is specified by ellipses."
