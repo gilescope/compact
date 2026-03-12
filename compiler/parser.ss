@@ -180,7 +180,7 @@
          ; so officially, we reserve it for future use
          (not (string-prefix? "__compact" (symbol->string x)))))
 
-  (module (define-grammar is sat sat/what parse-consumed-all? parse-result-value grammar-trace)
+  (module (define-grammar is sat sat/what parse-consumed-all? parse-result-value grammar-trace snippets)
     (meta define seen-keywords (box (keyword-group-words keywordReservedForFutureUse)))
     (module ()
       (define-syntax a (lambda (x) #`'#,(datum->syntax #'* seen-keywords)))
@@ -251,6 +251,14 @@
       (printf "copyright: This file is part of midnight-docs. Copyright (C) 2025 Midnight Foundation. Licensed under the Apache License, Version 2.0 (the \"License\"); You may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.\n")
       (printf "title: Compact grammar\n")
       (printf "---\n\n"))
+    (meta define lang-ref-proto "compiler/lang-ref-proto.mdx")
+    (meta define lang-ref-mdx "doc/lang-ref.mdx")
+    (meta define requested-snippets
+      (let ()
+        (import (snippet-helpers))
+        (#%$require-include lang-ref-proto)
+        (get-requested-snippets lang-ref-proto)))
+    (meta define snippets (make-parameter '()))
     (meta define (constant->html const)
       (define (html-text-string x)
         (define (html-text-char c)
@@ -899,6 +907,8 @@
            (with-output-language (Lparser Pattern-Argument-List)
              `(,langle (,parg* ...) (,sep* ...) ,rangle))))])
   )
+
+  (meta define ignore (for-each display-string (snippets)))
 
   (define (parse token-stream)
     ;;; return the first result, if any, for which the input stream was entirely consumed.
