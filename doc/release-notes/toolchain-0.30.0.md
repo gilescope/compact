@@ -27,7 +27,7 @@ This release targets the new version of the Midnight ledger, version 8.0.  The p
 
 ## New features
 
-The compiler now supports `--ledger-version` and `--runtime-version` flags.  The compiler and fixup tool now support `--compact-path` and `--trace-search` flags.
+The compiler now supports `--ledger-version` and `--runtime-version` flags.  The compiler and fixup tool now support `--compact-path` and `--trace-search` flags.  The release notes are now included in the release itself.
 
 ### Ledger and runtime version flags
 
@@ -71,7 +71,7 @@ So for example, for Apple silicon macOS, and if the default artifact directory i
 
 ## Improvements
 
-The generated TypeScript code now distinguishes circuits that have prover and verifier keys from other impure circuits.
+The language reference document has been extensively revised so it now describes the current version of the language.  The generated TypeScript code now distinguishes circuits that have prover and verifier keys from other impure circuits.
 
 **Improvement**: Up to date language reference
 
