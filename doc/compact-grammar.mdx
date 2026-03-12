@@ -242,10 +242,10 @@ A version literal takes the form nat or nat.nat or nat.nat.nat, e.g., 1.2 or 1.2
 #### <a name="Structure-declaration">Structure-declaration</a> (*struct-declaration*)
 
 <div className="lang-ref-table">
-|                      |         |                                                                                                                                                                                                                                                       |
-|----------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| *struct-declaration* | &xrarr; | `export`<sup>opt</sup> `struct` [*struct-name*](#identifier) [*gparams*](#Generic-parameter-list)<sup>opt</sup> `{` [*typed-identifier*](#Typed-identifier) `;` ⋯ `;` [*typed-identifier*](#Typed-identifier) `;`<sup>opt</sup> `}` `;`<sup>opt</sup> |
-|                      | \|      | `export`<sup>opt</sup> `struct` [*struct-name*](#identifier) [*gparams*](#Generic-parameter-list)<sup>opt</sup> `{` [*typed-identifier*](#Typed-identifier) `,` ⋯ `,` [*typed-identifier*](#Typed-identifier) `,`<sup>opt</sup> `}` `;`<sup>opt</sup> |
+|                      |         |                                                                                                                                                                                                                                       |
+|----------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| *struct-declaration* | &xrarr; | `export`<sup>opt</sup> `struct` [*struct-name*](#identifier) [*gparams*](#Generic-parameter-list)<sup>opt</sup> `{` [*typed-id*](#Typed-identifier) `;` ⋯ `;` [*typed-id*](#Typed-identifier) `;`<sup>opt</sup> `}` `;`<sup>opt</sup> |
+|                      | \|      | `export`<sup>opt</sup> `struct` [*struct-name*](#identifier) [*gparams*](#Generic-parameter-list)<sup>opt</sup> `{` [*typed-id*](#Typed-identifier) `,` ⋯ `,` [*typed-id*](#Typed-identifier) `,`<sup>opt</sup> `}` `;`<sup>opt</sup> |
 </div>
 
 #### <a name="Enum-declaration">Enum-declaration</a> (*enum-declaration*)
@@ -281,20 +281,20 @@ A version literal takes the form nat or nat.nat or nat.nat.nat, e.g., 1.2 or 1.2
 | *type-alias-declaration* | &xrarr; | `export`<sup>opt</sup> `new`<sup>opt</sup> `type` [*type-name*](#identifier) [*gparams*](#Generic-parameter-list)<sup>opt</sup> `=` [*type*](#Type) `;` |
 </div>
 
-#### <a name="Typed-identifier">Typed-identifier</a> (*typed-identifier*)
+#### <a name="Typed-identifier">Typed-identifier</a> (*typed-id*)
 
 <div className="lang-ref-table">
-|                    |         |                                         |
-|--------------------|---------|-----------------------------------------|
-| *typed-identifier* | &xrarr; | [*id*](#identifier) `:` [*type*](#Type) |
+|            |         |                                         |
+|------------|---------|-----------------------------------------|
+| *typed-id* | &xrarr; | [*id*](#identifier) `:` [*type*](#Type) |
 </div>
 
 #### <a name="Simple-parameter-list">Simple-parameter-list</a> (*simple-parameter-list*)
 
 <div className="lang-ref-table">
-|                         |         |                                                                                                                     |
-|-------------------------|---------|---------------------------------------------------------------------------------------------------------------------|
-| *simple-parameter-list* | &xrarr; | `(` [*typed-identifier*](#Typed-identifier) `,` ⋯ `,` [*typed-identifier*](#Typed-identifier) `,`<sup>opt</sup> `)` |
+|                         |         |                                                                                                     |
+|-------------------------|---------|-----------------------------------------------------------------------------------------------------|
+| *simple-parameter-list* | &xrarr; | `(` [*typed-id*](#Typed-identifier) `,` ⋯ `,` [*typed-id*](#Typed-identifier) `,`<sup>opt</sup> `)` |
 </div>
 
 #### <a name="Typed-pattern">Typed-pattern</a> (*typed-pattern*)

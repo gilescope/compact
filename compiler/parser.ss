@@ -520,12 +520,12 @@
          (with-output-language (Lparser Circuit-Definition)
            `(circuit ,src ,kwd-export? ,kwd-pure? ,kwd ,function-name ,generic-param-list? ,pattern-param-list (,colon ,type) ,block)))])
     (Structure-declaration (struct-declaration)
-      [structure-declaration/semicolons :: src (OPT (KEYWORD export) #f) (KEYWORD struct) struct-name (OPT gparams #f) #\{ (SEP* typed-identifier #\; #t) #\} (OPT #\; #f) =>
+      [structure-declaration/semicolons :: src (OPT (KEYWORD export) #f) (KEYWORD struct) struct-name (OPT gparams #f) #\{ (SEP* typed-id #\; #t) #\} (OPT #\; #f) =>
        (lambda (src kwd-export? kwd struct-name generic-param-list? lbrace arg-sep* rbrace semicolon?)
          (with-output-language (Lparser Structure-Definition)
            (let-values ([(arg* sep*) (split-sep arg-sep*)])
              `(struct ,src ,kwd-export? ,kwd ,struct-name ,generic-param-list? ,lbrace (,arg* ...) (,sep* ...) ,rbrace ,semicolon?))))]
-      [structure-declaration/commas :: src (OPT (KEYWORD export) #f) (KEYWORD struct) struct-name (OPT gparams #f) #\{ (SEP* typed-identifier #\, #t) #\} (OPT #\; #f) =>
+      [structure-declaration/commas :: src (OPT (KEYWORD export) #f) (KEYWORD struct) struct-name (OPT gparams #f) #\{ (SEP* typed-id #\, #t) #\} (OPT #\; #f) =>
        (lambda (src kwd-export? kwd struct-name generic-param-list? lbrace arg-sep* rbrace semicolon?)
          (with-output-language (Lparser Structure-Definition)
            (let-values ([(arg* sep*) (split-sep arg-sep*)])
@@ -559,13 +559,13 @@
        (lambda (src kwd-export? kwd-new? kwd type-name generic-param-list? op type semicolon)
          (with-output-language (Lparser Type-Definition)
            `(typedef ,src ,kwd-export? ,kwd-new? ,kwd ,type-name ,generic-param-list? ,op ,type ,semicolon)))])
-    (Typed-identifier (typed-identifier)
-      [typed-identifier :: src id #\: type =>
+    (Typed-identifier (typed-id)
+      [typed-id :: src id #\: type =>
        (lambda (src id colon type)
          (with-output-language (Lparser Argument)
            `(,src ,id ,colon ,type)))])
     (Simple-parameter-list (simple-parameter-list)
-      [parameter-list :: #\( (SEP* typed-identifier #\, #t) #\) =>
+      [parameter-list :: #\( (SEP* typed-id #\, #t) #\) =>
        (lambda (langle arg-sep* rangle)
          (let-values ([(arg* sep*) (split-sep arg-sep*)])
            (with-output-language (Lparser Argument-List)
