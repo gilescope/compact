@@ -25,7 +25,7 @@ kinds of program elements:
 - declarations of the data that the contract stores in the public ledger,
 - declarations of *witnesses*, which are callback functions supplied by the TypeScript runner,
 - definitions of *circuits*, which are functions serving as the operational core of a smart contract, and
-- the definition of at most one *constructor*, which is a function used to intialize the public ledger.
+- the definition of at most one *constructor*, which is a function used to initialize the public ledger.
 
 Compact is similar to TypeScript: it has a syntax similar to that of JavaScript,
 and it layers a type system over the JavaScript syntax.
@@ -159,7 +159,7 @@ all represent identifier tokens.
 - *version* represents version literals (in pragmas).
 
 While identifiers and string literals are each represented by more than one name,
-each representes the entire set of possible identifier or string-literal tokens.
+each represents the entire set of possible identifier or string-literal tokens.
 The grammar snippets use different terminal names only to suggest their use, e.g,
 *module-name* for module names versus *tvar-name* for type variable names.
 
@@ -212,7 +212,7 @@ and/or different numbers or types of run-time parameters.
 
 The scope of each binding depends upon where it appears, as described below.
 (The caveat "except where shadowed" is not explicitly stated but applies in each case.)
-- Identifiers bound at the outermost level of a contract (refered to as the *top
+- Identifiers bound at the outermost level of a contract (referred to as the *top
   level*) are visible throughout the contract, but not within any modules that are
   imported from separate files.
 - Identifiers bound at the outermost level of a module are visible throughout the module.
@@ -258,7 +258,7 @@ For circuit and witness bindings, the lifetime is effectively permanent, i.e.,
 the binding is always available for use whenever the program is run.
 
 The lifetimes of ledger-field bindings begin when they are first initialized
-and are effectively permanant from that point on; although the value of a
+and are effectively permanent from that point on; although the value of a
 field can change over time, the association of the ledger-field name with the
 ledger field's location in the (replicated) public state of a contract never
 changes.
@@ -305,7 +305,7 @@ parameters whose values are given at the use site rather than fixed at the point
 of declaration.
 This allows the same *generic* code to be used with different specific types,
 bounds, and sizes.
-Except where shadowed, generic parameters are visible thoughout the entire entity.
+Except where shadowed, generic parameters are visible throughout the entire entity.
 In particular, the generic parameters of a module are visible within the program
 elements that appear within the body of the module.
 
@@ -313,7 +313,7 @@ When present, generic parameters are enclosed in angle brackets following the
 name of the generic entity (module, structure, type alias, circuit, or witness).
 Each parameter is either a type name (e.g., `T`) or a hash-prefixed natural-number name
 (e.g., `#N`).
-Generic natural-number parameters are prefixed by `#` to distingish them from
+Generic natural-number parameters are prefixed by `#` to distinguish them from
 generic type parameters.
 
 <div className="lang-ref-table">
@@ -1266,7 +1266,7 @@ It is a static error to export any other kind of binding from the top level.
 ## Include files
 
 Compact allows programs and modules to be split into multiple files and spliced
-togther via `include` forms, which have the following syntax, where `file` is a
+together via `include` forms, which have the following syntax, where `file` is a
 string literal specifying a filesystem pathname for file to be included:
 
 <div className="lang-ref-table">
@@ -1607,7 +1607,7 @@ constructor(v: Field) {
 Each constructor parameter must be explicitly typed.
 The type of each variable binding arising from the binding of identifiers in
 each parameter pattern to the corresponding pieces of the input is the type of
-the corresonding part of the declared type's structure.
+the corresponding part of the declared type's structure.
 
 The return type of the constructor is always `[]`.
 Any attempt to return another type of value using `return expression;` where the
@@ -1658,7 +1658,7 @@ circuit, the type of the corresponding argument expression must be a subtype of
 that type.
 The type of each variable binding arising from the binding of identifiers in
 each parameter pattern to the corresponding pieces of the input is the type of
-the corresonding part of the declared type's structure.
+the corresponding part of the declared type's structure.
 For example, in the body of `sumStruct` below:
 
 ```compact
@@ -1753,11 +1753,11 @@ The syntax of Compact statements is summarized by the following grammar snippet:
 
 
 The snippet shows that a statement (`stmt`) is either a one-armed `if` expression
-or some other kinf of statement (`stmt0`).
+or some other kind of statement (`stmt0`).
 This structure is used to enforce the restriction that the *then* part of a
 two-armed cannot be a one-armed `if` expression.
 This is often left ambiguous in the grammar, with a separate note to say
-that the ambiguity is resolved by assocating an *else* part with the closest
+that the ambiguity is resolved by associating an *else* part with the closest
 enclosing `if` expression, but we prefer to make the constraint explicit in
 the grammar and avoid any ambiguity.
 
@@ -1810,7 +1810,7 @@ For example, it is a static error if the pattern implies that the expression's
 value is a tuple when the type is actually, say, `Field`.
 
 The type of each variable binding arising from the binding of identifiers in each
-pattern to the corresponding pieces of the input is the type of the corresonding
+pattern to the corresponding pieces of the input is the type of the corresponding
 part of the structure of the declared type, if present, otherwise of the inferred
 type.
 For example, in the following code, the binding for `x` has type `Boolean`, and
@@ -1871,7 +1871,7 @@ expression as described earlier in
 Any variable bound by `const` may not be reused within a block, although a
 `const` binding in a nested block might [shadow it](#identifiers-bindings-and-scope).
 Variables are immutable, although the same variable might take on different values
-at different times if is contined within a block of code that is evaluated more
+at different times if is contained within a block of code that is evaluated more
 than once, such as would be the case for the body of a `circuit` that is called
 more than once.
 
@@ -1908,7 +1908,7 @@ Otherwise, it must evaluate to `false`, in which case `else-statement`
 ### `for` statements
 
 `for` statements are used to iterate over a sequence of values.
-In Compact, in constrast to most languages, the number of iterations can
+In Compact, in contrast to most languages, the number of iterations can
 always be determined at compile time.
 That is, the number of iterations is bounded either by constant numeric
 bounds or by size of an object of constant size.
@@ -1951,7 +1951,7 @@ to *k* for each *k* in the range `start` (inclusive) to `end` (exclusive).
 `return` statements cannot be used to return from within `for` statements.
 It is therefore a static error for `statement` to be a `return` statement
 or for a `return` statement to appear within `statement` (except where it
-appears nested within an anoymous circuit).
+appears nested within an anonymous circuit).
 
 Iteration can also be accomplished via
 (`map` and `fold` expressions)[map-and-fold-expressions].
@@ -2100,7 +2100,7 @@ The grammar enforces associativity by allowing either the left or right
 operand of an operator to be at the same precedence level while requiring
 the other to be at a higher level.
 Specifically, left-associativity is expressed by allowing the left operand to be
-at the same level while requring the right operand to be at a higher level.
+at the same level while requiring the right operand to be at a higher level.
 For instance, `expr_5 → expr_5 + expr_6` enforces the left-associativity of
 addition, since the left operand can be at the same level while the right
 operand is at a higher level.
@@ -2269,7 +2269,7 @@ are as follows:
 - `HistoricMerkleTree<n, T>`, for a compile time integer `1 < n <= 32`, and any
   Compact type `T`: an empty Merkle tree
 
-Default is not ddefined for contract types and `Kernel` type (which is defined
+Default is not defined for contract types and `Kernel` type (which is defined
 in `CompactStandardLibrary`).
 
 ### Variable references
@@ -2356,14 +2356,14 @@ has a specific structure type, so does the other.
   The values are equal if they are the same enumeration member.
 - **`Opaque types:`**
   The values are equal if the runtime values are equal according to JavaScript's
-  strict equalty (`===`) operator.
+  strict equality (`===`) operator.
 
 Otherwise the operands are not equal.
 
 **Less than, greater than, less than or equals, and greater than or equals**
 
 The unsigned integer values of the operands are compared according to the
-corredponding relational operation.
+corresponding relational operation.
 
 ### Short-circuit logical expressions
 
@@ -2468,7 +2468,7 @@ circuit foo(x: Feet, y: Feet, scale: Uint<32>): Feet {
 }
 ```
 
-computes the sum of `x` and `y` multipled by `scale`.
+computes the sum of `x` and `y` multiplied by `scale`.
 If the value of this computation fits in 32 bits, `foo` returns the value.
 Otherwise, the enclosing top-level circuit or constructor halts with a
 message indicating that the cast of the value to `Feet` failed.
@@ -2827,9 +2827,9 @@ Type checking a function call depends on the form of the underlying function.
   - If there is no type annotation for a parameter, the parameter's type is
     inferred as the type of the corresponding argument expression.
 
-  Within the body of the anoymous circuit, the type of each variable binding arising
+  Within the body of the anonymous circuit, the type of each variable binding arising
   from the binding of identifiers in each parameter pattern to the corresponding
-  pieces of the corresponding argument is the type of the corresonding part of
+  pieces of the corresponding argument is the type of the corresponding part of
   the structure of the declared or inferred parameter type.
 
   If there is a return type annotation, it is a static error if the body can
@@ -3157,12 +3157,12 @@ is the exception.
 The mechanism for explicitly declaring disclosure is simple: disclosure of private
 data (exported circuit arguments, witness return values, and anything derived from
 private data) must be acknowledged by wrapping an expression whose value contains
-private data in a `disclose()` wrapper before storing it in the public state, returing
+private data in a `disclose()` wrapper before storing it in the public state, returning
 it from an exported circuit, or using it in conditional expressions that might
 affect what is stored in the public state or or returned from an exported circuit.
 
-For example, the following contract attempts to disclose privata data without
-explictly declaring the disclosure when it stores the value of the exported
+For example, the following contract attempts to disclose private data without
+explicitly declaring the disclosure when it stores the value of the exported
 parameter `x` into the ledger field `F`:
 
 ```compact
