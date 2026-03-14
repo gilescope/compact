@@ -1623,7 +1623,7 @@ or more expressions to be evaluated in sequence.
 This simply means that any expression or comma-separated sequence of expressions
 also qualifies as a statement.
 Expression sequences are described more fully in
-(their own section)[expression-sequences].
+[their own section](#expression-sequences).
 
 The remaining subsections of this section describe each of the other kinds of
 statements.
@@ -1711,7 +1711,7 @@ referenced by the cbindings that follow.
 The evaluation of each *cbinding* involves determining the value *v* of the
 expression on the right-hand side of the `=`, then giving values to identifiers
 in the pattern *p* on the left-hand side to the corresponding pieces of *v*
-as described earlier in (Patterns and destructuring)[patterns-and-destructuring].
+as described earlier in [Patterns and destructuring](#patterns-and-destructuring).
 
 Any variable bound by `const` may not be reused within a block, although a
 `const` binding in a nested block might [shadow it](#identifiers-bindings-and-scope).
@@ -1724,30 +1724,23 @@ more than once.
 
 An `if` statement is used to determine the flow of control through the
 statements of a circuit or constructor body.
-A *one-armed* `if` expression has a *test part* (an `expr-seq` enclosed
-in parentheses) and a *then part* (`then-statement`):
+A *one-armed* `if` expression has a "test part" (an *expr-seq* enclosed
+in parentheses) and a "then part" (*then-statement*):
 
-```compact
-if (expr-seq) then-statement
-```
+`if (`*expr-seq*`)` *then-statement*
 
-A *two-armed* `if` expression has a *test part* (an `expr-seq` enclosed
-in parentheses), a *then part* (`then-statement`), and an *else part*
-(`else-statement`):
+A *two-armed* `if` statement has a test part, a then part, and an "else part"
+(*else-statement*):
 
-```compact
-if (expr-seq)
-  then-statement
-else
-  else-statement
-```
+`if (`*expr-seq*`)` *then-statement* `else` *else-statement*
 
-The typing of an `if` expression requires only that the type of `expr-seq` must be
+The typing of an `if` statement requires only that the type of *expr-seq* must be
 `Boolean`.
 
-Evaluating an `if` expression involves first evaluating the `expr-seq`.
-If it evaluates to `true`, `then-statement` is evaluated.
-Otherwise, it must evaluate to `false`, in which case `else-statement`
+Evaluating an `if` expression involves first determining the value *v* of
+*expr-seq*.
+If *v* is `true`, *then-statement* is evaluated.
+Otherwise, *v* must be `false`, in which case *else-statement*
 (if present), is evaluated.
 
 ### `for` statements
@@ -1764,60 +1757,53 @@ Compact supports two kinds of `for` statements.
 The first iterates over vectors, tuples, and byte-vectors and takes the
 following form:
 
-```compact
-for (const x of expression) statement
-```
+`for (const` *x* `of` *expr*`)` *stmt*
 
-This kind of `for` statement is typed by typing `expression` and verifying that
-it is a `Vector` type, a tuple type that (has a vector type)[Subtyping and least
-upper bounds], or a `Bytes` type.
+This kind of `for` statement is typed by typing *expr* and verifying that
+it is a `Vector` type, a tuple type that
+[has a vector type](#subtyping-and-least-upper-bounds), or a `Bytes` type.
 
-Evaluating this kind of `for` requires evaluating `expression` then evaluating
-`statement` once for each element with `x` bound to the value of each element
-in turn.
+Evaluating this kind of `for` requires determining the vector, tuple, or
+byte-vector value *v* of *expr* then evaluating
+*stmt* once for each element of *v* with *x* bound to the value of each element
+of *v* in turn.
 
 The second form iterates over a range of unsigned integer values and takes the
 following form:
 
-```compact
-for (const i of start..end) statement
-```
+`for (const` *i* `of` *start* `..` *end*`)` *stmt*
 
-In this form, each of `start` and `end` must be a literal unsigned integer
-or a generic natural-number parameter, and `end` must be greater than or
-equal to `start`.
+In this form, each of *start* and *end* must be a literal unsigned integer
+or reference to a generic natural-number parameter, and *end* must be
+greater than or equal to *start*.
 Otherwise, it is a static error.
 
 This form is always well-typed.
 
-Evaluating this kind of `for` requires evaluating statement with `i` bound
-to *k* for each *k* in the range `start` (inclusive) to `end` (exclusive).
+Evaluating this kind of `for` requires evaluating *stmt* with *i* bound
+to *k* for each *k* in the range *start* (inclusive) to *end* (exclusive).
 
 `return` statements cannot be used to return from within `for` statements.
-It is therefore a static error for `statement` to be a `return` statement
-or for a `return` statement to appear within `statement` (except where it
+It is therefore a static error for *stmt* to be a `return` statement
+or for a `return` statement to appear within *stmt* (except where it
 appears nested within an anonymous circuit).
 
 Iteration can also be accomplished via
-(`map` and `fold` expressions)[map-and-fold-expressions].
+[`map` and `fold` expressions](#map-and-fold-expressions).
 
 ### `return` statements
 
 A `return` statement can be used to exit from the closest enclosing
-[anonymous circuit](#circuit-and-witness-calls) circuit, if any, or otherwise from
+[anonymous circuit](#circuit-and-witness-calls), if any, or otherwise from
 the enclosing constructor or named circuit, and to return to the caller either
-an explicit return value, i.e., the value of (`expr-seq`)[expression-sequences]
+an explicit return value, i.e., the value of [`expr-seq`](#expression-sequences)
 in this form of `return`:
 
-```compact
-return expr-seq;
-```
+`return` *expr-seq*`;`
 
 or the default value `[]` in this form of `return`:
 
-```compact
-return;
-```
+`return;`
 
 A circuit or constructor body can also exit without an explicit `return` statement:
 any path through the body that does not end in an explicit `return` statement is
@@ -1825,8 +1811,8 @@ treated as if ended with `return;`.
 
 A `return` statement is always well-typed if it exits from an anonymous circuit
 without a declared return type.
-Otherwise, a `return` statement is well-typed if the type of `expr-seq`, or
-`[]` if no `expr-seq` is present, is a subtype the expected return type.
+Otherwise, a `return` statement is well-typed if the type of *expr-seq*, or
+`[]` if no *expr-seq* is present, is a subtype the expected return type.
 If the `return` form exits from a named circuit or an anonymous circuit
 with a declared return type, the expected type is the declared return type,
 while if it exits from the constructor, the expected return type is `[]`.
@@ -1834,10 +1820,10 @@ while if it exits from the constructor, the expected return type is `[]`.
 An implication of these rules is that it is a static error to exit without an
 explicit return value from a circuit with a declared return type other than `[]`.
 
-When a `return` statement is evaluated, the `expr-seq`, if present, is evaluated,
+When a `return` statement is evaluated, the *expr-seq*, if present, is evaluated,
 the circuit or constructor exits immediately without evaluating any
-subsequent statements, and it returns to the caller the value of `expr-seq` or
-`[]` if no `expr-seq` is present.
+subsequent statements, and it returns to the caller the value of *expr-seq* or
+`[]` if no *expr-seq* is present.
 
 ## Expressions
 
@@ -2736,7 +2722,7 @@ Any cast not covered by one of the rules is not allowed.
 
 #### Upcasts
 
-- Upcasts, i.e., casts from a type to a (supertype)[subtyping-and-least-upper-bounds]
+- Upcasts, i.e., casts from a type to a [supertype](#subtyping-and-least-upper-bounds)
   (e.g., from `Vector<3, Uint<8>>` to `Vector<3, Uint<16>>`), are always allowed
   (but never required), never result in run-time errors, and, except in the case
   where the type and the supertype are the same, might require run-time conversions.
