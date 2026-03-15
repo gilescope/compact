@@ -177,8 +177,10 @@ for the errors and terminates without generating any output.
 
 The code the compiler generates and the run-time libraries it uses detect various
 kinds of *dynamic errors*, e.g., attempts from code outside of Compact to call
-Compact circuits with wrong numbers or types of arguments.
-These errors are reported when the generated code is run.
+Compact circuits with wrong numbers or types of arguments or attempts to cast
+an unsigned value to an unsigned type that is too small for the value.
+These errors are reported when the generated code is run and cause evaluation
+of the current circuit to halt.
 
 ## Identifiers, bindings, and scope
 
@@ -1838,51 +1840,51 @@ error: the Compact compiler reports the error and does not produce any target co
 The static type of a well-typed expression is either a Compact type or a
 ledger-state type.
 
-Every Compact expression either evaluates to a value or raises an exception,
-and it might have have an effect.
+Every well-typed Compact expression either evaluates to a value or causes a
+dynamic error, and it might have effects.
 The evaluation of an expression is defined in terms of the evaluation of its
 subexpressions.
-If the evaluation of a subexpression raises an exception, then the evaluation of
-the containing expression halts and raises the same exception.
 
 The first section below discusses how the grammar reflects the rules
 for precedence and associativity of operators, and the remaining sections
 describe the typing and evaluation rules for each kind of expression.
-
 
 ### Precedence and associativity
 
 The structure of the expression grammar unambiguously reflects the precedence
 and associativity of operators.
 
-Each subscripted nonterminal `expr_n` represents a precedence level, with higher
-subscripts representing higher levels of precedence.
-For example, `expr_6` (multiplication) binds more tightly than `expr_5` (addition)
-because the grammar permits the operands of an addition expression to be
-multiplication expressions, but not vice versa.
+Each group from *expr-seq* through *term* represents a precedence level,
+with *expr-seq* at a higher precedence level than *expr*, *expr* at a higher level
+than *expr<sub>0</sub>*, and so on.
+For example, *expr<sub>6</sub>* (multiplication) is at a higher precedence level
+and so binds more tightly than *expr<sub>5</sub>* (addition) because the grammar
+permits the operands of an addition expression to be multiplication expressions,
+but not vice versa.
 For example, `x * y + z` is parsed as the addition of `x * y` and `z`
-rather than the multiplication of `x` and `y + z`, because the `expr_5` production
-for addition is not reachable from the `expr_6` production for multiplication.
-One can still write `x * (y + z)` because an `expr_6` can be a `term` (via the
-"fall through" productions `expr_6 → expr_7`, `expr_7 → expr_8`, and so on),
-and a term can be a parenthesized `expr-seq`.
+rather than the multiplication of `x` and `y + z`, because the *expr<sub>5</sub>*
+production for addition is not reachable from the *expr<sub>6</sub>* production
+for multiplication.
+One can still write `x * (y + z)` because an *expr<sub>6</sub>* can be a *term* (via the
+"fall through" productions *expr<sub>6</sub>* &xrarr; *expr<sub>7</sub>*,
+*expr<sub>7</sub>* &xrarr; *expr<sub>8</sub>*, and so on),
+a *term* can be a parenthesized *expr-seq*, and an *expr-seq* can be an *expr*.
 
-The grammar enforces associativity by allowing either the left or right
-operand of an operator to be at the same precedence level while requiring
-the other to be at a higher level.
-Specifically, left-associativity is expressed by allowing the left operand to be
-at the same level while requiring the right operand to be at a higher level.
-For instance, `expr_5 → expr_5 + expr_6` enforces the left-associativity of
-addition, since the left operand can be at the same level while the right
-operand is at a higher level.
-This means that `x + y - z` can be treated only as the subtraction of `z`
+The grammar enforces associativity by requiring the left or right
+operand of an operator or both to be at a higher precedence level.
+Specifically, left-associativity is expressed by requiring the right operand to
+be at a higher level while allowing the left operand to be at the same level.
+For instance, *expr<sub>5</sub>* &xrarr; *expr<sub>5</sub>* `+` *expr<sub>6</sub>*
+enforces the left-associativity of addition, since the left operand must be at
+a higher level.
+This means, for example, that `x + y - z` can be treated only as the subtraction of `z`
 from `x + y` rather than as the addition of `x` and `y - z`.
 Right-associativity is expressed in the opposite manner, e.g.,
-`expr_0 ? expr : expr` enforces the right-associativity of the
+*expr<sub>0</sub>* `?` *expr* `:` *expr* enforces the right-associativity of the
 ternary `?:` operator.
-Non-associative operators such as the relational operators `<`, `<=`, `>=`, `>` have
-both operands at a strictly higher level (`expr_4` on both sides of `expr_3`),
-preventing chaining like `a < b < c`.
+Non-associative operators such as the relational operators `<`, `<=`, `>=`, and
+`>` require both operands to be at a strictly higher level (*expr<sub>4</sub>*
+on both sides of *expr<sub>3</sub>*), preventing chaining like `a < b < c`.
 
 The middle operand of the ternary `?:` operator plays no roll in determining
 precedence and associativity and can be any kind of expression.
@@ -1895,37 +1897,34 @@ expression where it can be confused as an operand of some other operator.
 
 ### Parenthesized expressions
 
-Compact allows parenthesized expressions of the form `(e)`, where `e` is an
-expression.
-They can be used to control the order of operations or simply to make the default
-order of operations to be explicit.
+Compact allows parenthesized expressions of the form `(`*e*`)`, where
+*e* is an expression or, more generally, an expression sequence.
+Parenthesized expressions can be used to control the order of operations or simply
+to make the default order of operations explicit.
 
 For example, `x + y * z` computes the product of `y` and `z` and adds `x` to the
 result, because `*` has higher precedence than `+`.
 `x + (y * z)` computes the same thing but more makes the order of operations more
 clear, while `(x + y) * z` computes the sum of `x` and `y` and multiplies it by `z`.
 
-The type of a parenthesized expression is the type of the embedded expression,
-and its value is the value of the subexpression.
+The type of a parenthesized expression is the type of the embedded expression
+sequence, and its value is the value of the subexpression.
 
 ### Expression sequences
 
-An expression sequence (`expr-seq` in the grammar above) is a comma-separated
+An expression sequence (*expr-seq* in the grammar above) is a comma-separated
 sequence of one or more expressions.
 
-```compact
-expression, ⋯, expression
-```
+*expr*`,` ⋯`,` *expr*
 
 Expression sequences can appear only in a few contexts.
 When an expression sequence is required in a context where only a single expression
 is permitted, the expression sequence can be wrapped in parentheses:
 
-```compact
-(expression, ⋯, expression)
-```
+`(`*expr*`,` ⋯`,` *expr*`)`
 
 The type of an expression sequence is the type of its last subexpression.
+The types of the other subexpressions are ignored and are not constrained in any way.
 
 An expression sequence is evaluated by evaluating the subexpressions from
 left to right, and its value is the value of the last subexpression.
