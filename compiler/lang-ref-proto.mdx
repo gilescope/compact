@@ -44,9 +44,10 @@ Compact deviates intentionally from TypeScript, however, in several important wa
   [generic parameters](#generic-parameters-and-arguments), which include size as
   well as type parameters.
 - Because every Compact program must compile into a set of finite proving circuits,
+  the language is *bounded*:
   all Compact types have sizes that are fixed at compile time, loops are bounded either
   by constant bounds or by the size of an object of constant size, and recursion
-  is disallowed. This is why we introduce Compact as a bounded language.
+  is disallowed.
 - Compact numeric values are limited to unsigned integers either with a
   program-declared range or with a range determined by the field size of the
   target proving system.
