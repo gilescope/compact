@@ -45,7 +45,7 @@ Compact deviates intentionally from TypeScript, however, in several important wa
 - Because every Compact program must compile into a set of finite proving circuits,
   all Compact types have sizes that are fixed at compile time, loops are bounded either
   by constant bounds or by the size of an object of constant size, and recursion
-  is disallowed.
+  is disallowed. This is why we introduce Compact as a bounded language.
 - Compact numeric values are limited to unsigned integers either with a
   program-declared range or with a range determined by the field size of the
   target proving system.
@@ -334,7 +334,7 @@ numeric value of a generic parameter.
 
 @(request-snippet gargs garg)
 
-The syntax of types allows for type references, including references to generic
+[The syntax of types](#compact-types) allows for type references, including references to generic
 parameters, so any generic argument can pass along the value of a generic type
 or natural-number parameter that is visible at the point of specialization.
 
@@ -602,7 +602,7 @@ enum Arrow { up, down, left, right };
 ```
 
 Within the scope of this declaration, a value of type `Arrow` can have one of
-three values, selected via `Arrow.up`, `Arrow.down`, `Arrow.left`, and `Arrow.right`.
+four values, selected via `Arrow.up`, `Arrow.down`, `Arrow.left`, and `Arrow.right`.
 
 Two enumeration types are the same if they have the same name and the same element
 names (in the same order) and distinct otherwise.
@@ -728,7 +728,7 @@ other tuple types.
 In general, a vector type `Vector<`*n*, *T*`>` is a subtype of a tuple type
 `[`*S<sub>1</sub>*, ⋯, *S<sub>n</sub>*`]` if *T* is a subtype of each of the
 types *S<sub>1</sub>*, ⋯, *S<sub>n</sub>*.
-The means, for instance, that a vector can often be passed to a circuit where a
+This means, for instance, that a vector can often be passed to a circuit where a
 tuple is expected.
 
 ## Patterns and destructuring
