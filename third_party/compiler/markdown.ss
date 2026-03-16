@@ -26,6 +26,8 @@
                      <head>
                      <meta>
                      <title>
+                     <body>
+                     <div>
                      <h1>
                      <h2>
                      <h3>
@@ -74,6 +76,18 @@
       (syntax-rules ()
         [(_ () b1 b2 ...)
          (void)]))
+    (define-syntax <body>
+      (syntax-rules ()
+        [(_ () b1 b2 ...)
+         (begin (void) b1 b2 ...)]))
+    (define-syntax <div>
+      (syntax-rules ()
+        [(_ ([?className class-name]) b1 b2 ...)
+         (eq? (datum ?className) 'className)
+         (begin
+           (printf "<div className=\"~a\">\n" class-name)
+           b1 b2 ...
+           (printf "</div>\n"))]))
     (define-syntax <h1>
       (syntax-rules ()
         [(_ () b1 b2 ...)
@@ -172,11 +186,9 @@
                                    w*
                                    row))
                             row*)])
-            (printf "<div className=\"lang-ref-table\">\n")
             (printf "|~{ ~a |~}\n" (map (lambda (w) (make-string w #\space)) w*))
             (printf "|~{~a|~}\n" (map (lambda (w) (make-string (fx+ w 2) #\-)) w*))
-            (for-each (lambda (row) (printf "|~{ ~a |~}\n" row)) row*)
-            (printf "</div>\n\n")))
+            (for-each (lambda (row) (printf "|~{ ~a |~}\n" row)) row*)))
         (define-syntax <table>
           (syntax-rules ()
             [(_ () b1 b2 ...)

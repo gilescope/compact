@@ -42,6 +42,8 @@
 ;;;    meta render-extension -> string extension for "html" filenames
 ;;;    module %html
 ;;;    meta print-copyright => prints grammar copyright notice to stdout
+;;;    meta document-css-class => css className
+;;;    meta table-css-class => css className
 ;;;
 ;;; %html should support the features from the (html) library's %html module
 ;;; that the renderer uses, but it doesn't actually have to produce HTML.
@@ -718,25 +720,27 @@
                       (printf "~a" (subscriptize nonterm))))
                   (newline)
                   (for-each (render-paragraph #f) (clause-before-paragraph* clause))
-                  (<table> ()
-                    (let ([primary-alias (car alias*)] [secondary-alias* (cdr alias*)])
-                      (let loop ([prod* (nonterminal-clause-prod* clause)] [first? #t])
-                        (unless (null? prod*)
-                          (let ([prod (car prod*)])
+                  (<div> ([className table-css-class])
+                    (<table> ()
+                      (let ([primary-alias (car alias*)] [secondary-alias* (cdr alias*)])
+                        (let loop ([prod* (nonterminal-clause-prod* clause)] [first? #t])
+                          (unless (null? prod*)
+                            (let ([prod (car prod*)])
+                              (<tr> ()
+                                (<td> () (when first? (render-alias primary-alias)))
+                                (<td> () (if first? (display-string "&xrarr;") (html-text "|")))
+                                (<td> () (render-production prod env))
+                                (unless (null? (production-paragraph* prod))
+                                  (<td> () (for-each (render-paragraph #t) (production-paragraph* prod))))))
+                            (loop (cdr prod*) #f)))
+                        (for-each
+                          (lambda (secondary-alias)
                             (<tr> ()
-                              (<td> () (when first? (render-alias primary-alias)))
-                              (<td> () (if first? (display-string "&xrarr;") (html-text "|")))
-                              (<td> () (render-production prod env))
-                              (unless (null? (production-paragraph* prod))
-                                (<td> () (for-each (render-paragraph #t) (production-paragraph* prod))))))
-                          (loop (cdr prod*) #f)))
-                      (for-each
-                        (lambda (secondary-alias)
-                          (<tr> ()
-                            (<td> () (render-alias secondary-alias))
-                            (<td> () (display-string "&xrarr;"))
-                            (<td> () (render-alias/link primary-alias env))))
-                        secondary-alias*)))
+                              (<td> () (render-alias secondary-alias))
+                              (<td> () (display-string "&xrarr;"))
+                              (<td> () (render-alias/link primary-alias env))))
+                          secondary-alias*))))
+                  (newline)
                   (for-each (render-paragraph #f) (clause-after-paragraph* clause)))))
           (define (render-section section)
             (unless (section-suppressed? section)
@@ -752,13 +756,15 @@
                   (<meta> ([http-equiv "Content-Type"]
                            [content "text/html;charset=utf-8"]))
                     (<title> () (html-text "~a" (syntax->datum name))))
-                (print-copyright)
-                (<h1> () (if (grammar-title grammar)
-                             (html-text (grammar-title grammar))
-                             (printf "Grammar for ~a" (syntax->datum name))))
-                (newline)
-                (for-each (render-paragraph #f) (grammar-paragraph* grammar))
-                (for-each render-section (grammar-section* grammar))))
+                (<body> ()
+                  (print-copyright)
+                  (<div> ([className document-css-class])
+                    (<h1> () (if (grammar-title grammar)
+                                 (html-text (grammar-title grammar))
+                                 (printf "Grammar for ~a" (syntax->datum name))))
+                    (newline)
+                    (for-each (render-paragraph #f) (grammar-paragraph* grammar))
+                    (for-each render-section (grammar-section* grammar))))))
             'replace))
         (define (create-snippets directive* grammar)
           (define-record-type snippet-request
@@ -923,16 +929,17 @@
                   (map (lambda (req)
                          (with-output-to-string
                            (lambda ()
-                             (<table> ()
-                               (for-each
-                                 (lambda (alias)
-                                   (let ([th (hashtable-ref nonterminal-snippets alias #f)])
-                                     (unless th
-                                       (errorf 'create-snippets
-                                               "unrecognized nonterminal name ~s from snippet request"
-                                               alias))
-                                     (th)))
-                                 (snippet-request-alias* req))))))
+                             (<div> ([className table-css-class])
+                               (<table> ()
+                                 (for-each
+                                   (lambda (alias)
+                                     (let ([th (hashtable-ref nonterminal-snippets alias #f)])
+                                       (unless th
+                                         (errorf 'create-snippets
+                                                 "unrecognized nonterminal name ~s from snippet request"
+                                                 alias))
+                                       (th)))
+                                   (snippet-request-alias* req)))))))
                        snippet-request*)))))))
       (module (parse-grammar)
         (define parse-elt
