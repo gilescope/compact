@@ -19,7 +19,7 @@ use std::process::Command;
 use std::{fs, io};
 
 #[allow(dead_code)]
-pub const COMPACT_VERSION: &str = "0.4.0";
+pub const COMPACT_VERSION: &str = "0.5.0";
 
 #[allow(dead_code)]
 pub const PREVIOUS_COMPACT_VERSION: &str = "0.3.0";
@@ -42,6 +42,7 @@ pub fn get_version() -> &'static str {
         ("macos", "aarch64") => "aarch64-darwin",
         ("macos", "x86_64") => "x86_64-apple-darwin",
         ("linux", "x86_64") => "x86_64-unknown-linux-musl",
+        ("linux", "aarch64") => "aarch64-unknown-linux-musl",
         _ => "unknown",
     }
 }
