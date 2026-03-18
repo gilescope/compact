@@ -366,16 +366,16 @@ A version literal takes the form nat or nat.nat or nat.nat.nat, e.g., 1.2 or 1.2
 #### <a name="Statement0">Statement<sub>0</sub></a> (**stmt<sub>0</sub>**)
 
 <div className="lang-ref-table">
-|                    |         |                                                                                                                          |
-|--------------------|---------|--------------------------------------------------------------------------------------------------------------------------|
-| *stmt<sub>0</sub>* | &xrarr; | [*expr-seq*](#Expression-sequence) `;`                                                                                   |
-|                    | \|      | `const` [*cbinding*](#Const-Binding) `,` ⋯¹ `,` [*cbinding*](#Const-Binding)  `;`                                        |
-|                    | \|      | `if` `(` [*expr-seq*](#Expression-sequence) `)` [*stmt<sub>0</sub>*](#Statement0) `else` [*stmt*](#Statement)            |
-|                    | \|      | `for` `(` `const` [*id*](#identifier) `of` [*nat*](#field-literal) `..` [*nat*](#field-literal) `)` [*stmt*](#Statement) |
-|                    | \|      | `for` `(` `const` [*id*](#identifier) `of` [*expr-seq*](#Expression-sequence) `)` [*stmt*](#Statement)                   |
-|                    | \|      | `return` [*expr-seq*](#Expression-sequence) `;`                                                                          |
-|                    | \|      | `return` `;`                                                                                                             |
-|                    | \|      | [*block*](#Block)                                                                                                        |
+|                    |         |                                                                                                                      |
+|--------------------|---------|----------------------------------------------------------------------------------------------------------------------|
+| *stmt<sub>0</sub>* | &xrarr; | [*expr-seq*](#Expression-sequence) `;`                                                                               |
+|                    | \|      | `const` [*cbinding*](#Const-Binding) `,` ⋯¹ `,` [*cbinding*](#Const-Binding)  `;`                                    |
+|                    | \|      | `if` `(` [*expr-seq*](#Expression-sequence) `)` [*stmt<sub>0</sub>*](#Statement0) `else` [*stmt*](#Statement)        |
+|                    | \|      | `for` `(` `const` [*id*](#identifier) `of` [*tsize*](#Type-size) `..` [*tsize*](#Type-size) `)` [*stmt*](#Statement) |
+|                    | \|      | `for` `(` `const` [*id*](#identifier) `of` [*expr-seq*](#Expression-sequence) `)` [*stmt*](#Statement)               |
+|                    | \|      | `return` [*expr-seq*](#Expression-sequence) `;`                                                                      |
+|                    | \|      | `return` `;`                                                                                                         |
+|                    | \|      | [*block*](#Block)                                                                                                    |
 </div>
 
 #### <a name="Pattern">Pattern</a> (**pattern**)

@@ -1129,6 +1129,21 @@
            (lambda (id) (env-insert! p src (id-sym id) (Info-var id)))
            var-id*)
          `(let* ,src ([,arg* ,expr*] ...) ,(Expression expr p)))]
+      [(for ,src ,var-name ,[Type-Size->nat : tsize0 p 0 -> * nat0] ,[Type-Size->nat : tsize1 p 0 -> * nat1] ,expr2)
+       (when (> nat0 (max-unsigned))
+         (source-errorf src "start bound ~d is greater than the maximum unsigned integer ~d" nat0 (max-unsigned)))
+       (when (> nat1 (max-unsigned))
+         (source-errorf src "end bound ~d is greater than the maximum unsigned integer ~d" nat1 (max-unsigned)))
+       (let ([n (- nat1 nat0)])
+         (when (< n 0)
+           (source-errorf src "end bound ~d is less than start bound ~s" nat1 nat0))
+         (when (> n (max-bytes/vector-length))
+           (source-errorf src "the difference ~d between end and start bounds exceeds the maximum vector size ~d" n (max-bytes/vector-length)))
+         (let ([expr1 (with-output-language (Lexpanded Expression)
+                         `(tuple ,src ,(map (lambda (i) `(single ,src (quote ,src ,(+ nat0 i)))) (iota n)) ...))])
+           (let ([id (make-source-id src var-name)] [p (add-rib p)])
+             (env-insert! p src var-name (Info-var id))
+             `(for ,src ,id ,expr1 ,(Expression expr2 p)))))]
       [(for ,src ,var-name ,[expr1] ,expr2)
        (let ([id (make-source-id src var-name)] [p (add-rib p)])
          (env-insert! p src var-name (Info-var id))
@@ -5590,6 +5605,7 @@
 
   (define-passes fixup-analysis-passes
     (expand-modules-and-types        Lexpanded)
+    (generate-contract-ht            Lexpanded)
     (infer-types                     Ltypes))
 
   (define-checker check-types/Lnodca Lnodca)
