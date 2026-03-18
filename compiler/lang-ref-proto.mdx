@@ -1032,15 +1032,15 @@ directly from there.
 If *import-name* is an identifier *module-name*, a definition for module *module-name*
 must be contained within
 the file *module-name*`.compact` in the same directory as the importing file or in one of the
-directories in the compact path.
+directories in the Compact path.
 If *import-name* is a string `"{`*prefix/*`}`*module-name*`"` where `{`*prefix/*`}` is either empty or is
 a pathname ending in a directory separator, a definition for a module named
 *module-name* must be contained within a file *module-name*`.compact` that is either:
 - (a) if `{`*prefix/*`}`*module-name*`.compact` is an absolute pathname, then exactly at
   `{`*prefix/*`}`*module-name*`.compact`, otherwise
 - (b) at `{`*prefix/*`}`*module-name*`.compact` relative to the directory of the importing
-  file or to one of the directories in the compact path.
-Details on the search order and the mechanism for setting the compact path are
+  file or to one of the directories in the Compact path.
+Details on the search order and the mechanism for setting the Compact path are
 given in [Compiler Usage](../compilation-and-tooling/compiler-usage).
 
 In any of these cases, it is a static error if *module-name*`.compact` is not found, if it
@@ -1183,8 +1183,8 @@ string literal specifying a filesystem pathname for file to be included:
 
 *file* can be an absolute pathname, one that is relative to the directory
 of the including file, or one that is relative to one of the directories in the
-compact path.
-Details on the search order and the mechanism for setting the compact path are
+Compact path.
+Details on the search order and the mechanism for setting the Compact path are
 given in [Compiler Usage](../compilation-and-tooling/compiler-usage).
 
 It is a static error if the file is not present or cannot be read.
@@ -1269,17 +1269,15 @@ The following *ledger-state types* are supported.
 - `Map<`*K*, *T*`>`, for any Compact types *K* and *T*
 - `Map<`*K*, *V*`>`, for any Compact type *K* and ledger-state type *V* (see the following section)
 - `List<`*T*`>`, for any Compact type *T*
-- `MerkleTree<`*n*, *T*`>`, for a compile time integer 1 \< *n* ≤ 32, and any Compact
-  type *T*
-- `HistoricMerkleTree<`*n*, *T*`>`, for a compile time integer 1 \< *n* ≤ 32, and any
-  Compact type *T*
+- `MerkleTree<`*n*, *T*`>`, for any *n*, 1 \< *n* ≤ 32, and any Compact type *T*
+- `HistoricMerkleTree<`*n*, *T*`>`, for any *n*, 1 \< *n* ≤ 32, and any Compact type *T*
 
 Each ledger type supports a set of operations, which can be invoked with
 
 *F*`.`*op*(*e*, ⋯, *e*)
 
 where *F* is a field name, *op* is the name of a ledger operation supported by
-the ledger-state type of *F*, and each *e* is an expression.
+the ledger-state type of *F*, and each *e* is an argument expression.
 
 A ledger field that is declared with a Compact type *T* implicitly has the type
 `Cell<`*T*`>`, which supports several operations, including `read`, `write`, and
@@ -1351,7 +1349,7 @@ export circuit getF(): Uint<64> {
 }
 ```
 
-A call to `incrF` or `decrF` involves an explicit read of `F`, and if `F` does
+a call to `incrF` or `decrF` involves an explicit read of `F`, and if `F` does
 not have the same value when the proof is checked as when the transaction is
 created, the proof fails and the transaction is rejected.
 
