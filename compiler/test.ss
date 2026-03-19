@@ -24058,6 +24058,60 @@ groups than for single tests.
       message: "~a:\n  ~?"
       irritants: '("testfile.compact line 2 char 3" "end bound ~d is greater than the maximum unsigned integer ~d" (452312848583266388373324160190187140051835877600158453279131187530910662660 452312848583266388373324160190187140051835877600158453279131187530910662655)))
     )
+
+  (test
+    `(
+      "export circuit foo(): [] {"
+      "  for (const i of 3..7) {"
+      "    if (i == 4) 0; else true;"
+      "  }"
+      "}"
+      )
+    (returns
+      (program
+        (circuit %foo.0 ()
+             (ttuple)
+          (seq
+            (fold
+              (circuit ([%t.1 (ttuple)] [%i.2 (tunsigned 6)])
+                   (ttuple)
+                (seq
+                  (seq
+                    (if (== %i.2 (safe-cast (tunsigned 6) (tunsigned 4) 4))
+                        0
+                        #t)
+                    (tuple))
+                  %t.1))
+              (tuple)
+              (tuple 3 4 5 6))
+            (tuple)))))
+    )
+
+  (test
+    `(
+      "export circuit foo(v: Vector<4, Field>): [] {"
+      "  for (const i of v) {"
+      "    if (i == 4) 0; else true;"
+      "  }"
+      "}"
+      )
+    (returns
+      (program
+        (circuit %foo.0 ([%v.1 (tvector 4 (tfield))])
+             (ttuple)
+          (seq
+            (fold
+              (circuit ([%t.3 (ttuple)] [%i.2 (tfield)])
+                   (ttuple)
+                (seq
+                  (seq
+                    (if (== %i.2 (safe-cast (tfield) (tunsigned 4) 4)) 0 #t)
+                    (tuple))
+                  %t.3))
+              (tuple)
+              %v.1)
+            (tuple)))))
+    )
 )
 
 ; tests limits for vectors, bytes, and tuples.
@@ -80616,12 +80670,16 @@ groups than for single tests.
       "export circuit foo(): [Uint<64>, Uint<64>] {"
       "  return [foo1<3, 10>(), foo2<3, 7>()];"
       "}"
+      "export circuit bar(): [Uint<64>, Uint<64>] {"
+      "  return [foo1<3, 3>(), foo2<3, 0>()];"
+      "}"
       )
     (stage-javascript
       `(
         "test('check 1', () => {"
         "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
         "  expect(C.circuits.foo(Ctxt).result).toEqual([42n, 42n]);"
+        "  expect(C.circuits.bar(Ctxt).result).toEqual([0n, 0n]);"
         "});"
         ))
     )
