@@ -473,16 +473,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1772122575,
-        "narHash": "sha256-GDJo0ztsaVwbrh1cg7chP2LV77PPR8GOcarjr2c+gYw=",
+        "lastModified": 1773309020,
+        "narHash": "sha256-5RvXdcs2piO2f4LT3zEMQvgVcK6V/8bXYAmfsvvLB5w=",
         "owner": "midnightntwrk",
         "repo": "midnight-ledger",
-        "rev": "30c1b96b9e9e98bd70ffa39ac5bad4a277d9b040",
+        "rev": "dfb450d558d23100d056d2ba121fe2b865e1208c",
         "type": "github"
       },
       "original": {
         "owner": "midnightntwrk",
-        "ref": "ledger-8.0.0-rc.5",
+        "ref": "ledger-8.0.2",
         "repo": "midnight-ledger",
         "type": "github"
       }
@@ -919,16 +919,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1772122575,
-        "narHash": "sha256-GDJo0ztsaVwbrh1cg7chP2LV77PPR8GOcarjr2c+gYw=",
+        "lastModified": 1773309020,
+        "narHash": "sha256-5RvXdcs2piO2f4LT3zEMQvgVcK6V/8bXYAmfsvvLB5w=",
         "owner": "midnightntwrk",
         "repo": "midnight-ledger",
-        "rev": "30c1b96b9e9e98bd70ffa39ac5bad4a277d9b040",
+        "rev": "dfb450d558d23100d056d2ba121fe2b865e1208c",
         "type": "github"
       },
       "original": {
         "owner": "midnightntwrk",
-        "ref": "ledger-8.0.0-rc.5",
+        "ref": "ledger-8.0.2",
         "repo": "midnight-ledger",
         "type": "github"
       }
@@ -994,16 +994,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1772122575,
-        "narHash": "sha256-GDJo0ztsaVwbrh1cg7chP2LV77PPR8GOcarjr2c+gYw=",
+        "lastModified": 1773309020,
+        "narHash": "sha256-5RvXdcs2piO2f4LT3zEMQvgVcK6V/8bXYAmfsvvLB5w=",
         "owner": "midnightntwrk",
         "repo": "midnight-ledger",
-        "rev": "30c1b96b9e9e98bd70ffa39ac5bad4a277d9b040",
+        "rev": "dfb450d558d23100d056d2ba121fe2b865e1208c",
         "type": "github"
       },
       "original": {
         "owner": "midnightntwrk",
-        "ref": "ledger-8.0.0-rc.5",
+        "ref": "ledger-8.0.2",
         "repo": "midnight-ledger",
         "type": "github"
       }
