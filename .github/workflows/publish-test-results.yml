@@ -52,6 +52,9 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Initialize git repository
+        run: git init
+
       # dorny/test-reporter: Creates a GitHub check run with a summary of
       # test results parsed from JUnit XML reports.
       - name: Publish Test Report
