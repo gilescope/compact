@@ -1761,18 +1761,18 @@ A block is evaluated by evaluating the statements in sequence.
 The syntax of Compact statements is summarized by the following grammar snippet:
 
 <div className="lang-ref-table">
-|                    |         |                                                                                                                                 |
-|--------------------|---------|---------------------------------------------------------------------------------------------------------------------------------|
-| *stmt*             | &xrarr; | `if` `(` [*expr-seq*](#expressions) `)` [*stmt*](#statements)                                                                   |
-|                    | \|      | [*stmt<sub>0</sub>*](#statements)                                                                                               |
-| *stmt<sub>0</sub>* | &xrarr; | [*expr-seq*](#expressions) `;`                                                                                                  |
-|                    | \|      | `const` [*cbinding*](#const-statements) `,` ⋯¹ `,` [*cbinding*](#const-statements)  `;`                                         |
-|                    | \|      | `if` `(` [*expr-seq*](#expressions) `)` [*stmt<sub>0</sub>*](#statements) `else` [*stmt*](#statements)                          |
-|                    | \|      | `for` `(` `const` [*id*](#terminal-names) `of` [*nat*](#terminal-names) `..` [*nat*](#terminal-names) `)` [*stmt*](#statements) |
-|                    | \|      | `for` `(` `const` [*id*](#terminal-names) `of` [*expr-seq*](#expressions) `)` [*stmt*](#statements)                             |
-|                    | \|      | `return` [*expr-seq*](#expressions) `;`                                                                                         |
-|                    | \|      | `return` `;`                                                                                                                    |
-|                    | \|      | [*block*](#blocks)                                                                                                              |
+|                    |         |                                                                                                                                       |
+|--------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
+| *stmt*             | &xrarr; | `if` `(` [*expr-seq*](#expressions) `)` [*stmt*](#statements)                                                                         |
+|                    | \|      | [*stmt<sub>0</sub>*](#statements)                                                                                                     |
+| *stmt<sub>0</sub>* | &xrarr; | [*expr-seq*](#expressions) `;`                                                                                                        |
+|                    | \|      | `const` [*cbinding*](#const-statements) `,` ⋯¹ `,` [*cbinding*](#const-statements)  `;`                                               |
+|                    | \|      | `if` `(` [*expr-seq*](#expressions) `)` [*stmt<sub>0</sub>*](#statements) `else` [*stmt*](#statements)                                |
+|                    | \|      | `for` `(` `const` [*id*](#terminal-names) `of` [*tsize*](#primitive-types) `..` [*tsize*](#primitive-types) `)` [*stmt*](#statements) |
+|                    | \|      | `for` `(` `const` [*id*](#terminal-names) `of` [*expr-seq*](#expressions) `)` [*stmt*](#statements)                                   |
+|                    | \|      | `return` [*expr-seq*](#expressions) `;`                                                                                               |
+|                    | \|      | `return` `;`                                                                                                                          |
+|                    | \|      | [*block*](#blocks)                                                                                                                    |
 </div>
 
 The snippet shows that a statement (*stmt*) is either a one-armed `if` expression
