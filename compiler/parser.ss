@@ -649,7 +649,7 @@
        (lambda (src id generic-arg-list?)
          (with-output-language (Lparser Type)
            `(type-ref ,src ,id ,generic-arg-list?)))])
-    (Type-size (tsize)
+    (Type-size (tsize start end)
       [type-size-field :: src nat =>
        (lambda (src nat)
          (with-output-language (Lparser Type-Size)
@@ -683,7 +683,7 @@
        (lambda (src kwd lparen expr rparen stmt1 kwd-else stmt2)
          (with-output-language (Lparser Statement)
            `(if ,src ,kwd ,lparen ,expr ,rparen ,stmt1 ,kwd-else ,stmt2)))]
-      [statement-for1 :: src (KEYWORD for) #\( (KEYWORD const) id (KEYWORD of) tsize ".." tsize #\) stmt =>
+      [statement-for1 :: src (KEYWORD for) #\( (KEYWORD const) id (KEYWORD of) start ".." end #\) stmt =>
        (lambda (src kwd lparen kwd-const id kwd-of tsize0 dotdot tsize1 rparen stmt)
          (with-output-language (Lparser Statement)
            `(for ,src ,kwd ,lparen ,kwd-const ,id ,kwd-of ,tsize0 ,dotdot ,tsize1 ,rparen ,stmt)))]

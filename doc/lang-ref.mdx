@@ -1734,9 +1734,9 @@ Compact program by the Compact compiler.
 A *block* is a group of statements enclosed in braces:
 
 <div className="lang-ref-table">
-|         |         |                                                       |
-|---------|---------|-------------------------------------------------------|
-| *block* | &xrarr; | `{` [*stmt*](#statements) ⋯ [*stmt*](#statements) `}` |
+|         |         |                                                                           |
+|---------|---------|---------------------------------------------------------------------------|
+| *block* | &xrarr; | `{` [*stmt*](#syntax-of-statements) ⋯ [*stmt*](#syntax-of-statements) `}` |
 </div>
 
 A block can be used in place of a single statement anywhere a single statement
@@ -1758,48 +1758,53 @@ A block is evaluated by evaluating the statements in sequence.
 
 ## Statements
 
-The syntax of Compact statements is summarized by the following grammar snippet:
+Compact statements are used to perform computations or effects with the help of
+Compact expressions.
 
-<div className="lang-ref-table">
-|                    |         |                                                                                                                                       |
-|--------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
-| *stmt*             | &xrarr; | `if` `(` [*expr-seq*](#expressions) `)` [*stmt*](#statements)                                                                         |
-|                    | \|      | [*stmt<sub>0</sub>*](#statements)                                                                                                     |
-| *stmt<sub>0</sub>* | &xrarr; | [*expr-seq*](#expressions) `;`                                                                                                        |
-|                    | \|      | `const` [*cbinding*](#const-statements) `,` ⋯¹ `,` [*cbinding*](#const-statements)  `;`                                               |
-|                    | \|      | `if` `(` [*expr-seq*](#expressions) `)` [*stmt<sub>0</sub>*](#statements) `else` [*stmt*](#statements)                                |
-|                    | \|      | `for` `(` `const` [*id*](#terminal-names) `of` [*tsize*](#primitive-types) `..` [*tsize*](#primitive-types) `)` [*stmt*](#statements) |
-|                    | \|      | `for` `(` `const` [*id*](#terminal-names) `of` [*expr-seq*](#expressions) `)` [*stmt*](#statements)                                   |
-|                    | \|      | `return` [*expr-seq*](#expressions) `;`                                                                                               |
-|                    | \|      | `return` `;`                                                                                                                          |
-|                    | \|      | [*block*](#blocks)                                                                                                                    |
-</div>
-
-The snippet shows that a statement (*stmt*) is either a one-armed `if` expression
-or some other kind of statement (*stmt<sub>0</sub>*).
-This structure is used to enforce the restriction that the "then" part of a
-two-armed cannot be a one-armed `if` expression.
-This is often left ambiguous in a language grammar, with a separate note to say
-that the ambiguity is resolved by associating each "else" part with the closest
-enclosing `if` expression, but we prefer to make the constraint explicit in
-the grammar and avoid any ambiguity.
-
-The first kind of *stmt<sub>0</sub>* is *expr-seq*`;`.
-An *expr-seq*, or *expression sequence*, is a comma separated sequence of one
-or more expressions to be evaluated in sequence.
-This simply means that any expression or comma-separated sequence of expressions
-also qualifies as a statement.
-Expression sequences are described more fully in
-[their own section](#expression-sequences).
-
-The remaining subsections of this section describe each of the other kinds of
-statements.
-
-Statements either do not have a value or (in the case of expression sequences
-serving as statements) the type and value are ignored.
+Statements either do not have values or (in the case of
+[expression sequences serving as statements](#expression-sequences-used-as-statements))
+the values are ignored.
 Thus it is not necessary to talk about the type of a statement.
 Nevertheless, each statement has typing rules that must be followed, such as that
 the type of the test expression of an `if` statement must be `Boolean`.
+
+The first subsection of this section presents a grammar snippet that summarizes
+the syntax of Compact statements.
+The remaining subsections describe the typing and evaluation rules of the various
+kinds of statements.
+
+### Syntax of statements
+
+<div className="lang-ref-table">
+|                    |         |                                                                                                                                                         |
+|--------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| *stmt*             | &xrarr; | `if` `(` [*expr-seq*](#syntax-of-expressions) `)` [*stmt*](#syntax-of-statements)                                                                       |
+|                    | \|      | [*stmt<sub>0</sub>*](#syntax-of-statements)                                                                                                             |
+| *stmt<sub>0</sub>* | &xrarr; | [*expr-seq*](#syntax-of-expressions) `;`                                                                                                                |
+|                    | \|      | `const` [*cbinding*](#const-statements) `,` ⋯¹ `,` [*cbinding*](#const-statements)  `;`                                                                 |
+|                    | \|      | `if` `(` [*expr-seq*](#syntax-of-expressions) `)` [*stmt<sub>0</sub>*](#syntax-of-statements) `else` [*stmt*](#syntax-of-statements)                    |
+|                    | \|      | `for` `(` `const` [*id*](#terminal-names) `of` [*start*](#syntax-of-statements) `..` [*end*](#syntax-of-statements) `)` [*stmt*](#syntax-of-statements) |
+|                    | \|      | `for` `(` `const` [*id*](#terminal-names) `of` [*expr-seq*](#syntax-of-expressions) `)` [*stmt*](#syntax-of-statements)                                 |
+|                    | \|      | `return` [*expr-seq*](#syntax-of-expressions) `;`                                                                                                       |
+|                    | \|      | `return` `;`                                                                                                                                            |
+|                    | \|      | [*block*](#blocks)                                                                                                                                      |
+| *start*            | &xrarr; | [*tsize*](#primitive-types)                                                                                                                             |
+| *end*              | &xrarr; | [*tsize*](#primitive-types)                                                                                                                             |
+</div>
+
+The grammar snippet above shows that a statement (*stmt*) is either a one-armed `if` statement
+or some other kind of statement (*stmt<sub>0</sub>*).
+This structure is used to enforce the restriction that the "then" part of a
+two-armed `if` cannot be a one-armed `if`.
+This is often left ambiguous in a language grammar, with a separate note to say
+that the ambiguity is resolved by associating each "else" part with the closest
+enclosing `if` statement, but here the constraint is explicit in the grammar.
+
+### Expression sequences used as statements
+
+Any *expression sequence* (*expr-seq*), i.e., comma-separated sequence of one or
+more expressions to be evaluated in sequence, can be used as a statement.
+Expression sequences are described in [their own section](#expression-sequences).
 
 ### `const` statements
 
@@ -1811,11 +1816,11 @@ Every `const` statement takes the following form:
 where each *cbinding* takes the following form:
 
 <div className="lang-ref-table">
-|                            |         |                                                                            |
-|----------------------------|---------|----------------------------------------------------------------------------|
-| *cbinding*                 | &xrarr; | [*optionally-typed-pattern*](#const-statements) `=` [*expr*](#expressions) |
-| *optionally-typed-pattern* | &xrarr; | [*pattern*](#patterns-and-destructuring)                                   |
-|                            | \|      | [*typed-pattern*](#contract-constructor)                                   |
+|                            |         |                                                                                      |
+|----------------------------|---------|--------------------------------------------------------------------------------------|
+| *cbinding*                 | &xrarr; | [*optionally-typed-pattern*](#const-statements) `=` [*expr*](#syntax-of-expressions) |
+| *optionally-typed-pattern* | &xrarr; | [*pattern*](#patterns-and-destructuring)                                             |
+|                            | \|      | [*typed-pattern*](#contract-constructor)                                             |
 </div>
 
 A `const` statement is typed by typing each of its *cbinding* subforms.
@@ -1999,68 +2004,7 @@ subsequent statements, and it returns to the caller the value of *expr-seq* or
 
 ## Expressions
 
-The syntax of Compact expressions is summarized by the following grammar snippet:
-
-<div className="lang-ref-table">
-|                    |         |                                                                                                                                                              |
-|--------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| *expr-seq*         | &xrarr; | [*expr*](#expressions)                                                                                                                                       |
-|                    | \|      | [*expr*](#expressions) `,` ⋯¹ `,` [*expr*](#expressions)  `,` [*expr*](#expressions)                                                                         |
-| *expr*             | &xrarr; | [*expr<sub>0</sub>*](#expressions) `?` [*expr*](#expressions) `:` [*expr*](#expressions)                                                                     |
-|                    | \|      | [*expr<sub>0</sub>*](#expressions) `=` [*expr*](#expressions)                                                                                                |
-|                    | \|      | [*expr<sub>0</sub>*](#expressions) `+=` [*expr*](#expressions)                                                                                               |
-|                    | \|      | [*expr<sub>0</sub>*](#expressions) `-=` [*expr*](#expressions)                                                                                               |
-|                    | \|      | [*expr<sub>0</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>0</sub>* | &xrarr; | [*expr<sub>0</sub>*](#expressions) `\|\|` [*expr<sub>1</sub>*](#expressions)                                                                                 |
-|                    | \|      | [*expr<sub>1</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>1</sub>* | &xrarr; | [*expr<sub>1</sub>*](#expressions) `&&` [*expr<sub>2</sub>*](#expressions)                                                                                   |
-|                    | \|      | [*expr<sub>2</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>2</sub>* | &xrarr; | [*expr<sub>2</sub>*](#expressions) `==` [*expr<sub>3</sub>*](#expressions)                                                                                   |
-|                    | \|      | [*expr<sub>2</sub>*](#expressions) `!=` [*expr<sub>3</sub>*](#expressions)                                                                                   |
-|                    | \|      | [*expr<sub>3</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>3</sub>* | &xrarr; | [*expr<sub>4</sub>*](#expressions) `<` [*expr<sub>4</sub>*](#expressions)                                                                                    |
-|                    | \|      | [*expr<sub>4</sub>*](#expressions) `<=` [*expr<sub>4</sub>*](#expressions)                                                                                   |
-|                    | \|      | [*expr<sub>4</sub>*](#expressions) `>=` [*expr<sub>4</sub>*](#expressions)                                                                                   |
-|                    | \|      | [*expr<sub>4</sub>*](#expressions) `>` [*expr<sub>4</sub>*](#expressions)                                                                                    |
-|                    | \|      | [*expr<sub>4</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>4</sub>* | &xrarr; | [*expr<sub>4</sub>*](#expressions) `as` [*type*](#primitive-types)                                                                                           |
-|                    | \|      | [*expr<sub>5</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>5</sub>* | &xrarr; | [*expr<sub>5</sub>*](#expressions) `+` [*expr<sub>6</sub>*](#expressions)                                                                                    |
-|                    | \|      | [*expr<sub>5</sub>*](#expressions) `-` [*expr<sub>6</sub>*](#expressions)                                                                                    |
-|                    | \|      | [*expr<sub>6</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>6</sub>* | &xrarr; | [*expr<sub>6</sub>*](#expressions) `*` [*expr<sub>7</sub>*](#expressions)                                                                                    |
-|                    | \|      | [*expr<sub>7</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>7</sub>* | &xrarr; | `!` [*expr<sub>7</sub>*](#expressions)                                                                                                                       |
-|                    | \|      | [*expr<sub>8</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>8</sub>* | &xrarr; | [*expr<sub>8</sub>*](#expressions) `[` [*expr*](#expressions) `]`                                                                                            |
-|                    | \|      | [*expr<sub>8</sub>*](#expressions) `.` [*id*](#terminal-names)                                                                                               |
-|                    | \|      | [*expr<sub>8</sub>*](#expressions) `.` [*id*](#terminal-names) `(` [*expr*](#expressions) `,` ⋯ `,` [*expr*](#expressions) `,`<sup>opt</sup> `)`             |
-|                    | \|      | [*expr<sub>9</sub>*](#expressions)                                                                                                                           |
-| *expr<sub>9</sub>* | &xrarr; | [*fun*](#circuit-and-witness-calls) `(` [*expr*](#expressions) `,` ⋯ `,` [*expr*](#expressions) `,`<sup>opt</sup> `)`                                        |
-|                    | \|      | `map` `(` [*fun*](#circuit-and-witness-calls) `,` [*expr*](#expressions) `,` ⋯¹ `,` [*expr*](#expressions) `,`<sup>opt</sup> `)`                             |
-|                    | \|      | `fold` `(` [*fun*](#circuit-and-witness-calls) `,` [*expr*](#expressions) `,` [*expr*](#expressions) `,` ⋯¹ `,` [*expr*](#expressions) `,`<sup>opt</sup> `)` |
-|                    | \|      | `slice` `<` [*tsize*](#primitive-types) `>` `(` [*expr*](#expressions) `,` [*expr*](#expressions) `)`                                                        |
-|                    | \|      | `[` [*tuple-arg*](#expressions) `,` ⋯ `,` [*tuple-arg*](#expressions) `,`<sup>opt</sup> `]`                                                                  |
-|                    | \|      | `Bytes` `[` [*bytes-arg*](#expressions) `,` ⋯ `,` [*bytes-arg*](#expressions) `,`<sup>opt</sup> `]`                                                          |
-|                    | \|      | [*tref*](#primitive-types) `{` [*struct-arg*](#expressions) `,` ⋯ `,` [*struct-arg*](#expressions) `,`<sup>opt</sup> `}`                                     |
-|                    | \|      | `assert` `(` [*expr*](#expressions) `,` [*str*](#terminal-names) `)`                                                                                         |
-|                    | \|      | `disclose` `(` [*expr*](#expressions) `)`                                                                                                                    |
-|                    | \|      | [*term*](#expressions)                                                                                                                                       |
-| *term*             | &xrarr; | [*id*](#terminal-names)                                                                                                                                      |
-|                    | \|      | `true`                                                                                                                                                       |
-|                    | \|      | `false`                                                                                                                                                      |
-|                    | \|      | [*nat*](#terminal-names)                                                                                                                                     |
-|                    | \|      | [*str*](#terminal-names)                                                                                                                                     |
-|                    | \|      | `pad` `(` [*nat*](#terminal-names) `,` [*str*](#terminal-names) `)`                                                                                          |
-|                    | \|      | `default` `<` [*type*](#primitive-types) `>`                                                                                                                 |
-|                    | \|      | `(` [*expr-seq*](#expressions) `)`                                                                                                                           |
-| *struct-arg*       | &xrarr; | [*expr*](#expressions)                                                                                                                                       |
-|                    | \|      | [*id*](#terminal-names) `:` [*expr*](#expressions)                                                                                                           |
-|                    | \|      | `...` [*expr*](#expressions)                                                                                                                                 |
-| *bytes-arg*        | &xrarr; | [*tuple-arg*](#expressions)                                                                                                                                  |
-| *tuple-arg*        | &xrarr; | [*expr*](#expressions)                                                                                                                                       |
-|                    | \|      | `...` [*expr*](#expressions)                                                                                                                                 |
-</div>
+Compact expressions are used to compute values, to cause effects, or both.
 
 Every Compact expression must be well-typed (free from static type errors).
 If any expression within a program contains a static type error, it is a static
@@ -2074,9 +2018,74 @@ dynamic error, and it might have effects.
 The evaluation of an expression is defined in terms of the evaluation of its
 subexpressions.
 
-The first section below discusses how the grammar reflects the rules
-for precedence and associativity of operators, and the remaining sections
-describe the typing and evaluation rules for each kind of expression.
+The first subsection of this section provides a grammar snippet that summarizes the
+syntax of Compact expressions, and the second discusses how the grammar reflects
+the rules for precedence and associativity of operators.
+The remaining sections describe the typing and evaluation rules for each kind
+of expression.
+
+### Syntax of expressions
+
+<div className="lang-ref-table">
+|                    |         |                                                                                                                                                                                            |
+|--------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| *expr-seq*         | &xrarr; | [*expr*](#syntax-of-expressions)                                                                                                                                                           |
+|                    | \|      | [*expr*](#syntax-of-expressions) `,` ⋯¹ `,` [*expr*](#syntax-of-expressions)  `,` [*expr*](#syntax-of-expressions)                                                                         |
+| *expr*             | &xrarr; | [*expr<sub>0</sub>*](#syntax-of-expressions) `?` [*expr*](#syntax-of-expressions) `:` [*expr*](#syntax-of-expressions)                                                                     |
+|                    | \|      | [*expr<sub>0</sub>*](#syntax-of-expressions) `=` [*expr*](#syntax-of-expressions)                                                                                                          |
+|                    | \|      | [*expr<sub>0</sub>*](#syntax-of-expressions) `+=` [*expr*](#syntax-of-expressions)                                                                                                         |
+|                    | \|      | [*expr<sub>0</sub>*](#syntax-of-expressions) `-=` [*expr*](#syntax-of-expressions)                                                                                                         |
+|                    | \|      | [*expr<sub>0</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>0</sub>* | &xrarr; | [*expr<sub>0</sub>*](#syntax-of-expressions) `\|\|` [*expr<sub>1</sub>*](#syntax-of-expressions)                                                                                           |
+|                    | \|      | [*expr<sub>1</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>1</sub>* | &xrarr; | [*expr<sub>1</sub>*](#syntax-of-expressions) `&&` [*expr<sub>2</sub>*](#syntax-of-expressions)                                                                                             |
+|                    | \|      | [*expr<sub>2</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>2</sub>* | &xrarr; | [*expr<sub>2</sub>*](#syntax-of-expressions) `==` [*expr<sub>3</sub>*](#syntax-of-expressions)                                                                                             |
+|                    | \|      | [*expr<sub>2</sub>*](#syntax-of-expressions) `!=` [*expr<sub>3</sub>*](#syntax-of-expressions)                                                                                             |
+|                    | \|      | [*expr<sub>3</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>3</sub>* | &xrarr; | [*expr<sub>4</sub>*](#syntax-of-expressions) `<` [*expr<sub>4</sub>*](#syntax-of-expressions)                                                                                              |
+|                    | \|      | [*expr<sub>4</sub>*](#syntax-of-expressions) `<=` [*expr<sub>4</sub>*](#syntax-of-expressions)                                                                                             |
+|                    | \|      | [*expr<sub>4</sub>*](#syntax-of-expressions) `>=` [*expr<sub>4</sub>*](#syntax-of-expressions)                                                                                             |
+|                    | \|      | [*expr<sub>4</sub>*](#syntax-of-expressions) `>` [*expr<sub>4</sub>*](#syntax-of-expressions)                                                                                              |
+|                    | \|      | [*expr<sub>4</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>4</sub>* | &xrarr; | [*expr<sub>4</sub>*](#syntax-of-expressions) `as` [*type*](#primitive-types)                                                                                                               |
+|                    | \|      | [*expr<sub>5</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>5</sub>* | &xrarr; | [*expr<sub>5</sub>*](#syntax-of-expressions) `+` [*expr<sub>6</sub>*](#syntax-of-expressions)                                                                                              |
+|                    | \|      | [*expr<sub>5</sub>*](#syntax-of-expressions) `-` [*expr<sub>6</sub>*](#syntax-of-expressions)                                                                                              |
+|                    | \|      | [*expr<sub>6</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>6</sub>* | &xrarr; | [*expr<sub>6</sub>*](#syntax-of-expressions) `*` [*expr<sub>7</sub>*](#syntax-of-expressions)                                                                                              |
+|                    | \|      | [*expr<sub>7</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>7</sub>* | &xrarr; | `!` [*expr<sub>7</sub>*](#syntax-of-expressions)                                                                                                                                           |
+|                    | \|      | [*expr<sub>8</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>8</sub>* | &xrarr; | [*expr<sub>8</sub>*](#syntax-of-expressions) `[` [*expr*](#syntax-of-expressions) `]`                                                                                                      |
+|                    | \|      | [*expr<sub>8</sub>*](#syntax-of-expressions) `.` [*id*](#terminal-names)                                                                                                                   |
+|                    | \|      | [*expr<sub>8</sub>*](#syntax-of-expressions) `.` [*id*](#terminal-names) `(` [*expr*](#syntax-of-expressions) `,` ⋯ `,` [*expr*](#syntax-of-expressions) `,`<sup>opt</sup> `)`             |
+|                    | \|      | [*expr<sub>9</sub>*](#syntax-of-expressions)                                                                                                                                               |
+| *expr<sub>9</sub>* | &xrarr; | [*fun*](#circuit-and-witness-calls) `(` [*expr*](#syntax-of-expressions) `,` ⋯ `,` [*expr*](#syntax-of-expressions) `,`<sup>opt</sup> `)`                                                  |
+|                    | \|      | `map` `(` [*fun*](#circuit-and-witness-calls) `,` [*expr*](#syntax-of-expressions) `,` ⋯¹ `,` [*expr*](#syntax-of-expressions) `,`<sup>opt</sup> `)`                                       |
+|                    | \|      | `fold` `(` [*fun*](#circuit-and-witness-calls) `,` [*expr*](#syntax-of-expressions) `,` [*expr*](#syntax-of-expressions) `,` ⋯¹ `,` [*expr*](#syntax-of-expressions) `,`<sup>opt</sup> `)` |
+|                    | \|      | `slice` `<` [*tsize*](#primitive-types) `>` `(` [*expr*](#syntax-of-expressions) `,` [*expr*](#syntax-of-expressions) `)`                                                                  |
+|                    | \|      | `[` [*tuple-arg*](#syntax-of-expressions) `,` ⋯ `,` [*tuple-arg*](#syntax-of-expressions) `,`<sup>opt</sup> `]`                                                                            |
+|                    | \|      | `Bytes` `[` [*bytes-arg*](#syntax-of-expressions) `,` ⋯ `,` [*bytes-arg*](#syntax-of-expressions) `,`<sup>opt</sup> `]`                                                                    |
+|                    | \|      | [*tref*](#primitive-types) `{` [*struct-arg*](#syntax-of-expressions) `,` ⋯ `,` [*struct-arg*](#syntax-of-expressions) `,`<sup>opt</sup> `}`                                               |
+|                    | \|      | `assert` `(` [*expr*](#syntax-of-expressions) `,` [*str*](#terminal-names) `)`                                                                                                             |
+|                    | \|      | `disclose` `(` [*expr*](#syntax-of-expressions) `)`                                                                                                                                        |
+|                    | \|      | [*term*](#syntax-of-expressions)                                                                                                                                                           |
+| *term*             | &xrarr; | [*id*](#terminal-names)                                                                                                                                                                    |
+|                    | \|      | `true`                                                                                                                                                                                     |
+|                    | \|      | `false`                                                                                                                                                                                    |
+|                    | \|      | [*nat*](#terminal-names)                                                                                                                                                                   |
+|                    | \|      | [*str*](#terminal-names)                                                                                                                                                                   |
+|                    | \|      | `pad` `(` [*nat*](#terminal-names) `,` [*str*](#terminal-names) `)`                                                                                                                        |
+|                    | \|      | `default` `<` [*type*](#primitive-types) `>`                                                                                                                                               |
+|                    | \|      | `(` [*expr-seq*](#syntax-of-expressions) `)`                                                                                                                                               |
+| *struct-arg*       | &xrarr; | [*expr*](#syntax-of-expressions)                                                                                                                                                           |
+|                    | \|      | [*id*](#terminal-names) `:` [*expr*](#syntax-of-expressions)                                                                                                                               |
+|                    | \|      | `...` [*expr*](#syntax-of-expressions)                                                                                                                                                     |
+| *bytes-arg*        | &xrarr; | [*tuple-arg*](#syntax-of-expressions)                                                                                                                                                      |
+| *tuple-arg*        | &xrarr; | [*expr*](#syntax-of-expressions)                                                                                                                                                           |
+|                    | \|      | `...` [*expr*](#syntax-of-expressions)                                                                                                                                                     |
+</div>
 
 ### Precedence and associativity
 
@@ -2770,14 +2779,14 @@ and *e*, ⋯, *e* is a sequence of zero or more comma-separated argument express
 The function expression *fun* can take one of the following forms:
 
 <div className="lang-ref-table">
-|                        |         |                                                                                                                                            |
-|------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| *fun*                  | &xrarr; | [*id*](#terminal-names) [*gargs*](#generic-parameters-and-arguments)<sup>opt</sup>                                                         |
-|                        | \|      | [*arrow-parameter-list*](#circuit-and-witness-calls) [*return-type*](#circuit-and-witness-calls)<sup>opt</sup> `=>` [*block*](#blocks)     |
-|                        | \|      | [*arrow-parameter-list*](#circuit-and-witness-calls) [*return-type*](#circuit-and-witness-calls)<sup>opt</sup> `=>` [*expr*](#expressions) |
-|                        | \|      | `(` [*fun*](#circuit-and-witness-calls) `)`                                                                                                |
-| *arrow-parameter-list* | &xrarr; | `(` [*optionally-typed-pattern*](#const-statements) `,` ⋯ `,` [*optionally-typed-pattern*](#const-statements) `,`<sup>opt</sup> `)`        |
-| *return-type*          | &xrarr; | `:` [*type*](#primitive-types)                                                                                                             |
+|                        |         |                                                                                                                                                      |
+|------------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| *fun*                  | &xrarr; | [*id*](#terminal-names) [*gargs*](#generic-parameters-and-arguments)<sup>opt</sup>                                                                   |
+|                        | \|      | [*arrow-parameter-list*](#circuit-and-witness-calls) [*return-type*](#circuit-and-witness-calls)<sup>opt</sup> `=>` [*block*](#blocks)               |
+|                        | \|      | [*arrow-parameter-list*](#circuit-and-witness-calls) [*return-type*](#circuit-and-witness-calls)<sup>opt</sup> `=>` [*expr*](#syntax-of-expressions) |
+|                        | \|      | `(` [*fun*](#circuit-and-witness-calls) `)`                                                                                                          |
+| *arrow-parameter-list* | &xrarr; | `(` [*optionally-typed-pattern*](#const-statements) `,` ⋯ `,` [*optionally-typed-pattern*](#const-statements) `,`<sup>opt</sup> `)`                  |
+| *return-type*          | &xrarr; | `:` [*type*](#primitive-types)                                                                                                                       |
 </div>
 
 In the simplest form, *fun* is just a identifier *id* referring to a witness or
@@ -3064,7 +3073,7 @@ __Kernel operations__ are operations that do not depend on specific ledger
 state.  They can be invoked by expressions of the form *id*`.`*op*`(`*e*, ⋯, *e*`)`, where
 *id* is the name of a ledger field declared to have the special ledger-state type `Kernel`,
 *op* is the name of a builtin kernel operation, and
-*e*, ⋯, *e* is a comma separated sequence of zero or more argument expressions.
+*e*, ⋯, *e* is a comma-separated sequence of zero or more argument expressions.
 The `CompactStandardLibrary` predefines the ledger field name `kernel` to have
 ledger-state type `Kernel`, so for example, the built-in `self` operation can be called
 from a circuit as follows:

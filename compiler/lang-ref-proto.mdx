@@ -1635,35 +1635,38 @@ A block is evaluated by evaluating the statements in sequence.
 
 ## Statements
 
-The syntax of Compact statements is summarized by the following grammar snippet:
+Compact statements are used to perform computations or effects with the help of
+Compact expressions.
 
-@(request-snippet stmt stmt0)
-
-The snippet shows that a statement (*stmt*) is either a one-armed `if` expression
-or some other kind of statement (*stmt<sub>0</sub>*).
-This structure is used to enforce the restriction that the "then" part of a
-two-armed cannot be a one-armed `if` expression.
-This is often left ambiguous in a language grammar, with a separate note to say
-that the ambiguity is resolved by associating each "else" part with the closest
-enclosing `if` expression, but we prefer to make the constraint explicit in
-the grammar and avoid any ambiguity.
-
-The first kind of *stmt<sub>0</sub>* is *expr-seq*`;`.
-An *expr-seq*, or *expression sequence*, is a comma separated sequence of one
-or more expressions to be evaluated in sequence.
-This simply means that any expression or comma-separated sequence of expressions
-also qualifies as a statement.
-Expression sequences are described more fully in
-[their own section](#expression-sequences).
-
-The remaining subsections of this section describe each of the other kinds of
-statements.
-
-Statements either do not have a value or (in the case of expression sequences
-serving as statements) the type and value are ignored.
+Statements either do not have values or (in the case of
+[expression sequences serving as statements](#expression-sequences-used-as-statements))
+the values are ignored.
 Thus it is not necessary to talk about the type of a statement.
 Nevertheless, each statement has typing rules that must be followed, such as that
 the type of the test expression of an `if` statement must be `Boolean`.
+
+The first subsection of this section presents a grammar snippet that summarizes
+the syntax of Compact statements.
+The remaining subsections describe the typing and evaluation rules of the various
+kinds of statements.
+
+### Syntax of statements
+
+@(request-snippet stmt stmt0)
+
+The grammar snippet above shows that a statement (*stmt*) is either a one-armed `if` statement
+or some other kind of statement (*stmt<sub>0</sub>*).
+This structure is used to enforce the restriction that the "then" part of a
+two-armed `if` cannot be a one-armed `if`.
+This is often left ambiguous in a language grammar, with a separate note to say
+that the ambiguity is resolved by associating each "else" part with the closest
+enclosing `if` statement, but here the constraint is explicit in the grammar.
+
+### Expression sequences used as statements
+
+Any *expression sequence* (*expr-seq*), i.e., comma-separated sequence of one or
+more expressions to be evaluated in sequence, can be used as a statement.
+Expression sequences are described in [their own section](#expression-sequences).
 
 ### `const` statements
 
@@ -1857,9 +1860,7 @@ subsequent statements, and it returns to the caller the value of *expr-seq* or
 
 ## Expressions
 
-The syntax of Compact expressions is summarized by the following grammar snippet:
-
-@(request-snippet expr-seq expr)
+Compact expressions are used to compute values, to cause effects, or both.
 
 Every Compact expression must be well-typed (free from static type errors).
 If any expression within a program contains a static type error, it is a static
@@ -1873,9 +1874,15 @@ dynamic error, and it might have effects.
 The evaluation of an expression is defined in terms of the evaluation of its
 subexpressions.
 
-The first section below discusses how the grammar reflects the rules
-for precedence and associativity of operators, and the remaining sections
-describe the typing and evaluation rules for each kind of expression.
+The first subsection of this section provides a grammar snippet that summarizes the
+syntax of Compact expressions, and the second discusses how the grammar reflects
+the rules for precedence and associativity of operators.
+The remaining sections describe the typing and evaluation rules for each kind
+of expression.
+
+### Syntax of expressions
+
+@(request-snippet expr-seq expr)
 
 ### Precedence and associativity
 
@@ -2854,7 +2861,7 @@ __Kernel operations__ are operations that do not depend on specific ledger
 state.  They can be invoked by expressions of the form *id*`.`*op*`(`*e*, ⋯, *e*`)`, where
 *id* is the name of a ledger field declared to have the special ledger-state type `Kernel`,
 *op* is the name of a builtin kernel operation, and
-*e*, ⋯, *e* is a comma separated sequence of zero or more argument expressions.
+*e*, ⋯, *e* is a comma-separated sequence of zero or more argument expressions.
 The `CompactStandardLibrary` predefines the ledger field name `kernel` to have
 ledger-state type `Kernel`, so for example, the built-in `self` operation can be called
 from a circuit as follows:

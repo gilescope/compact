@@ -346,6 +346,8 @@ A version literal takes the form nat.nat representing major and minor versions o
 |---------|---------|-------------------------|
 | *tsize* | &xrarr; | [*nat*](#field-literal) |
 |         | \|      | [*id*](#identifier)     |
+| *start* | &xrarr; | [*tsize*](#type-size)   |
+| *end*   | &xrarr; | [*tsize*](#type-size)   |
 </div>
 
 #### Block
@@ -368,16 +370,16 @@ A version literal takes the form nat.nat representing major and minor versions o
 #### Statement<sub>0</sub>
 
 <div className="lang-ref-table">
-|                    |         |                                                                                                                      |
-|--------------------|---------|----------------------------------------------------------------------------------------------------------------------|
-| *stmt<sub>0</sub>* | &xrarr; | [*expr-seq*](#expression-sequence) `;`                                                                               |
-|                    | \|      | `const` [*cbinding*](#const-binding) `,` ⋯¹ `,` [*cbinding*](#const-binding)  `;`                                    |
-|                    | \|      | `if` `(` [*expr-seq*](#expression-sequence) `)` [*stmt<sub>0</sub>*](#statement0) `else` [*stmt*](#statement)        |
-|                    | \|      | `for` `(` `const` [*id*](#identifier) `of` [*tsize*](#type-size) `..` [*tsize*](#type-size) `)` [*stmt*](#statement) |
-|                    | \|      | `for` `(` `const` [*id*](#identifier) `of` [*expr-seq*](#expression-sequence) `)` [*stmt*](#statement)               |
-|                    | \|      | `return` [*expr-seq*](#expression-sequence) `;`                                                                      |
-|                    | \|      | `return` `;`                                                                                                         |
-|                    | \|      | [*block*](#block)                                                                                                    |
+|                    |         |                                                                                                                    |
+|--------------------|---------|--------------------------------------------------------------------------------------------------------------------|
+| *stmt<sub>0</sub>* | &xrarr; | [*expr-seq*](#expression-sequence) `;`                                                                             |
+|                    | \|      | `const` [*cbinding*](#const-binding) `,` ⋯¹ `,` [*cbinding*](#const-binding)  `;`                                  |
+|                    | \|      | `if` `(` [*expr-seq*](#expression-sequence) `)` [*stmt<sub>0</sub>*](#statement0) `else` [*stmt*](#statement)      |
+|                    | \|      | `for` `(` `const` [*id*](#identifier) `of` [*start*](#type-size) `..` [*end*](#type-size) `)` [*stmt*](#statement) |
+|                    | \|      | `for` `(` `const` [*id*](#identifier) `of` [*expr-seq*](#expression-sequence) `)` [*stmt*](#statement)             |
+|                    | \|      | `return` [*expr-seq*](#expression-sequence) `;`                                                                    |
+|                    | \|      | `return` `;`                                                                                                       |
+|                    | \|      | [*block*](#block)                                                                                                  |
 </div>
 
 #### Pattern
