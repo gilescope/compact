@@ -24,10 +24,15 @@ on:
         required: true
         type: string
 
+permissions: {}
+
 jobs:
   e2e-test:
     name: Run e2e test for compactc on specific system
     runs-on: ${{ inputs.platform }}
+    permissions:
+      contents: read
+      checks: write
     steps:
       - name: Set name of artifact
         run: |
