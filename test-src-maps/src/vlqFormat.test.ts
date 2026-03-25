@@ -24,7 +24,7 @@ describe('VLQ converter', () => {
 
    fcTest.prop([fc.array(fc.integer({ min: -1000000, max: 1000000 }), { minLength: 1, maxLength: 5 })])(
       'encode/decode roundtrip should be identity',
-      ([segment]) => {
+      (segment) => {
          expect(vlq.decode(vlq.encode(segment))).toEqual(segment);
       }
    );
