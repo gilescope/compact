@@ -1877,12 +1877,39 @@
       [(public-ledger ,src ,ledger-field-name ,sugar? (,path-elt* ...) ,src^ ,adt-op ,[expr*] ...)
        (raise 'ledger)]))
 
-  (define-pass reduce-to-circuit : Lnovectorref (ir) -> Lcircuit ()
+  (define-pass remove-implicit-asserts : Lnovectorref (ir) -> Lexplicit-asserts ()
+    (Expression : Expression (ir) -> Expression ()
+      [(downcast-unsigned ,src ,nat ,[expr])
+       (let ([t (make-temp-id src 't)]
+             [q (make-temp-id src 'q)]
+             [r (make-temp-id src 'r)])
+         ; FIXME: bits might should be the lowest power of two not less than nat
+         (let* ([bits (unsigned-bits)]
+                [max-r (- (expt 2 (unsigned-bits)) 1)])
+           `(let* ,src ([[,t (ttuple ,src (tfield ,src) (tfield ,src))]
+                         (div-mod-power-of-two ,src ,expr ,bits)]
+                        [[,q (tfield ,src)] (tuple-ref ,src (var-ref ,src ,t) 0)]
+                        [[,r (tunsigned ,src ,max-r)] (tuple-ref ,src (var-ref ,src ,t) 1)])
+              (seq ,src
+                (assert ,src
+                  (if ,src
+                      (== ,src (tfield ,src) (var-ref ,src ,q) (quote ,src 0))
+                      (if ,src
+                          (< ,src ,bits (quote ,src ,nat) (var-ref ,src ,r))
+                          (quote ,src #f)
+                          (quote ,src #t))
+                      (quote ,src #f))
+                  ,(format "downcast to Uint<0..~d> failed" nat))
+                ; FIXME: downcast-unsigned should be marked safe; it's just here
+                ; to make check-types/Lflattened happy
+                (downcast-unsigned ,src #t ,nat (var-ref ,src ,r))))))]))
+
+  (define-pass reduce-to-circuit : Lexplicit-asserts (ir) -> Lcircuit ()
     (definitions
       (define fun-ht (make-eq-hashtable))
       (define default-src)
       (define (arg->name arg)
-        (nanopass-case (Lnovectorref Argument) arg
+        (nanopass-case (Lexplicit-asserts Argument) arg
           [(,var-name ,type) var-name]))
       (define (Triv expr test k)
         (Rhs expr test
@@ -1903,7 +1930,7 @@
                   (f (cdr expr*) (cons triv rtriv*)))))))
       (define (Tuple-Argument tuple-arg test k)
         (with-output-language (Lcircuit Tuple-Argument)
-          (nanopass-case (Lnovectorref Tuple-Argument) tuple-arg
+          (nanopass-case (Lexplicit-asserts Tuple-Argument) tuple-arg
             [(single ,src ,expr)
              (Triv expr test
                (lambda (triv)
@@ -1924,7 +1951,7 @@
           (if (null? path-elt*)
               (k (reverse rpath-elt*))
               (let ([path-elt (car path-elt*)] [path-elt* (cdr path-elt*)])
-                (nanopass-case (Lnovectorref Path-Element) path-elt
+                (nanopass-case (Lexplicit-asserts Path-Element) path-elt
                   [,path-index (f path-elt* (cons path-index rpath-elt*))]
                   [(,src ,type ,expr)
                    (Triv expr test
@@ -1959,7 +1986,7 @@
       [(let* ,src ([,local* ,expr*] ...) ,expr)
        (fold-right
          (lambda (local expr stmt*)
-           (nanopass-case (Lnovectorref Argument) local
+           (nanopass-case (Lexplicit-asserts Argument) local
              [(,var-name ,type)
               (Rhs expr test
                 (lambda (rhs)
@@ -2006,7 +2033,7 @@
        (let f ([local* local*] [expr* expr*])
          (if (null? local*)
              (Rhs expr test k)
-             (nanopass-case (Lnovectorref Argument) (car local*)
+             (nanopass-case (Lexplicit-asserts Argument) (car local*)
                [(,var-name ,type)
                 (Rhs (car expr*) test
                   (lambda (rhs)
@@ -2122,11 +2149,16 @@
          (lambda (triv)
            (k (with-output-language (Lcircuit Rhs)
               `(vector->bytes ,len ,triv)))))]
-      [(downcast-unsigned ,src ,nat ,expr)
+      [(downcast-unsigned ,src ,safe ,nat ,expr)
        (Triv expr test
          (lambda (triv)
            (k (with-output-language (Lcircuit Rhs)
-                `(downcast-unsigned ,src ,test ,nat ,triv)))))]
+                `(downcast-unsigned ,src ,safe ,test ,nat ,triv)))))]
+      [(div-mod-power-of-two ,src ,expr ,bits)
+       (Triv expr test
+         (lambda (triv)
+           (k (with-output-language (Lcircuit Rhs)
+                `(div-mod-power-of-two ,triv ,bits)))))]
       [(public-ledger ,src ,ledger-field-name ,sugar? (,path-elt* ...) ,src^ ,[adt-op] ,expr* ...)
        (Path-Element* path-elt* test
          (lambda (path-elt*)
@@ -2512,6 +2544,15 @@
                    (f (- len (fx* 2 (field-bytes))) (list var-name1 var-name2))))))
          (with-output-language (Lflattened Statement)
            (list `(= (,var-name1 ,var-name2) (field->bytes ,src ,test ,len ,triv)))))]
+      [(div-mod-power-of-two ,[Single-Triv : triv] ,bits)
+       (let ([var-name1 (make-new-id var-name)]
+             [var-name2 (make-new-id var-name)])
+         (hashtable-set! var-ht var-name
+           (Wump-vector
+             (list (Wump-single var-name1)
+                   (Wump-single var-name2))))
+         (with-output-language (Lflattened Statement)
+           (list `(= (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)))))]
       [(bytes->vector ,len ,[* wump])
        (let loop ([len len] [triv* (reverse (wump->elts wump))] [rvar-name** '()] [stmt* '()])
          (if (fx= len 0)
@@ -2540,10 +2581,10 @@
                        (with-output-language (Lflattened Statement)
                          (cons `(= ,this-var-name (vector->bytes ,(car this-var-name*) ,(cdr this-var-name*) ...))
                                stmt*)))))))]
-      [(downcast-unsigned ,src ,[Single-Triv : test] ,nat ,[Single-Triv : triv])
+      [(downcast-unsigned ,src ,safe ,[Single-Triv : test] ,nat ,[Single-Triv : triv])
        (hashtable-set! var-ht var-name (Wump-single var-name))
        (with-output-language (Lflattened Statement)
-         (list `(= ,var-name (downcast-unsigned ,src ,test ,nat ,triv))))]
+         (list `(= ,var-name (downcast-unsigned ,src ,safe ,test ,nat ,triv))))]
       [(elt-ref ,[* wump] ,elt-name)
        (hashtable-set! var-ht var-name
          (Wump-case wump
@@ -2695,7 +2736,7 @@
               (and (triv-equal? test test^)
                    (eqv? len len^)
                    (trivs-equal? triv1 triv1^ triv2 triv2^))]
-             [(downcast-unsigned ,src ,test ,nat ,triv) (downcast-unsigned ,src^ ,test^ ,nat^ ,triv^)
+             [(downcast-unsigned ,src ,safe ,test ,nat ,triv) (downcast-unsigned ,src^ ,safe^ ,test^ ,nat^ ,triv^)
               (and (triv-equal? test test^)
                    (eqv? nat nat^)
                    (triv-equal? triv triv^))]))
@@ -2749,7 +2790,7 @@
              (fold-left (lambda (hc triv) (triv-hash triv hc))
                729589248
                (cons triv triv*))]
-            [(downcast-unsigned ,src ,test ,nat ,triv)
+            [(downcast-unsigned ,src ,safe ,test ,nat ,triv)
              (triv-hash test
                (triv-hash triv
                  (triv-hash nat 314267636)))]
@@ -2864,7 +2905,7 @@
       [else (internal-errorf 'FWD-Statement "unexpected ir ~s" ir)])
     (Single-Test : Single (ir) -> * (maybe-test)
       [(bytes->field ,src ,[FWD-Triv : test] ,len ,triv1 ,triv2) test]
-      [(downcast-unsigned ,src ,[FWD-Triv : test] ,nat ,triv) test]
+      [(downcast-unsigned ,src ,safe ,[FWD-Triv : test] ,nat ,triv) test]
       [else #f])
     (Multiple-Test : Multiple (ir) -> * (maybe-test)
       [(call ,src ,[FWD-Triv : test] ,function-name ,triv* ...) test]
@@ -2905,6 +2946,11 @@
                    [else
                     (set-cdr! a (cons var-name1 var-name2))
                     (cons `(= (,var-name1 ,var-name2) (field->bytes ,src ,test ,len ,triv)) rstmt*)])))))]
+      [(div-mod-power-of-two ,[FWD-Triv : triv] ,bits)
+       (assert (fx= (length var-name*) 2))
+       (with-output-language (Lflattened Statement)
+         (let ([var-name1 (car var-name*)] [var-name2 (cadr var-name*)])
+           (cons `(= (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)) rstmt*)))]
       [(bytes->vector ,[FWD-Triv : triv])
        (with-output-language (Lflattened Statement)
          (or (ifconstant triv
@@ -3102,11 +3148,11 @@
                           '()
                           triv*)])
              `(vector->bytes ,triv ,triv* ...)))]
-      [(downcast-unsigned ,src ,[FWD-Triv : test] ,nat ,[FWD-Triv : triv])
+      [(downcast-unsigned ,src ,safe ,[FWD-Triv : test] ,nat ,[FWD-Triv : triv])
        (or (ifconstant triv
              (lambda (nat^)
                (and (<= nat^ nat) nat^)))
-           `(downcast-unsigned ,src ,test ,nat ,triv))]
+           `(downcast-unsigned ,src ,safe ,test ,nat ,triv))]
       [else (internal-errorf 'FWD-Single "unexpected ir ~s" ir)])
     (FWD-Path-Element : Path-Element (ir) -> Path-Element ()
       [,path-index path-index]
@@ -3128,7 +3174,7 @@
             [(bytes-ref ,triv ,nat) #t]
             [(bytes->field ,src ,test ,len ,triv1 ,triv2) (<= len (field-bytes))]
             [(vector->bytes ,triv ,triv* ...) #t]
-            [(downcast-unsigned ,src ,test ,nat ,triv) #f])))
+            [(downcast-unsigned ,src ,safe ,test ,nat ,triv) #f])))
       [(= ,var-name ,single)
        (guard
          (not (hashtable-contains? ref-ht var-name))
@@ -3154,6 +3200,13 @@
        stmt*]
       [(= (,var-name1 ,var-name2) (field->bytes ,src ,[BWD-Triv : test] ,len ,[BWD-Triv : triv]))
        (cons `(= (,var-name1 ,var-name2) (field->bytes ,src ,test ,len ,triv)) stmt*)]
+      [(= (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits))
+       (guard
+         (not (hashtable-contains? ref-ht var-name1))
+         (not (hashtable-contains? ref-ht var-name2)))
+       stmt*]
+      [(= (,var-name1 ,var-name2) (div-mod-power-of-two ,[BWD-Triv : triv] ,bits))
+       (cons `(= (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)) stmt*)]
       [(= (,var-name* ...) (bytes->vector ,triv))
        (guard (not (ormap (lambda (var-name) (hashtable-contains? ref-ht var-name)) var-name*)))
        stmt*]
@@ -3181,8 +3234,8 @@
        `(bytes->field ,src ,test ,len ,triv1 ,triv2)]
       [(vector->bytes ,[BWD-Triv : triv] ,[BWD-Triv : triv*] ...)
        `(vector->bytes ,triv ,triv* ...)]
-      [(downcast-unsigned ,src ,[BWD-Triv : test] ,nat ,[BWD-Triv : triv])
-       `(downcast-unsigned ,src ,test ,nat ,triv)]
+      [(downcast-unsigned ,src ,safe ,[BWD-Triv : test] ,nat ,[BWD-Triv : triv])
+       `(downcast-unsigned ,src ,safe ,test ,nat ,triv)]
       [else (internal-errorf 'BWD-Single "unexpected ir ~s" ir)])
     (BWD-Path-Element : Path-Element (ir) -> Path-Element ()
       [,path-index path-index]
@@ -3451,6 +3504,11 @@
        (with-output-language (Lflattened Primitive-Type)
          (set-idtype! var-name1 (Idtype-Base `(tfield ,(max 0 (- (expt 2 (* (fxmin (fxmax 0 (fx- len (field-bytes))) (field-bytes)) 8)) 1)))))
          (set-idtype! var-name2 (Idtype-Base `(tfield ,(max 0 (- (expt 2 (* (fxmin len (field-bytes)) 8)) 1))))))]
+      [(= (,var-name1 ,var-name2) (div-mod-power-of-two ,[* type] ,bits))
+       (check-tfield "argument to div-mod-power-of-two" type)
+       (with-output-language (Lflattened Primitive-Type)
+         (set-idtype! var-name1 (Idtype-Base `(tfield)))
+         (set-idtype! var-name2 (Idtype-Base `(tfield ,bits))))]
       [(= (,var-name* ...) (bytes->vector ,[* type]))
        (check-tfield "argument to bytes->vector" type)
        (with-output-language (Lflattened Primitive-Type)
@@ -3552,7 +3610,7 @@
              (source-errorf program-src "incompatible types (~{~a~^, ~}) for vector->bytes"
                (map format-primitive-type type*)))))
        (with-output-language (Lflattened Primitive-Type) `(tfield ,(- (expt 256 (fx+ (length triv*) 1)) 1)))]
-      [(downcast-unsigned ,src ,test ,nat ,[* type])
+      [(downcast-unsigned ,src ,safe ,test ,nat ,[* type])
        (verify-test src test)
        (check-tfield (format "argument to downcast-unsigned at ~a" (format-source-object src)) type)
        (with-output-language (Lflattened Primitive-Type) `(tfield ,nat))]
@@ -3582,6 +3640,7 @@
     (resolve-indices/simplify        Lnovectorref)
     (discard-useless-code            Lnovectorref)
     (prune-unnecessary-circuits      Lnovectorref)
+    (remove-implicit-asserts         Lexplicit-asserts)
     (reduce-to-circuit               Lcircuit)
     (flatten-datatypes               Lflattened)
     (optimize-circuit                Lflattened))

@@ -678,6 +678,11 @@
                instr*)
              (cons `(div_mod_power_of_two ,var-name0 ,var-name1 ,triv ,(* (field-bytes) 8))
                instr*)))]
+      [(= (,var-name0 ,var-name1) (div-mod-power-of-two ,triv ,bits))
+       (with-output-language (Lzkir Instruction)
+         (cons
+           `(div_mod_power_of_two ,var-name0 ,var-name1 ,triv ,bits)
+           instr*))]
       [(= (,var-name* ...) (bytes->vector ,triv))
        (assert (not (null? var-name*)))
        (with-output-language (Lzkir Instruction)
@@ -778,14 +783,16 @@
                                  (let ([div (make-temp-id default-src 'div)])
                                    (values div (recur div (car triv+) (cdr triv+) instr*))))])
                    (cons `(reconstitute_field ,result ,div ,current ,8) instr*)))))]
-      [(downcast-unsigned ,src ,test ,nat ,triv)
+      [(downcast-unsigned ,src ,safe ,test ,nat ,triv)
        ;; TODO(kmillikin): This needs to be conditional on test.
        (with-output-language (Lzkir Instruction)
          ;; TODO(kmillikin): The `copy` here is unnecessary.  Remove it.
          (cons `(copy ,var-name ,triv)
-           (emit-constraints-for triv
-             (with-output-language (Lflattened Primitive-Type) `(tfield ,nat))
-             instr*)))]
+           (if safe
+               instr*
+               (emit-constraints-for triv
+                 (with-output-language (Lflattened Primitive-Type) `(tfield ,nat))
+                 instr*))))]
       [else
         (fprintf (current-error-port) "unimplemented: ~s\n" ir)
         (assert cannot-happen)])

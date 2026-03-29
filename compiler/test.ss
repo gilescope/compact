@@ -136,7 +136,7 @@ groups than for single tests.
   (define contractCode*)
   (define test-root*)
 
-  (define show-last-successes (make-parameter 0))
+  (define show-last-successes (make-parameter 10))
   (define show-successes (make-parameter #f))
   (define show-all-passes (make-parameter #f))
   (define show-stack-backtrace (make-parameter #t))
@@ -882,6 +882,34 @@ groups than for single tests.
                      (next-param (cdr ls) (cons (car v*) rchosen*))
                      (next-value (cdr v*))))))))]))
 )
+
+(with-parameter-values ([feature-zkir-v3 #f #t])
+(run-tests print-typescript
+  (test
+    '(
+      "ledger F: Uint<8>;"
+      "export circuit foo(x: Uint<32>): Uint<8> {"
+      "  if (disclose(x) < 256) {"
+      "    F = disclose(x) as Uint<8>;"
+      "  } else {"
+      "    F = 0;"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, 5n).result).toEqual(5n);"
+        "  expect(C.circuits.foo(Ctxt, 256n).result).toEqual(0n);"
+        "  });"
+        ))
+    )
+)
+(run-javascript)
+)
+#!eof
 
 (run-tests parse-file/format/reparse
   (test

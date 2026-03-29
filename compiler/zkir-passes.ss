@@ -397,6 +397,10 @@
                  (print-gate "div_mod_power_of_two" `[var ,triv] `[bits ,(* (field-bytes) 8)])
                  (new-var! var-name1 #f)
                  (new-var! var-name2 #f)))]
+          [(= (,var-name1 ,var-name2) (div-mod-power-of-two ,[* triv] ,bits))
+           (print-gate "div_mod_power_of_two" `[var ,triv] `[bits ,bits])
+           (new-var! var-name1 #f)
+           (new-var! var-name2 #f)]
           [(= (,var-name* ...) (public-ledger ,src ,[* test] ,ledger-field-name ,sugar? (,[* path-elt*] ...) ,src^ ,adt-op ,[* triv*] ...))
            (let ()
              (define (group type* triv*)
@@ -735,10 +739,11 @@
                                   (let ([d ctr]) (set! ctr (add1 ctr)) d))))])
                    (print-gate "reconstitute_field" `[divisor ,d] `[modulus ,triv] `[bits 8]))))]
           ; FIXME: zkir downcast-unsigned needs to respect test
-          [(downcast-unsigned ,src ,[* test] ,nat ,[* triv])
-           (constrain-type (with-output-language (Lflattened Primitive-Type)
-                                                 `(tfield ,nat))
-                           triv)
+          [(downcast-unsigned ,src ,safe ,[* test] ,nat ,[* triv])
+           (unless safe
+             (constrain-type (with-output-language (Lflattened Primitive-Type)
+                                                   `(tfield ,nat))
+                             triv))
            (print-gate "copy" `[var ,triv])]
           [(select ,[* triv0] ,[* triv1] ,[* triv2])
            (print-gate "cond_select" `[bit ,triv0] `[a ,triv1] `[b ,triv2])])

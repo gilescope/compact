@@ -46,6 +46,7 @@
           Linlined unparse-Linlined Linlined-pretty-formats
           Lnosafecast unparse-Lnosafecast Lnosafecast-pretty-formats
           Lnovectorref unparse-Lnovectorref Lnovectorref-pretty-formats
+          Lexplicit-asserts unparse-Lexplicit-asserts Lexplicit-asserts-pretty-formats
           Lcircuit unparse-Lcircuit Lcircuit-pretty-formats Lcircuit-Native-Declaration? Lcircuit-Witness-Declaration? Lcircuit-Circuit-Definition? Lcircuit-Kernel-Declaration? Lcircuit-Ledger-Declaration? Lcircuit-Triv?
           Lflattened unparse-Lflattened Lflattened-pretty-formats Lflattened-Triv? Lflattened-Circuit-Definition?
           Lzkir unparse-Lzkir Lzkir-pretty-formats
@@ -66,11 +67,14 @@
   (define (unsigned-bits) (* (field-bytes) 8))
   (define (max-unsigned) (- (expt 2 (unsigned-bits)) 1))
 
+  (define (bits? x)
+    (and (integer? x)
+         (exact? x)
+         (<= 1 x (unsigned-bits))))
+
   (define (maybe-bits? x)
     (or (not x)
-        (and (integer? x)
-             (exact? x)
-             (<= 1 x (unsigned-bits)))))
+        (bits? x)))
 
   (define (field-bytes? x)
     (and (integer? x)
@@ -950,13 +954,24 @@
          (vector-slice src type expr index len))
       (+ (bytes-ref src expr kindex) => (bytes-ref expr kindex))))
 
+  (define-language/pretty Lexplicit-asserts (extends Lnovectorref)
+    (terminals
+      (- (boolean (pure-dcl)))
+      (+ (boolean (pure-dcl safe)))
+      (+ (bits (bits))))
+    (Expression (expr index)
+      (- (downcast-unsigned src nat expr))
+      (+ (downcast-unsigned src safe nat expr) => (downcast-unsigned safe nat #f expr))
+      (+ (div-mod-power-of-two src expr bits))))
+
   (define-language/pretty Lcircuit (entry Program)
     (terminals
       (field (nat))
       (len (len))
       (kindex (kindex))
+      (bits (bits))
       (maybe-bits (mbits))
-      (boolean (pure-dcl))
+      (boolean (pure-dcl safe))
       (symbol (export-name struct-name contract-name elt-name ledger-op ledger-op-class adt-name adt-formal))
       (id (name var-name function-name ledger-field-name))
       (string (mesg opaque-type file sugar))
@@ -1026,7 +1041,8 @@
         (contract-call test elt-name 4 (triv 0 type) #f triv* ...)
       (field->bytes src test len triv)        => (field->bytes test len triv)
       (bytes->field src test len triv)        => (bytes->field test len triv)
-      (downcast-unsigned src test nat triv)   => (downcast-unsigned test nat triv))
+      (div-mod-power-of-two triv bits)
+      (downcast-unsigned src safe test nat triv)   => (downcast-unsigned safe test nat triv))
     (Triv (triv test)
       var-name
       (quote datum)                          => datum
@@ -1106,7 +1122,7 @@
          (contract-call src test elt-name (triv type) triv* ...)
          (field->bytes src test len triv)
          (bytes->field src test len triv)
-         (downcast-unsigned src test nat triv)))
+         (downcast-unsigned src safe test nat triv)))
     (Single (single)
       (+ triv
          (+ mbits triv1 triv2)
@@ -1118,12 +1134,13 @@
          (bytes-ref triv nat)
          (bytes->field src test len triv1 triv2) => (bytes->field test len #f triv1 #f triv2)
          (vector->bytes triv triv* ...)          => (vector->bytes triv triv* ...) ; result holds one field's worth of bytes
-         (downcast-unsigned src test nat triv)   => (downcast-unsigned test nat triv)))
+         (downcast-unsigned src safe test nat triv)   => (downcast-unsigned safe test nat triv)))
     (Multiple (multiple)
       (+ (call src test function-name triv* ...) => (call test function-name #f triv* ...)
          (default opaque-type)
          (field->bytes src test len triv)        => (field->bytes test len #f triv)
          (bytes->vector triv)                    => (bytes->vector #f triv) ; triv holds one field's worth of bytes
+         (div-mod-power-of-two triv bits)
          (public-ledger src test ledger-field-name (maybe sugar) (path-elt* ...) src^ adt-op triv* ...) =>
            (public-ledger test ledger-field-name (path-elt* 0 ...) adt-op #f triv* ...)
          (contract-call src test elt-name (triv primitive-type) triv* ...) =>
