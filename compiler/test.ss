@@ -883,34 +883,6 @@ groups than for single tests.
                      (next-value (cdr v*))))))))]))
 )
 
-(with-parameter-values ([feature-zkir-v3 #f #t])
-(run-tests print-typescript
-  (test
-    '(
-      "ledger F: Uint<8>;"
-      "export circuit foo(x: Uint<32>): Uint<8> {"
-      "  if (disclose(x) < 256) {"
-      "    F = disclose(x) as Uint<8>;"
-      "  } else {"
-      "    F = 0;"
-      "  }"
-      "  return F;"
-      "}"
-      )
-    (stage-javascript
-      '(
-        "test('check 1', () => {"
-        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
-        "  expect(C.circuits.foo(Ctxt, 5n).result).toEqual(5n);"
-        "  expect(C.circuits.foo(Ctxt, 256n).result).toEqual(0n);"
-        "  });"
-        ))
-    )
-)
-(run-javascript)
-)
-#!eof
-
 (run-tests parse-file/format/reparse
   (test
     '(
@@ -81299,6 +81271,54 @@ groups than for single tests.
         "  expect(C.circuits.foo(Ctxt).result).toEqual([42n, 42n]);"
         "  expect(C.circuits.bar(Ctxt).result).toEqual([0n, 0n]);"
         "});"
+        ))
+    )
+
+  ; issue 226
+  (test
+    '(
+      "ledger F: Uint<8>;"
+      "export circuit foo(x: Uint<32>): Uint<8> {"
+      "  if (disclose(x) < 256) {"
+      "    F = disclose(x) as Uint<8>;"
+      "  } else {"
+      "    F = 0;"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, 5n).result).toEqual(5n);"
+        "  expect(C.circuits.foo(Ctxt, 256n).result).toEqual(0n);"
+        "  });"
+        ))
+    )
+
+  ; issue 226
+  (test
+    '(
+      "ledger F: Bytes<7>;"
+      "export circuit foo(b: Boolean, x: Field): Bytes<7> {"
+      "  if (disclose(b)) {"
+      "    F = disclose(x) as Bytes<7>;"
+      "  } else {"
+      "    F = default<Bytes<7>>;"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, false, 0x12345671234567n).result).toEqual(new Uint8Array([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]));"
+        "  expect(C.circuits.foo(Ctxt, false, 0x100000000000000n).result).toEqual(new Uint8Array([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]));"
+        "  expect(C.circuits.foo(Ctxt, true, 0x12345671234567n).result).toEqual(new Uint8Array([0x67, 0x45, 0x23, 0x71, 0x56, 0x34, 0x12]));"
+        "  expect(() => C.circuits.foo(Ctxt, true, 0x100000000000000n)).toThrow(runtime.CompactError);"
+        "  });"
         ))
     )
 )

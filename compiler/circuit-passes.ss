@@ -1879,6 +1879,9 @@
 
   (define-pass remove-implicit-asserts : Lnovectorref (ir) -> Lexplicit-asserts ()
     (Expression : Expression (ir) -> Expression ()
+; FIXME: remove this
+      #;[(downcast-unsigned ,src ,nat ,[expr])
+       `(downcast-unsigned ,src #f ,nat ,expr)]
       [(downcast-unsigned ,src ,nat ,[expr])
        (let ([t (make-temp-id src 't)]
              [q (make-temp-id src 'q)]
@@ -2521,12 +2524,21 @@
                     (let ([var-name^ (make-new-id var-name)])
                       (with-output-language (Lflattened Statement)
                         (cons*
+; FIXME: ignoring test
                           `(= ,var-name^ (== ,triv 0))
                           `(assert ,src ,var-name^ "bytes value is too big to fit in a field")
                           ls))))
                   (let-values ([(triv1 triv2) (apply values (list-tail triv* n))])
                     (with-output-language (Lflattened Statement)
-                      (list `(= ,var-name (bytes->field ,src ,test ,len ,triv1 ,triv2)))))
+                      (let ([t1 (make-temp-id src 't1)])
+                        (list
+#|
+; FIXME: special case test = 0, test = 1 (unless optimize-circuit takes care of that)
+                          `(= ,t1 (< ,(* (field-bytes) 8) ,triv 256))
+                          `(= ,t2 (select ,test ,t1 1))
+                          `(assert ,src ,t2 "bytes value is too big to fit in a field")
+|#
+                          `(= ,var-name (bytes->field ,src ,test ,len ,triv1 ,triv2))))))
                   (list-head triv* n)))])))]
       [(field->bytes ,src ,[Single-Triv : test] ,len ,[Single-Triv : triv])
        (assert (not (= len 0)))
@@ -2542,8 +2554,30 @@
                (if (fx<= len (field-bytes))
                    (list var-name2)
                    (f (- len (fx* 2 (field-bytes))) (list var-name1 var-name2))))))
-         (with-output-language (Lflattened Statement)
-           (list `(= (,var-name1 ,var-name2) (field->bytes ,src ,test ,len ,triv)))))]
+; FIXME: remove this
+         #;(with-output-language (Lflattened Statement)
+           (list
+             `(= (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv))))
+         (let ([var-name1^ (make-new-id var-name)]
+               [var-name2^ (make-new-id var-name)]
+               [t1 (make-temp-id src 't1)]
+               [t2 (make-temp-id src 't2)]
+               [t3 (make-temp-id src 't3)]
+               [t4 (make-temp-id src 't4)])
+           (with-output-language (Lflattened Statement)
+             (assert (= (* (field-bytes) 8) (unsigned-bits)))
+             (cons*
+               `(= (,var-name1^ ,var-name2^) (field->bytes ,src 1 ,(+ (field-bytes) 1) ,triv))
+               `(= ,var-name1 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin (fxmax 0 (fx- len (field-bytes))) (field-bytes)) 8)) 1)) ,var-name1^))
+               `(= ,var-name2 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin len (field-bytes)) 8)) 1)) ,var-name2^))
+               (if (> len (field-bytes))
+                   '()
+                   (list
+                     `(= ,t1 (== ,var-name1 0))
+                     `(= ,t2 (< ,(unsigned-bits) ,(- (expt 256 len) 1) ,var-name2))
+                     `(= ,t3 (select ,t2 0 ,t1))
+                     `(= ,t4 (select ,test ,t3 1))
+                     `(assert ,src ,t4 ,(format "field value is too large to fit in ~d bytes" len))))))))]
       [(div-mod-power-of-two ,[Single-Triv : triv] ,bits)
        (let ([var-name1 (make-new-id var-name)]
              [var-name2 (make-new-id var-name)])
