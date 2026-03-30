@@ -883,6 +883,92 @@ groups than for single tests.
                      (next-value (cdr v*))))))))]))
 )
 
+(run-tests print-typescript
+  ; issue 226
+  (let* ([len (field-bytes)]
+         [yes (- (expt 256 len) 1)]
+         [yes* (make-list len #xff)])
+  (test
+    `(
+      "ledger F: Field;"
+      ,(format "export circuit foo(b: Boolean, x: Bytes<~d>): Field {" len)
+      "  if (disclose(b)) {"
+      "    F = disclose(x) as Field;"
+      "  } else {"
+      "    F = default<Field>;"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      `(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        ,(format "  expect(C.circuits.foo(Ctxt, false, new Uint8Array([~{0x~x~^, ~}])).result).toEqual(0x~xn);" yes* 0)
+        ,(format "  expect(C.circuits.foo(Ctxt, true, new Uint8Array([~{0x~x~^, ~}])).result).toEqual(0x~xn);" yes* yes)
+        "  });"
+        ))
+    )
+  )
+
+  ; issue 226
+  (let* ([len (+ (field-bytes) 1)]
+         [yes (max-field)]
+         [yes* (let f ([yes yes] [len len]) (if (fx= len 0) '() (cons (modulo yes 256) (f (quotient yes 256) (fx- len 1)))))])
+  (test
+    `(
+      "ledger F: Field;"
+      ,(format "export circuit foo(b: Boolean, x: Bytes<~d>): Field {" len)
+      "  if (disclose(b)) {"
+      "    F = disclose(x) as Field;"
+      "  } else {"
+      "    F = default<Field>;"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      `(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        ,(format "  expect(C.circuits.foo(Ctxt, false, new Uint8Array([~{0x~x~^, ~}])).result).toEqual(0x~xn);" yes* 0)
+        ,(format "  expect(C.circuits.foo(Ctxt, true, new Uint8Array([~{0x~x~^, ~}])).result).toEqual(0x~xn);" yes* yes)
+        "  });"
+        ))
+    )
+  )
+
+  ; issue 226
+  (let* ([len (+ (field-bytes) 1)]
+         [yes (+ (max-field) 1)]
+         [yes* (let f ([yes yes] [len len]) (if (fx= len 0) '() (cons (modulo yes 256) (f (quotient yes 256) (fx- len 1)))))])
+  (test
+    `(
+      "ledger F: Field;"
+      ,(format "export circuit foo(b: Boolean, x: Bytes<~d>): Field {" len)
+      "  if (disclose(b)) {"
+      "    F = disclose(x) as Field;"
+      "  } else {"
+      "    F = default<Field>;"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      `(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        ,(format "  expect(C.circuits.foo(Ctxt, false, new Uint8Array([~{0x~x~^, ~}])).result).toEqual(0x~xn);" yes* 0)
+        ,(format "  expect(() => C.circuits.foo(Ctxt, true, new Uint8Array([~{0x~x~^, ~}]))).toThrow(runtime.CompactError);" yes*)
+        "  });"
+        ))
+    )
+  )
+)
+
+(run-javascript)
+#!eof
+
 (run-tests parse-file/format/reparse
   (test
     '(
@@ -81320,6 +81406,124 @@ groups than for single tests.
         "  expect(() => C.circuits.foo(Ctxt, true, 0x100000000000000n)).toThrow(runtime.CompactError);"
         "  });"
         ))
+    )
+
+  ; issue 226
+  (let* ([len 7]
+         [yes (- (expt 256 len) 1)]
+         [no (expt 256 len)]
+         [yes* (make-list len #xff)]
+         [zero* (make-list len 0)])
+  (test
+    `(
+      ,(format "ledger F: Bytes<~d>;" len)
+      ,(format "export circuit foo(b: Boolean, x: Field): Bytes<~d> {" len)
+      "  if (disclose(b)) {"
+      ,(format "    F = disclose(x) as Bytes<~d>;" len)
+      "  } else {"
+      ,(format "    F = default<Bytes<~d>>;" len)
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      `(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        ,(format "  expect(C.circuits.foo(Ctxt, false, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" yes zero*)
+        ,(format "  expect(C.circuits.foo(Ctxt, false, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" no zero*)
+        ,(format "  expect(C.circuits.foo(Ctxt, true, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" yes yes*)
+        ,(format "  expect(() => C.circuits.foo(Ctxt, true, 0x~xn)).toThrow(runtime.CompactError);" no)
+        "  });"
+        ))
+    )
+    )
+
+  ; issue 226
+  (let* ([len (field-bytes)]
+         [yes (- (expt 256 len) 1)]
+         [no (expt 256 len)]
+         [yes* (make-list len #xff)]
+         [zero* (make-list len 0)])
+  (test
+    `(
+      ,(format "ledger F: Bytes<~d>;" len)
+      ,(format "export circuit foo(b: Boolean, x: Field): Bytes<~d> {" len)
+      "  if (disclose(b)) {"
+      ,(format "    F = disclose(x) as Bytes<~d>;" len)
+      "  } else {"
+      ,(format "    F = default<Bytes<~d>>;" len)
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      `(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        ,(format "  expect(C.circuits.foo(Ctxt, false, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" yes zero*)
+        ,(format "  expect(C.circuits.foo(Ctxt, false, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" no zero*)
+        ,(format "  expect(C.circuits.foo(Ctxt, true, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" yes yes*)
+        ,(format "  expect(() => C.circuits.foo(Ctxt, true, 0x~xn)).toThrow(runtime.CompactError);" no)
+        "  });"
+        ))
+    )
+    )
+
+  ; issue 226
+  (let* ([len (+ (field-bytes) 1)]
+         [yes (max-field)]
+         [yes* (let f ([yes yes] [len len]) (if (fx= len 0) '() (cons (modulo yes 256) (f (quotient yes 256) (fx- len 1)))))]
+         [zero* (make-list len 0)])
+  (test
+    `(
+      ,(format "ledger F: Bytes<~d>;" len)
+      ,(format "export circuit foo(b: Boolean, x: Field): Bytes<~d> {" len)
+      "  if (disclose(b)) {"
+      ,(format "    F = disclose(x) as Bytes<~d>;" len)
+      "  } else {"
+      ,(format "    F = default<Bytes<~d>>;" len)
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      `(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        ,(format "  expect(C.circuits.foo(Ctxt, false, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" yes zero*)
+        ,(format "  expect(C.circuits.foo(Ctxt, true, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" yes yes*)
+        "  });"
+        ))
+    )
+    )
+
+  ; issue 226
+  (let* ([len (* (+ (field-bytes) 1) 2)]
+         [yes (max-field)]
+         [yes* (let f ([yes yes] [len len]) (if (fx= len 0) '() (cons (modulo yes 256) (f (quotient yes 256) (fx- len 1)))))]
+         [zero* (make-list len 0)])
+   (test
+     `(
+       ,(format "ledger F: Bytes<~d>;" len)
+       ,(format "export circuit foo(b: Boolean, x: Field): Bytes<~d> {" len)
+       "  if (disclose(b)) {"
+       ,(format "    F = disclose(x) as Bytes<~d>;" len)
+       "  } else {"
+       ,(format "    F = default<Bytes<~d>>;" len)
+       "  }"
+       "  return F;"
+       "}"
+       )
+     (stage-javascript
+       `(
+         "test('check 1', () => {"
+         "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+         ,(format "  expect(C.circuits.foo(Ctxt, false, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" yes zero*)
+         ,(format "  expect(C.circuits.foo(Ctxt, true, 0x~xn).result).toEqual(new Uint8Array([~{0x~x~^, ~}]));" yes yes*)
+         "  });"
+         ))
+     )
     )
 )
 
