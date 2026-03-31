@@ -48,7 +48,7 @@
   (Bytes 32))
 
 ;; ==== Other hashing circuits
-(declare-native-entry circuit keccakHash [A]
+(declare-native-entry circuit keccak256 [A]
   "__compactRuntime.keccak256"
   ([value A (discloses "a hash of")])
   (Bytes 32))
