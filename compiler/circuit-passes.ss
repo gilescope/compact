@@ -1880,9 +1880,9 @@
   (define-pass remove-implicit-asserts : Lnovectorref (ir) -> Lexplicit-asserts ()
     (Expression : Expression (ir) -> Expression ()
 ; FIXME: remove this
-      #;[(downcast-unsigned ,src ,nat ,[expr])
-       `(downcast-unsigned ,src #f ,nat ,expr)]
       [(downcast-unsigned ,src ,nat ,[expr])
+       `(downcast-unsigned ,src #f ,nat ,expr)]
+      #;[(downcast-unsigned ,src ,nat ,[expr])
        (let ([t (make-temp-id src 't)]
              [q (make-temp-id src 'q)]
              [r (make-temp-id src 'r)])
@@ -2529,26 +2529,31 @@
                           `(= ,t2 (select ,test ,t1 1)) 
                           `(assert ,src ,t2 "bytes value is too big to fit in a field")
                           ls))))
-                  (let-values ([(triv1 triv2) (apply values (list-tail triv* n))])
-                    (with-output-language (Lflattened Statement)
-                      (let ([t1 (make-temp-id src 't1)]
-                            [t2 (make-temp-id src 't2)]
-                            [t3 (make-temp-id src 't3)]
-                            [t4 (make-temp-id src 't4)]
-                            [t5 (make-temp-id src 't5)]
-                            [t6 (make-temp-id src 't6)]
-                            [t7 (make-temp-id src 't7)])
-                        (let-values ([(q r) (div-and-mod (max-field) (expt 256 (field-bytes)))])
-                          (list
-                            `(= ,t1 (< ,(unsigned-bits) ,triv1 ,q))
-                            `(= ,t2 (== ,triv1 ,q))
-                            `(= ,t3 (< ,(unsigned-bits) ,r ,triv2))
-                            `(= ,t4 (select ,t3 0 ,t2))
-                            `(= ,t5 (select ,t1 1 ,t4))
-                            `(= ,t6 (select ,test ,t5 1))
-                            `(assert ,src ,t6 "bytes value is too big to fit in a field")
-                            `(= ,t7 (select ,t5 ,triv1 0))
-                            `(= ,var-name (bytes->field ,src ,test ,len ,t7 ,triv2)))))))
+                  (if (eqv? test 1)
+                      (let-values ([(triv1 triv2) (apply values (list-tail triv* n))])
+                        (with-output-language (Lflattened Statement)
+                          (list `(= ,var-name (bytes->field ,src ,test ,len ,triv1 ,triv2)))))
+                      ; work around zkir implementations ignoring test
+                      (let-values ([(triv1 triv2) (apply values (list-tail triv* n))])
+                        (with-output-language (Lflattened Statement)
+                          (let ([t1 (make-temp-id src 't1)]
+                                [t2 (make-temp-id src 't2)]
+                                [t3 (make-temp-id src 't3)]
+                                [t4 (make-temp-id src 't4)]
+                                [t5 (make-temp-id src 't5)]
+                                [t6 (make-temp-id src 't6)]
+                                [t7 (make-temp-id src 't7)])
+                            (let-values ([(q r) (div-and-mod (max-field) (expt 256 (field-bytes)))])
+                              (list
+                                `(= ,t1 (< ,(unsigned-bits) ,triv1 ,q))
+                                `(= ,t2 (== ,triv1 ,q))
+                                `(= ,t3 (< ,(unsigned-bits) ,r ,triv2))
+                                `(= ,t4 (select ,t3 0 ,t2))
+                                `(= ,t5 (select ,t1 1 ,t4))
+                                `(= ,t6 (select ,test ,t5 1))
+                                `(assert ,src ,t6 "bytes value is too big to fit in a field")
+                                `(= ,t7 (select ,t5 ,triv1 0))
+                                `(= ,var-name (bytes->field ,src ,test ,len ,t7 ,triv2))))))))
                   (list-head triv* n)))])))]
       [(field->bytes ,src ,[Single-Triv : test] ,len ,[Single-Triv : triv])
        (assert (not (= len 0)))
@@ -2568,26 +2573,29 @@
          #;(with-output-language (Lflattened Statement)
            (list
              `(= (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv))))
-         (let ([var-name1^ (make-new-id var-name)]
-               [var-name2^ (make-new-id var-name)]
-               [t1 (make-temp-id src 't1)]
-               [t2 (make-temp-id src 't2)]
-               [t3 (make-temp-id src 't3)]
-               [t4 (make-temp-id src 't4)])
-           (with-output-language (Lflattened Statement)
-             (assert (= (* (field-bytes) 8) (unsigned-bits)))
-             (cons*
-               `(= (,var-name1^ ,var-name2^) (field->bytes ,src 1 ,(+ (field-bytes) 1) ,triv))
-               `(= ,var-name1 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin (fxmax 0 (fx- len (field-bytes))) (field-bytes)) 8)) 1)) ,var-name1^))
-               `(= ,var-name2 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin len (field-bytes)) 8)) 1)) ,var-name2^))
-               (if (> len (field-bytes))
-                   '()
-                   (list
-                     `(= ,t1 (== ,var-name1 0))
-                     `(= ,t2 (< ,(unsigned-bits) ,(- (expt 256 len) 1) ,var-name2))
-                     `(= ,t3 (select ,t2 0 ,t1))
-                     `(= ,t4 (select ,test ,t3 1))
-                     `(assert ,src ,t4 ,(format "field value is too large to fit in ~d bytes" len))))))))]
+         (with-output-language (Lflattened Statement)
+           (if (eqv? test 1)
+               (list `(= (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv)))
+               ; work around zkir implementations ignoring test
+               (let ([var-name1^ (make-new-id var-name)]
+                     [var-name2^ (make-new-id var-name)]
+                     [t1 (make-temp-id src 't1)]
+                     [t2 (make-temp-id src 't2)]
+                     [t3 (make-temp-id src 't3)]
+                     [t4 (make-temp-id src 't4)])
+                 (assert (= (* (field-bytes) 8) (unsigned-bits)))
+                 (cons*
+                   `(= (,var-name1^ ,var-name2^) (field->bytes ,src 1 ,(+ (field-bytes) 1) ,triv))
+                   `(= ,var-name1 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin (fxmax 0 (fx- len (field-bytes))) (field-bytes)) 8)) 1)) ,var-name1^))
+                   `(= ,var-name2 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin len (field-bytes)) 8)) 1)) ,var-name2^))
+                   (if (> len (field-bytes))
+                       '()
+                       (list
+                         `(= ,t1 (== ,var-name1 0))
+                         `(= ,t2 (< ,(unsigned-bits) ,(- (expt 256 len) 1) ,var-name2))
+                         `(= ,t3 (select ,t2 0 ,t1))
+                         `(= ,t4 (select ,test ,t3 1))
+                         `(assert ,src ,t4 ,(format "field value is too large to fit in ~d bytes" len)))))))))]
       [(div-mod-power-of-two ,[Single-Triv : triv] ,bits)
        (let ([var-name1 (make-new-id var-name)]
              [var-name2 (make-new-id var-name)])
@@ -2628,7 +2636,24 @@
       [(downcast-unsigned ,src ,safe ,[Single-Triv : test] ,nat ,[Single-Triv : triv])
        (hashtable-set! var-ht var-name (Wump-single var-name))
        (with-output-language (Lflattened Statement)
-         (list `(= ,var-name (downcast-unsigned ,src ,safe ,test ,nat ,triv))))]
+         (if (eqv? test 1) 
+             (list `(= ,var-name (downcast-unsigned ,src ,safe ,test ,nat ,triv)))
+             ; work around zkir implementations ignoring test
+             (let ([q (make-temp-id src 'q)]
+                   [r (make-temp-id src 'r)]
+                   [t1 (make-temp-id src 't1)]
+                   [t2 (make-temp-id src 't2)]
+                   [t3 (make-temp-id src 't3)]
+                   [t4 (make-temp-id src 't4)])
+               (list
+                 `(= (,q ,r) (div-mod-power-of-two ,triv ,(unsigned-bits)))
+                 `(= ,t1 (== ,q 0))
+                 `(= ,t2 (< ,(unsigned-bits) ,nat ,r))
+                 `(= ,t3 (select ,t2 0 ,t1))
+                 `(= ,t4 (select ,test ,t3 1))
+                 `(assert ,src ,t4 ,(format "downcast to Uint<0..~d> failed" nat))
+                 ; downcast-unsigned is used here with safe flag to make check-types/Lflattened happy
+                 `(= ,var-name (downcast-unsigned ,src #t ,test ,nat ,triv))))))]
       [(elt-ref ,[* wump] ,elt-name)
        (hashtable-set! var-ht var-name
          (Wump-case wump
