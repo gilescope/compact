@@ -2912,16 +2912,16 @@
        (parenthesize level (precedence *)
          ; infer-type guarantees that the result is in range via range analysis
          (make-Qconcat expr1 0 "*" 0 expr2))]
-      [(< ,src ,mbits ,[Expr : expr1 (precedence <) outer-pure? -> * expr1] ,[Expr : expr2 (precedence add1 <) outer-pure? -> * expr2])
+      [(< ,src ,bits ,[Expr : expr1 (precedence <) outer-pure? -> * expr1] ,[Expr : expr2 (precedence add1 <) outer-pure? -> * expr2])
        (parenthesize level (precedence <)
          (make-Qconcat expr1 0 "<" 0 expr2))]
-      [(<= ,src ,mbits ,[Expr : expr1 (precedence <=) outer-pure? -> * expr1] ,[Expr : expr2 (precedence add1 <=) outer-pure? -> * expr2])
+      [(<= ,src ,bits ,[Expr : expr1 (precedence <=) outer-pure? -> * expr1] ,[Expr : expr2 (precedence add1 <=) outer-pure? -> * expr2])
        (parenthesize level (precedence <=)
          (make-Qconcat expr1 0 "<=" 0 expr2))]
-      [(> ,src ,mbits ,[Expr : expr1 (precedence >) outer-pure? -> * expr1] ,[Expr : expr2 (precedence add1 >) outer-pure? -> * expr2])
+      [(> ,src ,bits ,[Expr : expr1 (precedence >) outer-pure? -> * expr1] ,[Expr : expr2 (precedence add1 >) outer-pure? -> * expr2])
        (parenthesize level (precedence >)
          (make-Qconcat expr1 0 ">" 0 expr2))]
-      [(>= ,src ,mbits ,[Expr : expr1 (precedence >=) outer-pure? -> * expr1] ,[Expr : expr2 (precedence add1 >=) outer-pure? -> * expr2])
+      [(>= ,src ,bits ,[Expr : expr1 (precedence >=) outer-pure? -> * expr1] ,[Expr : expr2 (precedence add1 >=) outer-pure? -> * expr2])
        (parenthesize level (precedence >=)
          (make-Qconcat expr1 0 ">=" 0 expr2))]
       [(== ,src ,type ,expr1 ,expr2)

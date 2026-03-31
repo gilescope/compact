@@ -47,9 +47,9 @@
         )
       [(elt-ref ,src ,[expr] ,elt-name ,nat) `(elt-ref ,src ,expr ,elt-name)]
       [(return ,src ,[expr]) expr]
-      [(<= ,src ,mbits ,[expr1] ,[expr2]) (do-not src `(< ,src ,mbits ,expr2 ,expr1))]
-      [(> ,src ,mbits ,[expr1] ,[expr2]) `(< ,src ,mbits ,expr2 ,expr1)]
-      [(>= ,src ,mbits ,[expr1] ,[expr2]) (do-not src `(< ,src ,mbits ,expr1 ,expr2))]
+      [(<= ,src ,bits ,[expr1] ,[expr2]) (do-not src `(< ,src ,bits ,expr2 ,expr1))]
+      [(> ,src ,bits ,[expr1] ,[expr2]) `(< ,src ,bits ,expr2 ,expr1)]
+      [(>= ,src ,bits ,[expr1] ,[expr2]) (do-not src `(< ,src ,bits ,expr1 ,expr2))]
       [(!= ,src ,[type] ,[expr1] ,[expr2]) (do-not src `(== ,src ,type ,expr1 ,expr2))]
       [(cast-from-bytes ,src ,type ,len ,[expr])
        (let ([expr `(bytes->field ,src ,len ,expr)])
@@ -746,7 +746,7 @@
        (arithmetic-binop src "-" mbits expr1 expr2)]
       [(* ,src ,mbits ,expr1 ,expr2)
        (arithmetic-binop src "*" mbits expr1 expr2)]
-      [(< ,src ,mbits ,expr1 ,expr2)
+      [(< ,src ,bits ,expr1 ,expr2)
        (let* ([type1 (Care expr1)] [type2 (Care expr2)])
          (or (T type1
                 [(tunsigned ,src1 ,nat1) (T type2 [(tunsigned ,src2 ,nat2) (= nat1 nat2)])])
@@ -755,11 +755,11 @@
                (source-errorf src "incompatible combination of types ~a and ~a for relational operator"
                               (format-type type1)
                               (format-type type2)))
-         (unless (eqv? (T type1 [(tunsigned ,src ,nat) (fxmax 1 (integer-length nat))]) mbits)
+         (unless (eqv? (T type1 [(tunsigned ,src ,nat) (fxmax 1 (integer-length nat))]) bits)
            ; the error message says "relational operator" here rather than "<" to avoid misleading
            ; type-mismatch messages for <=, >, and >=; which all get converted to < earlier in the compiler.
-           (source-errorf src "mismatched mbits ~s and type ~a for relational operator"
-                          mbits
+           (source-errorf src "mismatched bits ~s and type ~a for relational operator"
+                          bits
                           (format-type type1))))
        (with-output-language (Linlined Type) `(tboolean ,src))]
       [(== ,src ,type ,expr1 ,expr2)
@@ -1474,13 +1474,13 @@
              [(ifconstant ctv2 isone?) ctv1]
              [else #f]))
          (lambda (expr1 expr2) `(* ,src ,mbits ,expr1 ,expr2)))]
-      [(< ,src ,mbits ,expr1 ,expr2)
+      [(< ,src ,bits ,expr1 ,expr2)
        (handle-binop src < expr1 expr2
          (lambda (ctv1 ctv2)
            (cond
              [(same-var-name? ctv1 ctv2) (CTV-const no-var-name #f)]
              [else #f]))
-           (lambda (expr1 expr2) `(< ,src ,mbits ,expr1 ,expr2)))]
+           (lambda (expr1 expr2) `(< ,src ,bits ,expr1 ,expr2)))]
       [(== ,src ,[type] ,expr1 ,expr2)
        (handle-binop src equal? expr1 expr2
          (lambda (ctv1 ctv2)
@@ -1702,9 +1702,9 @@
        (values
          `(* ,src ,mbits ,expr1 ,expr2)
          (idset-union idset1 idset2))]
-      [(< ,src ,mbits ,[Value : expr1 idset1] ,[Value : expr2 idset2])
+      [(< ,src ,bits ,[Value : expr1 idset1] ,[Value : expr2 idset2])
        (values
-         `(< ,src ,mbits ,expr1 ,expr2)
+         `(< ,src ,bits ,expr1 ,expr2)
          (idset-union idset1 idset2))]
       [(== ,src ,type ,[Value : expr1 idset1] ,[Value : expr2 idset2])
        (values
@@ -1804,7 +1804,7 @@
        (values
          (make-seq #t src (list expr1) expr2)
          (idset-union idset1 idset2))]
-      [(< ,src ,mbits ,[Effect : expr1 idset1] ,[Effect : expr2 idset2])
+      [(< ,src ,bits ,[Effect : expr1 idset1] ,[Effect : expr2 idset2])
        (values
          (make-seq #t src (list expr1) expr2)
          (idset-union idset1 idset2))]
@@ -2058,13 +2058,13 @@
              (lambda (triv2)
                (k (with-output-language (Lcircuit Rhs)
                   `(* ,mbits ,triv1 ,triv2)))))))]
-      [(< ,src ,mbits ,expr1 ,expr2)
+      [(< ,src ,bits ,expr1 ,expr2)
        (Triv expr1 test
          (lambda (triv1)
            (Triv expr2 test
              (lambda (triv2)
                (k (with-output-language (Lcircuit Rhs)
-                  `(< ,mbits ,test ,triv1 ,triv2)))))))]
+                  `(< ,bits ,test ,triv1 ,triv2)))))))]
       [(== ,src ,type ,expr1 ,expr2)
        (Triv expr1 test
          (lambda (triv1)
@@ -2407,7 +2407,7 @@
        (hashtable-set! var-ht var-name (Wump-single var-name))
        (with-output-language (Lflattened Statement)
          (list `(= ,var-name (* ,mbits ,triv1 ,triv2))))]
-      [(< ,mbits ,[Single-Triv : test] ,[Single-Triv : triv1] ,[Single-Triv : triv2])
+      [(< ,bits ,[Single-Triv : test] ,[Single-Triv : triv1] ,[Single-Triv : triv2])
        (hashtable-set! var-ht var-name (Wump-single var-name))
        (with-output-language (Lflattened Statement)
          (let ([t1 (make-new-id var-name)]
@@ -2416,7 +2416,7 @@
              ; work around zkir implementations ignoring test
              `(= ,t1 (select ,test ,triv1 0))
              `(= ,t2 (select ,test ,triv2 0))
-             `(= ,var-name (< ,mbits ,t1 ,t2)))))]
+             `(= ,var-name (< ,bits ,t1 ,t2)))))]
       [(== ,[* wump1] ,[* wump2])
        (let ([triv1* (wump->elts wump1)] [triv2* (wump->elts wump2)])
          (assert (fx= (length triv1*) (length triv2*)))
@@ -2761,8 +2761,8 @@
              [(* ,mbits ,triv1 ,triv2) (* ,mbits^ ,triv1^ ,triv2^)
               (and (eqv? mbits mbits^)
                    (commutative-trivs-equal? triv1 triv1^ triv2 triv2^))]
-             [(< ,mbits ,triv1 ,triv2) (< ,mbits^ ,triv1^ ,triv2^)
-              (and (eqv? mbits mbits^)
+             [(< ,bits ,triv1 ,triv2) (< ,bits^ ,triv1^ ,triv2^)
+              (and (eqv? bits bits^)
                    (trivs-equal? triv1 triv1^ triv2 triv2^))]
              [(== ,triv1 ,triv2) (== ,triv1^ ,triv2^)
               (commutative-trivs-equal? triv1 triv1^ triv2 triv2^)]
@@ -2796,8 +2796,10 @@
           (fxlogxor (#3%fx+ (#3%fxsll hc 2) hc) k))
         (define (nat-hash nat hc)
           (update hc (if (fixnum? nat) nat (modulo nat (most-positive-fixnum)))))
+        (define (bits-hash bits hc)
+          (nat-hash bits hc))
         (define (mbits-hash mbits hc)
-          (if mbits (nat-hash mbits hc) (update hc 729589248)))
+          (if mbits (bits-hash mbits hc) (update hc 729589248)))
         (define (triv-hash triv hc)
           (nanopass-case (Lflattened Triv) triv
             [,var-name (update hc (id-uniq var-name))]
@@ -2810,7 +2812,7 @@
             [(+ ,mbits ,triv1 ,triv2) (mbits-hash mbits (commutative-triv-hash triv1 triv2 119001092))]
             [(- ,mbits ,triv1 ,triv2) (mbits-hash mbits (triv-hash triv1 (triv-hash triv2 410225874)))]
             [(* ,mbits ,triv1 ,triv2) (mbits-hash mbits (commutative-triv-hash triv1 triv2 513566316))]
-            [(< ,mbits ,triv1 ,triv2) (mbits-hash mbits (triv-hash triv1 (triv-hash triv2 730407)))]
+            [(< ,bits ,triv1 ,triv2) (bits-hash bits (triv-hash triv1 (triv-hash triv2 730407)))]
             [(== ,triv1 ,triv2) (commutative-triv-hash triv1 triv2 729589248)]
             [(select ,triv0 ,triv1 ,triv2)
              (triv-hash triv0
@@ -3114,9 +3116,9 @@
            [(_ ,triv ,nat)
             (or (and (eqv? nat 0) 0)
                 (and (eqv? nat 1) triv))]))]
-      [(< ,mbits ,triv1 ,triv2)
+      [(< ,bits ,triv1 ,triv2)
        (let ([< lessthan])
-         (fold2 < mbits triv1 triv2 #f
+         (fold2 < bits triv1 triv2 #f
            ; TODO: special-case
            ;  (< var-name 0)
            ;  (< var-name (+ var-name n>0))
@@ -3207,7 +3209,7 @@
             [(+ ,mbits ,triv1 ,triv2) #t]
             [(- ,mbits ,triv1 ,triv2) #t]
             [(* ,mbits ,triv1 ,triv2) #t]
-            [(< ,mbits ,triv1 ,triv2) #t]
+            [(< ,bits ,triv1 ,triv2) #t]
             [(== ,triv1 ,triv2) #t]
             [(select ,triv0 ,triv1 ,triv2) #t]
             [(bytes-ref ,triv ,nat) #t]
@@ -3264,7 +3266,7 @@
       [(+ ,mbits ,[BWD-Triv : triv1] ,[BWD-Triv : triv2]) `(+ ,mbits ,triv1 ,triv2)]
       [(- ,mbits ,[BWD-Triv : triv1] ,[BWD-Triv : triv2]) `(- ,mbits ,triv1 ,triv2)]
       [(* ,mbits ,[BWD-Triv : triv1] ,[BWD-Triv : triv2]) `(* ,mbits ,triv1 ,triv2)]
-      [(< ,mbits ,[BWD-Triv : triv1] ,[BWD-Triv : triv2]) `(< ,mbits ,triv1 ,triv2)]
+      [(< ,bits ,[BWD-Triv : triv1] ,[BWD-Triv : triv2]) `(< ,bits ,triv1 ,triv2)]
       [(== ,[BWD-Triv : triv1] ,[BWD-Triv : triv2]) `(== ,triv1 ,triv2)]
       [(select ,[BWD-Triv : triv0] ,[BWD-Triv : triv1] ,[BWD-Triv : triv2])
        `(select ,triv0 ,triv1 ,triv2)]
@@ -3593,14 +3595,13 @@
        (arithmetic-binop "-" mbits triv1 triv2)]
       [(* ,mbits ,triv1 ,triv2)
        (arithmetic-binop "*" mbits triv1 triv2)]
-      [(< ,mbits ,triv1 ,triv2)
+      [(< ,bits ,triv1 ,triv2)
        (let* ([type1 (Triv triv1)] [type2 (Triv triv2)])
          (let ([maybe-nat1 (check-tfield (format "first argument ~s to relational operator" triv1) type1)]
                [maybe-nat2 (check-tfield (format "second argument ~s to relational operator" triv2) type2)])
-           (unless (and mbits
-                        maybe-nat1
+           (unless (and maybe-nat1
                         maybe-nat2
-                        (<= (fxmax 1 (integer-length (max maybe-nat1 maybe-nat2))) mbits))
+                        (<= (fxmax 1 (integer-length (max maybe-nat1 maybe-nat2))) bits))
              (source-errorf program-src "incompatible types ~a and ~a for relational operator"
                 (format-primitive-type type1)
                 (format-primitive-type type2)))

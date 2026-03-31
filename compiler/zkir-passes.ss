@@ -727,8 +727,8 @@
            (set! ctr (add1 ctr))]
           [(* ,mbits ,[* triv1] ,[* triv2])
            (print-gate "mul" `[a ,triv1] `[b ,triv2])]
-          [(< ,mbits ,[* triv1] ,[* triv2])
-           (print-gate "less_than" `[a ,triv1] `[b ,triv2] `[bits ,mbits])]
+          [(< ,bits ,[* triv1] ,[* triv2])
+           (print-gate "less_than" `[a ,triv1] `[b ,triv2] `[bits ,bits])]
           [(== ,[* triv1] ,[* triv2])
            (print-gate "test_eq" `[a ,triv1] `[b ,triv2])]
           [(bytes-ref ,[* triv] ,nat)

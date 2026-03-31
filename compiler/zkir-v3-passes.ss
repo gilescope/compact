@@ -754,9 +754,9 @@
       [(* ,mbits ,triv0 ,triv1)
        (with-output-language (Lzkir Instruction)
          (cons `(mul ,var-name ,triv0 ,triv1) instr*))]
-      [(< ,mbits ,triv0 ,triv1)
+      [(< ,bits ,triv0 ,triv1)
        (with-output-language (Lzkir Instruction)
-         (cons `(less_than ,var-name ,triv0 ,triv1 ,mbits) instr*))]
+         (cons `(less_than ,var-name ,triv0 ,triv1 ,bits) instr*))]
       [(== ,triv0 ,triv1)
        (with-output-language (Lzkir Instruction)
          (cons `(test_eq ,var-name ,triv0 ,triv1) instr*))]
