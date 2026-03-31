@@ -344,6 +344,18 @@
                                   [(ty (,alignment* ...) (,primitive-type* ...)) (length primitive-type*)]))])
              (list ledger-op (apply + (type-length type) (map type-length type*))))])
         (Statement : Statement (ir) -> * (void)
+          [(= ,var-name (downcast-unsigned ,src ,safe ,[* test] ,nat ,[* triv]))
+           (unless safe
+             (constrain-type (with-output-language (Lflattened Primitive-Type)
+                                                   `(tfield ,nat))
+                             triv))
+           (if (id? triv)
+               (let ([index (var-idx triv)])
+                 (hashtable-set! varid-ht var-name index)
+                 index)
+               (begin
+                 (print-gate "copy" `[var ,triv])
+                 (new-var! var-name)))]
           [(= ,var-name ,single)
            (Single single)
            (new-var! var-name)]
@@ -361,9 +373,10 @@
                     (if (equal? test (hashtable-ref literal-ht 1 #f))
                         (print-gate "private_input" '[guard null])
                         (print-gate "private_input" `[guard ,test]))
-                    (let ([index (new-var! var type)])
-                      ; FIXME: the constraints implemented by this call to constrain-type
-                      ; should be conditional on test
+                    (let ([index (new-var! var)])
+                      ; NB: the public inputs are 0 if a conditionally executed witness
+                      ; call is not executed, and at present constrain_type is always
+                      ; okay with zero
                       (constrain-type type index)
                       index))
                   (assert (hashtable-ref returntype-ht function-name #f))
@@ -752,11 +765,7 @@
           ; NB: flatten-datatypes now implements a workaround that ensures
           ; downcast-unsigned's safe flag is #t whenever the test might be false.
           [(downcast-unsigned ,src ,safe ,[* test] ,nat ,[* triv])
-           (unless safe
-             (constrain-type (with-output-language (Lflattened Primitive-Type)
-                                                   `(tfield ,nat))
-                             triv))
-           (print-gate "copy" `[var ,triv])]
+           (assertf cannot-happen "handled directly by Statement")]
           [(select ,[* triv0] ,[* triv1] ,[* triv2])
            (print-gate "cond_select" `[bit ,triv0] `[a ,triv1] `[b ,triv2])])
         (Triv : Triv (ir) -> * (str)

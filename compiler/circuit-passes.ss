@@ -2064,7 +2064,7 @@
            (Triv expr2 test
              (lambda (triv2)
                (k (with-output-language (Lcircuit Rhs)
-                  `(< ,mbits ,triv1 ,triv2)))))))]
+                  `(< ,mbits ,test ,triv1 ,triv2)))))))]
       [(== ,src ,type ,expr1 ,expr2)
        (Triv expr1 test
          (lambda (triv1)
@@ -2407,10 +2407,16 @@
        (hashtable-set! var-ht var-name (Wump-single var-name))
        (with-output-language (Lflattened Statement)
          (list `(= ,var-name (* ,mbits ,triv1 ,triv2))))]
-      [(< ,mbits ,[Single-Triv : triv1] ,[Single-Triv : triv2])
+      [(< ,mbits ,[Single-Triv : test] ,[Single-Triv : triv1] ,[Single-Triv : triv2])
        (hashtable-set! var-ht var-name (Wump-single var-name))
        (with-output-language (Lflattened Statement)
-         (list `(= ,var-name (< ,mbits ,triv1 ,triv2))))]
+         (let ([t1 (make-new-id var-name)]
+               [t2 (make-new-id var-name)])
+           (list
+             ; work around zkir implementations ignoring test
+             `(= ,t1 (select ,test ,triv1 0))
+             `(= ,t2 (select ,test ,triv2 0))
+             `(= ,var-name (< ,mbits ,t1 ,t2)))))]
       [(== ,[* wump1] ,[* wump2])
        (let ([triv1* (wump->elts wump1)] [triv2* (wump->elts wump2)])
          (assert (fx= (length triv1*) (length triv2*)))
@@ -2539,7 +2545,7 @@
            (list
              `(= (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv))))
          (with-output-language (Lflattened Statement)
-           (if (eqv? test 1)
+           (if (or (eqv? test 1) (> len (field-bytes)))
                (list `(= (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv)))
                ; work around zkir implementations ignoring test
                (let ([var-name1^ (make-new-id var-name)]
@@ -2549,19 +2555,16 @@
                      [t3 (make-temp-id src 't3)]
                      [t4 (make-temp-id src 't4)])
                  (assert (= (* (field-bytes) 8) (unsigned-bits)))
-                 (cons*
+                 (list
                    `(= (,var-name1^ ,var-name2^) (field->bytes ,src 1 ,(+ (field-bytes) 1) ,triv))
                     ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
                    `(= ,var-name1 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin (fxmax 0 (fx- len (field-bytes))) (field-bytes)) 8)) 1)) ,var-name1^))
                    `(= ,var-name2 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin len (field-bytes)) 8)) 1)) ,var-name2^))
-                   (if (> len (field-bytes))
-                       '()
-                       (list
-                         `(= ,t1 (== ,var-name1 0))
-                         `(= ,t2 (< ,(unsigned-bits) ,(- (expt 256 len) 1) ,var-name2))
-                         `(= ,t3 (select ,t2 0 ,t1))
-                         `(= ,t4 (select ,test ,t3 1))
-                         `(assert ,src ,t4 ,(format "field value is too large to fit in ~d bytes" len)))))))))]
+                   `(= ,t1 (== ,var-name1 0))
+                   `(= ,t2 (< ,(unsigned-bits) ,(- (expt 256 len) 1) ,var-name2))
+                   `(= ,t3 (select ,t2 0 ,t1))
+                   `(= ,t4 (select ,test ,t3 1))
+                   `(assert ,src ,t4 ,(format "field value is too large to fit in ~d bytes" len)))))))]
       [(bytes->vector ,len ,[* wump])
        (let loop ([len len] [triv* (reverse (wump->elts wump))] [rvar-name** '()] [stmt* '()])
          (if (fx= len 0)

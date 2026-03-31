@@ -70,6 +70,9 @@
                   `(private_input ,(type->string primitive-type) ,var-name ,test)))
             (fold-left
               (lambda (instr* var-name primitive-type)
+                ; NB: the public inputs are 0 if a conditionally executed witness
+                ; call is not executed, and at present constrain_type is always
+                ; okay with zero
                 (emit-constraints-for var-name primitive-type
                   (cons (make-private-input var-name primitive-type) instr*)))
               instr* var-name* primitive-type*))))
@@ -670,6 +673,9 @@
          (cons `(decode "Point<Jubjub>" ,var-name 0 1) instr*))]
       [(= (,var-name0 ,var-name1) (field->bytes ,src ,test ,len ,triv))
        ;; TODO(kmillikin): this needs to respect test because `constrain_bits` can fail.
+       ;; NB: flatten-datatypes now implements a workaround that ensures
+       ;; field->bytes receives a large enough length that it won't produce
+       ;; constrain_bits when the test might be false
        (with-output-language (Lzkir Instruction)
          (if (<= len (field-bytes))
              (cons*
@@ -768,6 +774,9 @@
              instr*)))]
       [(bytes->field ,src ,test ,len ,triv0 ,triv1)
        ;; TODO(kmillikin): This should respect test and be conditional in the ZKIR output.
+       ;; NB: flatten-datatypes now implements a workaround that ensures
+       ;; bytes->field receives inputs that can't cause reconstitute_field
+       ;; to fail when test turns out to be false
        (with-output-language (Lzkir Instruction)
          ;; flatten-datatype takes care of this case.
          (assert (> len (field-bytes)))
@@ -782,9 +791,14 @@
                                  (values (car triv+) instr*)
                                  (let ([div (make-temp-id default-src 'div)])
                                    (values div (recur div (car triv+) (cdr triv+) instr*))))])
+                   ; TODO: use of reconstitute_field should be conditioned on test
+                   ; NB: flatten-datatypes now implements a workaround that ensures
+                   ; vector->bytes gets valid inputs when test turns out to be false
                    (cons `(reconstitute_field ,result ,div ,current ,8) instr*)))))]
       [(downcast-unsigned ,src ,safe ,test ,nat ,triv)
        ;; TODO(kmillikin): This needs to be conditional on test.
+       ;; NB: flatten-datatypes now implements a workaround that ensures
+       ;; downcast-unsigned's safe flag is #t whenever the test might be false.
        (with-output-language (Lzkir Instruction)
          ;; TODO(kmillikin): The `copy` here is unnecessary.  Remove it.
          (cons `(copy ,var-name ,triv)
