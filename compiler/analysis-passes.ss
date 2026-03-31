@@ -3063,7 +3063,7 @@
                 [(tunsigned ,src1 ,nat1)
                  (T type^
                     [(tfield ,src2)
-                     `(downcast-unsigned ,src ,nat1 ,expr)]
+                     `(field->unsigned ,src ,nat1 ,expr)]
                     [(tunsigned ,src2 ,nat2)
                      (assert (> nat2 nat1))
                      `(downcast-unsigned ,src ,nat1 ,expr)]
@@ -4066,9 +4066,15 @@
                         len
                         (format-type type)))
        (with-output-language (Lnodca Type) `(tbytes ,src ,len))]
-      [(downcast-unsigned ,src ,nat ,[Care : expr -> * type])
+      [(field->unsigned ,src ,nat ,[Care : expr -> * type])
        (unless (nanopass-case (Lnodca Type) (de-alias type)
                  [(tfield ,src) #t]
+                 [else #f])
+         (source-errorf src "expected Field, got ~a for field->unsigned"
+                              (format-type type)))
+       (with-output-language (Lnodca Type) `(tunsigned ,src ,nat))]
+      [(downcast-unsigned ,src ,nat ,[Care : expr -> * type])
+       (unless (nanopass-case (Lnodca Type) (de-alias type)
                  [(tunsigned ,src ,nat) #t]
                  [else #f])
          (source-errorf src "expected Uint, got ~a for downcast-unsigned"
@@ -5504,6 +5510,7 @@
       [(field->bytes ,src ,len ,[* abs]) abs]
       [(bytes->vector ,src ,len ,[* abs]) (Abs-single (Abs-atomic (abs->witnesses abs)))]
       [(vector->bytes ,src ,len ,[* abs]) (Abs-atomic (abs->witnesses abs))]
+      [(field->unsigned ,src ,nat ,[* abs]) abs]
       [(downcast-unsigned ,src ,nat ,[* abs]) abs]
       [(safe-cast ,src ,type ,type^ ,[* abs]) abs]
 

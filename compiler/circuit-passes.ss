@@ -54,7 +54,7 @@
       [(cast-from-bytes ,src ,type ,len ,[expr])
        (let ([expr `(bytes->field ,src ,len ,expr)])
          (nanopass-case (Lnodisclose Type) type
-           [(tunsigned ,src ,nat) `(downcast-unsigned ,src ,nat ,expr)]
+           [(tunsigned ,src ,nat) `(field->unsigned ,src ,nat ,expr)]
            [else expr]))])
     (Type : Type (ir) -> Type ()
       [,tvar-name (assert cannot-happen)]
@@ -94,7 +94,7 @@
                        [(tunsigned ,src ,nat) nat]
                        [else (assert cannot-happen)])])
          (nanopass-case (Lnoenums Type) type^
-           [(tfield ,src^) `(downcast-unsigned ,src ,maxval ,expr)]
+           [(tfield ,src^) `(field->unsigned ,src ,maxval ,expr)]
            [(tunsigned ,src^ ,nat)
             (cond
               [(> nat maxval) `(downcast-unsigned ,src ,maxval ,expr)]
@@ -937,12 +937,18 @@
                         len
                         (format-type type)))
        (with-output-language (Linlined Type) `(tbytes ,src ,len))]
-      [(downcast-unsigned ,src ,nat ,[Care : expr -> * type])
+      [(field->unsigned ,src ,nat ,[Care : expr -> * type])
        (unless (nanopass-case (Linlined Type) type
                  [(tfield ,src) #t]
+                 [else #f])
+         (source-errorf src "expected Field, got ~a for field->unsigned"
+                              (format-type type)))
+       (with-output-language (Linlined Type) `(tunsigned ,src ,nat))]
+      [(downcast-unsigned ,src ,nat ,[Care : expr -> * type])
+       (unless (nanopass-case (Linlined Type) type
                  [(tunsigned ,src ,nat) #t]
                  [else #f])
-         (source-errorf src "expected Field or Uint, got ~a for downcast-unsigned"
+         (source-errorf src "expected Uint, got ~a for downcast-unsigned"
                               (format-type type)))
        (with-output-language (Linlined Type) `(tunsigned ,src ,nat))]
       [(safe-cast ,src ,type ,type^ ,[Care : expr -> * type^^])
@@ -1548,6 +1554,16 @@
          [else (values
                  `(bytes->vector ,src ,len ,expr)
                  (CTV-unknown no-var-name))])]
+      [(field->unsigned ,src ,nat ,[expr ctv])
+       (cond
+         [(ifconstant ctv (lambda (datum) (and (<= datum nat) datum))) =>
+          (lambda (datum)
+            (values
+              `(seq ,src ,expr (quote ,src ,datum))
+              ctv))]
+         [else (values
+                 `(field->unsigned ,src ,nat ,expr)
+                 (CTV-unknown no-var-name))])]
       [(downcast-unsigned ,src ,nat ,[expr ctv])
        (cond
          [(ifconstant ctv (lambda (datum) (and (<= datum nat) datum))) =>
@@ -1738,6 +1754,10 @@
        (values
          `(bytes->vector ,src ,len ,expr)
          idset)]
+      [(field->unsigned ,src ,nat ,[Value : expr idset])
+       (values
+         `(field->unsigned ,src ,nat ,expr)
+         idset)]
       [(downcast-unsigned ,src ,nat ,[Value : expr idset])
        (values
          `(downcast-unsigned ,src ,nat ,expr)
@@ -1834,6 +1854,11 @@
        (Effect expr)]
       [(bytes->vector ,src ,len ,expr)
        (Effect expr)]
+      [(field->unsigned ,src ,nat ,expr)
+       (let-values ([(expr idset) (Value expr)])
+         (values
+           `(field->unsigned ,src ,nat ,expr)
+           idset))]
       [(downcast-unsigned ,src ,nat ,expr)
        (let-values ([(expr idset) (Value expr)])
          (values
@@ -2122,6 +2147,11 @@
          (lambda (triv)
            (k (with-output-language (Lcircuit Rhs)
               `(vector->bytes ,test ,len ,triv)))))]
+      [(field->unsigned ,src ,nat ,expr)
+       (Triv expr test
+         (lambda (triv)
+           (k (with-output-language (Lcircuit Rhs)
+                `(field->unsigned ,src ,test ,nat ,triv)))))]
       [(downcast-unsigned ,src ,nat ,expr)
        (Triv expr test
          (lambda (triv)
@@ -2603,7 +2633,7 @@
                              `(= ,this-var-name (vector->bytes ,(car t*) ,(cdr t*) ...))
                              stmt*)
                            t* this-triv*)))))))]
-      [(downcast-unsigned ,src ,[Single-Triv : test] ,nat ,[Single-Triv : triv])
+      [(field->unsigned ,src ,[Single-Triv : test] ,nat ,[Single-Triv : triv])
        (hashtable-set! var-ht var-name (Wump-single var-name))
        (with-output-language (Lflattened Statement)
          (if (eqv? test 1) 
@@ -2614,12 +2644,38 @@
                    [t1 (make-temp-id src 't1)]
                    [t2 (make-temp-id src 't2)]
                    [t3 (make-temp-id src 't3)]
+                   [t4 (make-temp-id src 't4)]
+                   [bits (max 1 (integer-length nat))])
+               (cons*
+                 `(= (,q ,r) (div-mod-power-of-two ,triv ,bits))
+                 `(= ,t1 (== ,q 0))
+                 (let ([tail (list
+                               `(assert ,src ,t4 ,(format "downcast to Uint<0..~d> failed" nat))
+                               ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
+                               `(= ,var-name (downcast-unsigned ,src #t ,test ,nat ,triv)))])
+                   (if (= nat (- (expt 2 bits) 1))
+                       (cons
+                         `(= ,t4 (select ,test ,t1 1))
+                         tail)
+                       (cons*
+                         `(= ,t2 (< ,bits ,nat ,r))
+                         `(= ,t3 (select ,t2 0 ,t1))
+                         `(= ,t4 (select ,test ,t3 1))
+                         tail)))))))]
+      [(downcast-unsigned ,src ,[Single-Triv : test] ,nat ,[Single-Triv : triv])
+       (hashtable-set! var-ht var-name (Wump-single var-name))
+       (with-output-language (Lflattened Statement)
+         (if (eqv? test 1) 
+             (list `(= ,var-name (downcast-unsigned ,src #f ,test ,nat ,triv)))
+             ; work around zkir implementations ignoring test
+             (let ([t1 (make-temp-id src 't1)]
+                   [t2 (make-temp-id src 't2)]
+                   [t3 (make-temp-id src 't3)]
                    [t4 (make-temp-id src 't4)])
                (list
-                 `(= (,q ,r) (div-mod-power-of-two ,triv ,(unsigned-bits)))
-                 `(= ,t1 (== ,q 0))
-                 `(= ,t2 (< ,(unsigned-bits) ,nat ,r))
-                 `(= ,t3 (select ,t2 0 ,t1))
+                 `(= ,t1 (select ,test ,triv 0))
+                 `(= ,t2 (< ,(unsigned-bits) ,nat ,t1))
+                 `(= ,t3 (select ,t2 0 1))
                  `(= ,t4 (select ,test ,t3 1))
                  `(assert ,src ,t4 ,(format "downcast to Uint<0..~d> failed" nat))
                  ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy

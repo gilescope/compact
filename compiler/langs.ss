@@ -718,6 +718,7 @@
       (cast-from-enum src type type^ expr)    => (cast-from-enum type type^ #f expr) ; type is tfield or tunsigned, type^ is tenum
       (cast-to-enum src type type^ expr)      => (cast-to-enum type type^ #f expr) ; type is tenum, type^ is tfield or tunsigned
       (safe-cast src type type^ expr)         => (safe-cast type 10 type^ #f expr)
+      (field->unsigned src nat expr)          => (field->unsigned nat #f expr)
       (downcast-unsigned src nat expr)        => (downcast-unsigned nat #f expr)
       (disclose src expr)                     => (disclose expr)
       (ledger-call src ledger-op (maybe sugar) expr expr* ...) =>
@@ -1031,6 +1032,7 @@
         (contract-call test elt-name 4 (triv 0 type) #f triv* ...)
       (field->bytes src test len triv)        => (field->bytes test len triv)
       (bytes->field src test len triv)        => (bytes->field test len triv)
+      (field->unsigned src test nat triv)     => (field->unsigned test nat triv)
       (downcast-unsigned src test nat triv)   => (downcast-unsigned test nat triv))
     (Triv (triv test)
       var-name
@@ -1113,6 +1115,7 @@
          (contract-call src test elt-name (triv type) triv* ...)
          (field->bytes src test len triv)
          (bytes->field src test len triv)
+         (field->unsigned src test nat triv)
          (downcast-unsigned src test nat triv)))
     (Single (single)
       (+ triv

@@ -883,15 +883,138 @@ groups than for single tests.
                      (next-value (cdr v*))))))))]))
 )
 
-#|
 (with-parameter-values ([feature-zkir-v3 #f #t])
 (run-tests print-typescript
+  ; issue 226
+  (test
+    '(
+      "export circuit foo(x: Uint<32>): Uint<8> {"
+      "  if (disclose(x) == 0) {"
+      "    return disclose(x) as Uint<0..1>;"
+      "  } else {"
+      "    return 7;"
+      "  }"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, 0n).result).toEqual(0n);"
+        "  expect(C.circuits.foo(Ctxt, 5n).result).toEqual(7n);"
+        "  });"
+        ))
+    )
+
+  ; issue 226
+  (test
+    '(
+      "ledger F: Uint<8>;"
+      "export circuit foo(x: Uint<32>): Uint<8> {"
+      "  if (disclose(x) == 0) {"
+      "    F = disclose(x) as Uint<0..1>;"
+      "  } else {"
+      "    F = 7;"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, 0n).result).toEqual(0n);"
+        "  expect(C.circuits.foo(Ctxt, 5n).result).toEqual(7n);"
+        "  });"
+        ))
+    )
+
+  ; issue 226
+  (test
+    '(
+      "ledger F: Uint<0..2>;"
+      "export circuit foo(x: Uint<32>): Uint<8> {"
+      "  if (disclose(x) == 0) {"
+      "    F = disclose(x) as Uint<0..1>;"
+      "  } else {"
+      "    F = 1;"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, 0n).result).toEqual(0n);"
+        "  expect(C.circuits.foo(Ctxt, 5n).result).toEqual(1n);"
+        "  });"
+        ))
+    )
+
+  ; issue 226
+  (test
+    '(
+      "ledger F: Uint<0..1>;"
+      "export circuit foo(x: Uint<0..1>): Uint<8> {"
+      "  F = disclose(x);"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, 0n).result).toEqual(0n);"
+        "  });"
+        ))
+    )
+
+  ; issue 226
+  (test
+    '(
+      "ledger F: Uint<0..1>;"
+      "export circuit foo(x: Uint<32>): Uint<8> {"
+      "  F = disclose(x) as Uint<0..1>;"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, 0n).result).toEqual(0n);"
+        "  expect(() => C.circuits.foo(Ctxt, 5n)).toThrow(runtime.CompactError);"
+        "  });"
+        ))
+    )
+
+  ; issue 226
+  (test
+    '(
+      "ledger F: Uint<0..1>;"
+      "export circuit foo(x: Uint<32>): Uint<8> {"
+      "  if (disclose(x) == 0) {"
+      "    F = disclose(x) as Uint<0..1>;"
+      "  } else {"
+      "    F = 0;"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, 0n).result).toEqual(0n);"
+        "  expect(C.circuits.foo(Ctxt, 5n).result).toEqual(0n);"
+        "  });"
+        ))
+    )
 )
 
 (run-javascript)
 )
-#!eof
-|#
 
 (run-tests parse-file/format/reparse
   (test
