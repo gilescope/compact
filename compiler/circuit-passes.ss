@@ -1877,42 +1877,12 @@
       [(public-ledger ,src ,ledger-field-name ,sugar? (,path-elt* ...) ,src^ ,adt-op ,[expr*] ...)
        (raise 'ledger)]))
 
-  (define-pass remove-implicit-asserts : Lnovectorref (ir) -> Lexplicit-asserts ()
-    (Expression : Expression (ir) -> Expression ()
-; FIXME: remove this
-      [(downcast-unsigned ,src ,nat ,[expr])
-       `(downcast-unsigned ,src #f ,nat ,expr)]
-      #;[(downcast-unsigned ,src ,nat ,[expr])
-       (let ([t (make-temp-id src 't)]
-             [q (make-temp-id src 'q)]
-             [r (make-temp-id src 'r)])
-         ; FIXME: bits might should be the lowest power of two not less than nat
-         (let* ([bits (unsigned-bits)]
-                [max-r (- (expt 2 (unsigned-bits)) 1)])
-           `(let* ,src ([[,t (ttuple ,src (tfield ,src) (tfield ,src))]
-                         (div-mod-power-of-two ,src ,expr ,bits)]
-                        [[,q (tfield ,src)] (tuple-ref ,src (var-ref ,src ,t) 0)]
-                        [[,r (tunsigned ,src ,max-r)] (tuple-ref ,src (var-ref ,src ,t) 1)])
-              (seq ,src
-                (assert ,src
-                  (if ,src
-                      (== ,src (tfield ,src) (var-ref ,src ,q) (quote ,src 0))
-                      (if ,src
-                          (< ,src ,bits (quote ,src ,nat) (var-ref ,src ,r))
-                          (quote ,src #f)
-                          (quote ,src #t))
-                      (quote ,src #f))
-                  ,(format "downcast to Uint<0..~d> failed" nat))
-                ; FIXME: downcast-unsigned should be marked safe; it's just here
-                ; to make check-types/Lflattened happy
-                (downcast-unsigned ,src #t ,nat (var-ref ,src ,r))))))]))
-
-  (define-pass reduce-to-circuit : Lexplicit-asserts (ir) -> Lcircuit ()
+  (define-pass reduce-to-circuit : Lnovectorref (ir) -> Lcircuit ()
     (definitions
       (define fun-ht (make-eq-hashtable))
       (define default-src)
       (define (arg->name arg)
-        (nanopass-case (Lexplicit-asserts Argument) arg
+        (nanopass-case (Lnovectorref Argument) arg
           [(,var-name ,type) var-name]))
       (define (Triv expr test k)
         (Rhs expr test
@@ -1933,7 +1903,7 @@
                   (f (cdr expr*) (cons triv rtriv*)))))))
       (define (Tuple-Argument tuple-arg test k)
         (with-output-language (Lcircuit Tuple-Argument)
-          (nanopass-case (Lexplicit-asserts Tuple-Argument) tuple-arg
+          (nanopass-case (Lnovectorref Tuple-Argument) tuple-arg
             [(single ,src ,expr)
              (Triv expr test
                (lambda (triv)
@@ -1954,7 +1924,7 @@
           (if (null? path-elt*)
               (k (reverse rpath-elt*))
               (let ([path-elt (car path-elt*)] [path-elt* (cdr path-elt*)])
-                (nanopass-case (Lexplicit-asserts Path-Element) path-elt
+                (nanopass-case (Lnovectorref Path-Element) path-elt
                   [,path-index (f path-elt* (cons path-index rpath-elt*))]
                   [(,src ,type ,expr)
                    (Triv expr test
@@ -1989,7 +1959,7 @@
       [(let* ,src ([,local* ,expr*] ...) ,expr)
        (fold-right
          (lambda (local expr stmt*)
-           (nanopass-case (Lexplicit-asserts Argument) local
+           (nanopass-case (Lnovectorref Argument) local
              [(,var-name ,type)
               (Rhs expr test
                 (lambda (rhs)
@@ -2036,7 +2006,7 @@
        (let f ([local* local*] [expr* expr*])
          (if (null? local*)
              (Rhs expr test k)
-             (nanopass-case (Lexplicit-asserts Argument) (car local*)
+             (nanopass-case (Lnovectorref Argument) (car local*)
                [(,var-name ,type)
                 (Rhs (car expr*) test
                   (lambda (rhs)
@@ -2152,16 +2122,11 @@
          (lambda (triv)
            (k (with-output-language (Lcircuit Rhs)
               `(vector->bytes ,len ,triv)))))]
-      [(downcast-unsigned ,src ,safe ,nat ,expr)
+      [(downcast-unsigned ,src ,nat ,expr)
        (Triv expr test
          (lambda (triv)
            (k (with-output-language (Lcircuit Rhs)
-                `(downcast-unsigned ,src ,safe ,test ,nat ,triv)))))]
-      [(div-mod-power-of-two ,src ,expr ,bits)
-       (Triv expr test
-         (lambda (triv)
-           (k (with-output-language (Lcircuit Rhs)
-                `(div-mod-power-of-two ,triv ,bits)))))]
+                `(downcast-unsigned ,src ,test ,nat ,triv)))))]
       [(public-ledger ,src ,ledger-field-name ,sugar? (,path-elt* ...) ,src^ ,[adt-op] ,expr* ...)
        (Path-Element* path-elt* test
          (lambda (path-elt*)
@@ -2586,6 +2551,7 @@
                  (assert (= (* (field-bytes) 8) (unsigned-bits)))
                  (cons*
                    `(= (,var-name1^ ,var-name2^) (field->bytes ,src 1 ,(+ (field-bytes) 1) ,triv))
+                    ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
                    `(= ,var-name1 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin (fxmax 0 (fx- len (field-bytes))) (field-bytes)) 8)) 1)) ,var-name1^))
                    `(= ,var-name2 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin len (field-bytes)) 8)) 1)) ,var-name2^))
                    (if (> len (field-bytes))
@@ -2596,15 +2562,6 @@
                          `(= ,t3 (select ,t2 0 ,t1))
                          `(= ,t4 (select ,test ,t3 1))
                          `(assert ,src ,t4 ,(format "field value is too large to fit in ~d bytes" len)))))))))]
-      [(div-mod-power-of-two ,[Single-Triv : triv] ,bits)
-       (let ([var-name1 (make-new-id var-name)]
-             [var-name2 (make-new-id var-name)])
-         (hashtable-set! var-ht var-name
-           (Wump-vector
-             (list (Wump-single var-name1)
-                   (Wump-single var-name2))))
-         (with-output-language (Lflattened Statement)
-           (list `(= (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)))))]
       [(bytes->vector ,len ,[* wump])
        (let loop ([len len] [triv* (reverse (wump->elts wump))] [rvar-name** '()] [stmt* '()])
          (if (fx= len 0)
@@ -2633,11 +2590,11 @@
                        (with-output-language (Lflattened Statement)
                          (cons `(= ,this-var-name (vector->bytes ,(car this-var-name*) ,(cdr this-var-name*) ...))
                                stmt*)))))))]
-      [(downcast-unsigned ,src ,safe ,[Single-Triv : test] ,nat ,[Single-Triv : triv])
+      [(downcast-unsigned ,src ,[Single-Triv : test] ,nat ,[Single-Triv : triv])
        (hashtable-set! var-ht var-name (Wump-single var-name))
        (with-output-language (Lflattened Statement)
          (if (eqv? test 1) 
-             (list `(= ,var-name (downcast-unsigned ,src ,safe ,test ,nat ,triv)))
+             (list `(= ,var-name (downcast-unsigned ,src #f ,test ,nat ,triv)))
              ; work around zkir implementations ignoring test
              (let ([q (make-temp-id src 'q)]
                    [r (make-temp-id src 'r)]
@@ -2652,7 +2609,7 @@
                  `(= ,t3 (select ,t2 0 ,t1))
                  `(= ,t4 (select ,test ,t3 1))
                  `(assert ,src ,t4 ,(format "downcast to Uint<0..~d> failed" nat))
-                 ; downcast-unsigned is used here with safe flag to make check-types/Lflattened happy
+                 ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
                  `(= ,var-name (downcast-unsigned ,src #t ,test ,nat ,triv))))))]
       [(elt-ref ,[* wump] ,elt-name)
        (hashtable-set! var-ht var-name
@@ -3709,7 +3666,6 @@
     (resolve-indices/simplify        Lnovectorref)
     (discard-useless-code            Lnovectorref)
     (prune-unnecessary-circuits      Lnovectorref)
-    (remove-implicit-asserts         Lexplicit-asserts)
     (reduce-to-circuit               Lcircuit)
     (flatten-datatypes               Lflattened)
     (optimize-circuit                Lflattened))
