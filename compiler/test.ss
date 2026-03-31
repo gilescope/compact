@@ -883,6 +883,16 @@ groups than for single tests.
                      (next-value (cdr v*))))))))]))
 )
 
+#|
+(with-parameter-values ([feature-zkir-v3 #f #t])
+(run-tests print-typescript
+)
+
+(run-javascript)
+)
+#!eof
+|#
+
 (run-tests parse-file/format/reparse
   (test
     '(
@@ -81596,6 +81606,29 @@ groups than for single tests.
         ))
     )
   )
+
+  ; issue 226
+  (test
+    '(
+      "ledger F: Bytes<7>;"
+      "export circuit foo(b: Boolean, v: Vector<7, Uint<8>>): Bytes<7> {"
+      "  if (disclose(b)) {"
+      "    F = disclose(v) as Bytes<7>;"
+      "  } else {"
+      "    F = Bytes[1,2,3,4,5,6,7];"
+      "  }"
+      "  return F;"
+      "}"
+      )
+    (stage-javascript
+      '(
+        "test('check 1', () => {"
+        "  const [C, Ctxt] = startContract(contractCode, {}, 0);"
+        "  expect(C.circuits.foo(Ctxt, true, [0x12n, 0x34n, 0x56n, 0x78n, 0x91n, 0x23n, 0x45n]).result).toEqual(new Uint8Array([0x12, 0x34, 0x56, 0x78, 0x91, 0x23, 0x45]));"
+        "  expect(C.circuits.foo(Ctxt, false, [0x12n, 0x34n, 0x56n, 0x78n, 0x91n, 0x23n, 0x45n]).result).toEqual(new Uint8Array([1,2,3,4,5,6,7]));"
+        "  });"
+        ))
+    )
 )
 
 (run-javascript)

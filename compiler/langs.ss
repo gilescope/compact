@@ -1020,7 +1020,7 @@
       (bytes-ref triv nat)
       (new type triv* ...)                   => (new type #f triv* ...)
       (elt-ref triv elt-name)
-      (vector->bytes len triv)               => (vector->bytes len triv)
+      (vector->bytes test len triv)          => (vector->bytes test len triv)
       (bytes->vector len triv)               => (bytes->vector len triv)
       (call src test function-name triv* ...) => (call test function-name #f triv* ...)
       (public-ledger src test ledger-field-name (maybe sugar) (path-elt* ...) src^ adt-op triv* ...) =>
@@ -1105,7 +1105,7 @@
          (bytes-ref triv nat)
          (new type triv* ...)
          (elt-ref triv elt-name)
-         (vector->bytes len triv)
+         (vector->bytes test len triv)
          (bytes->vector len triv)
          (call src test function-name triv* ...)
          (public-ledger src test ledger-field-name (maybe sugar) (path-elt* ...) src^ adt-op triv* ...)

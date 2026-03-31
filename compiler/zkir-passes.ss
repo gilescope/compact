@@ -100,12 +100,10 @@
             (equal? (path-last file) "std"))
           (define (bind-var! var bind-to)
             (hashtable-set! varid-ht var bind-to))
-          (define (new-var! var bound)
+          (define (new-var! var)
             (let ([index ctr])
               (bind-var! var index)
               (set! ctr (add1 ctr))
-              (when bound
-                (constrain-type bound index))
               index))
 
           ;; Returns the list of argument primitive types along with their indexes, with the
@@ -117,8 +115,7 @@
                                       [(argument (,var-name* ...) ,type)
                                        (values
                                          (type->primitive-types type)
-                                         (maplr (lambda (var-name) (new-var! var-name #f))
-                                           var-name*))]))
+                                         (maplr new-var! var-name*))]))
                             args)])
               (values (apply append prim-type**) (apply append index**))))
 
@@ -170,7 +167,7 @@
               (register-handler! 'transientHash
                 (lambda (align res* . xs)
                   (print-gate "transient_hash" `[inputs ,xs])
-                  (new-var! (car res*) #f)))
+                  (new-var! (car res*))))
               (register-handler! 'degradeToTransient
                 (lambda (align res* a1 a2) (bind-var! (car res*) a2)))
               (register-handler! 'upgradeFromTransient
@@ -178,27 +175,27 @@
                   (bind-var! (car res*) (literal 0))
                   (print-gate "div_mod_power_of_two" `[var ,a1] `[bits 248])
                   (set! ctr (add1 ctr))
-                  (new-var! (cadr res*) #f)))
+                  (new-var! (cadr res*))))
               (register-handler! 'ecAdd
                 (lambda (align res* ax ay bx by)
                   (print-gate "ec_add" `[a_x ,ax] `[a_y ,ay] `[b_x ,bx] `[b_y ,by])
-                  (new-var! (car res*) #f)
-                  (new-var! (cadr res*) #f)))
+                  (new-var! (car res*))
+                  (new-var! (cadr res*))))
               (register-handler! 'ecMul
                 (lambda (align res* ax ay b)
                   (print-gate "ec_mul" `[a_x ,ax] `[a_y ,ay] `[scalar ,b])
-                  (new-var! (car res*) #f)
-                  (new-var! (cadr res*) #f)))
+                  (new-var! (car res*))
+                  (new-var! (cadr res*))))
               (register-handler! 'ecMulGenerator
                 (lambda (align res* b)
                   (print-gate "ec_mul_generator" `[scalar ,b])
-                  (new-var! (car res*) #f)
-                  (new-var! (cadr res*) #f)))
+                  (new-var! (car res*))
+                  (new-var! (cadr res*))))
               (register-handler! 'hashToCurve
                 (lambda (align res* . args*)
                   (print-gate "hash_to_curve" `[inputs ,args*])
-                  (new-var! (car res*) #f)
-                  (new-var! (cadr res*) #f)))
+                  (new-var! (car res*))
+                  (new-var! (cadr res*))))
               (register-handler! 'jubjubPointX
                 (lambda (align res* a1 a2)
                   (bind-var! (car res*) a1)))
@@ -216,7 +213,7 @@
                 (lambda (align res* . args*)
                   (print-gate "transient_hash" `[inputs ,(cons (car (list-tail args* (sub1 (length args*))))
                                                                (list-head args* (sub1 (length args*))))])
-                  (new-var! (car res*) #f)))
+                  (new-var! (car res*))))
               (register-handler! 'persistentCommit
                 ;; First n-2 args are the object being committed.
                 ;; Final 2 args are commitment nonce.
@@ -229,8 +226,8 @@
                                                    (caar align)))]
                               `[inputs ,(append (list-tail args* (- (length args*) 2))
                                                 (list-head args* (- (length args*) 2)))])
-                  (new-var! (car res*) #f)
-                  (new-var! (cadr res*) #f)))
+                  (new-var! (car res*))
+                  (new-var! (cadr res*))))
               (register-handler! 'persistentHash
                 (lambda (align res* . args*)
                   (print-gate "persistent_hash"
@@ -238,8 +235,8 @@
                               `[inputs ,args*])
                   ; FIXME: also cadr res*
                   ; FIXME: should check for expected number of res*
-                  (new-var! (car res*) #f)
-                  (new-var! (cadr res*) #f)))
+                  (new-var! (car res*))
+                  (new-var! (cadr res*))))
               (register-handler! 'ownPublicKey
                 (lambda (align res* . args*)
                   ; handled as a witness
@@ -349,7 +346,7 @@
         (Statement : Statement (ir) -> * (void)
           [(= ,var-name ,single)
            (Single single)
-           (new-var! var-name #f)]
+           (new-var! var-name)]
           [(= (,var-name* ...) (call ,src ,[* test] ,function-name ,[* triv*] ...))
            (let ([pair (assert (calltype function-name))])
              (case (car pair)
@@ -364,7 +361,11 @@
                     (if (equal? test (hashtable-ref literal-ht 1 #f))
                         (print-gate "private_input" '[guard null])
                         (print-gate "private_input" `[guard ,test]))
-                    (new-var! var type))
+                    (let ([index (new-var! var type)])
+                      ; FIXME: the constraints implemented by this call to constrain-type
+                      ; should be conditional on test
+                      (constrain-type type index)
+                      index))
                   (assert (hashtable-ref returntype-ht function-name #f))
                   var-name*)]
                [else (assert cannot-happen)]))]
@@ -384,10 +385,13 @@
                      (print-gate "div_mod_power_of_two" `[var ,triv] `[bits 8])
                      (let ([q ctr])
                        (set! ctr (add1 ctr))
-                       (new-var! var-name #f)
+                       (new-var! var-name)
                        (loop var-name* q))))))]
           [(= (,var-name1 ,var-name2) (field->bytes ,src ,[* test] ,len ,[* triv]))
            ; FIXME: need to respect test: constrain_bits shouldn't happen if test is false
+           ; NB: flatten-datatypes now implements a workaround that ensures
+           ; field->bytes receives a large enough length that it won't produce
+           ; constrain_bits when the test might be false
            (if (<= len (field-bytes))
                (begin
                  (bind-var! var-name1 (literal 0))
@@ -395,12 +399,12 @@
                  (print-gate "constrain_bits" `[var ,triv] `[bits ,(* len 8)]))
                (begin
                  (print-gate "div_mod_power_of_two" `[var ,triv] `[bits ,(* (field-bytes) 8)])
-                 (new-var! var-name1 #f)
-                 (new-var! var-name2 #f)))]
+                 (new-var! var-name1)
+                 (new-var! var-name2)))]
           [(= (,var-name1 ,var-name2) (div-mod-power-of-two ,[* triv] ,bits))
            (print-gate "div_mod_power_of_two" `[var ,triv] `[bits ,bits])
-           (new-var! var-name1 #f)
-           (new-var! var-name2 #f)]
+           (new-var! var-name1)
+           (new-var! var-name2)]
           [(= (,var-name* ...) (public-ledger ,src ,[* test] ,ledger-field-name ,sugar? (,[* path-elt*] ...) ,src^ ,adt-op ,[* triv*] ...))
            (let ()
              (define (group type* triv*)
@@ -539,11 +543,11 @@
                                                 (print-gate "cond_select" `[bit ,(car recipient)]
                                                                           `[a   ,(cadr recipient)]
                                                                           `[b   ,(cadddr recipient)])
-                                                (new-var! data1 #f)
+                                                (new-var! data1)
                                                 (print-gate "cond_select" `[bit ,(car recipient)]
                                                                           `[a   ,(caddr recipient)]
                                                                           `[b   ,(car (cddddr recipient))])
-                                                (new-var! data2 #f)
+                                                (new-var! data2)
                                                 (apply (hashtable-ref std-circuits 'persistentHash #f)
                                                        (list*
                                                          ;; alignment of `CoinPreimage` in std.compact
@@ -629,7 +633,7 @@
                                  (if (equal? test (hashtable-ref literal-ht 1 #f))
                                      (print-gate "public_input" '[guard null])
                                      (print-gate "public_input" `[guard ,test]))
-                                 (new-var! var #f)
+                                 (new-var! var)
                                  (var-idx var))
                                var-name*)))]
                         ["addi"
@@ -722,6 +726,9 @@
              (print-gate "div_mod_power_of_two" `[var ,q] `[bits ,8])
              (set! ctr (add1 ctr)))]
           ; FIXME: zkir bytes->field needs to respect test
+          ; NB: flatten-datatypes now implements a workaround that ensures
+          ; bytes->field receives inputs that can't cause reconstitute_field
+          ; to fail when test turns out to be false
           [(bytes->field ,src ,[* test] ,len ,[* triv1] ,[* triv2])
            (if (<= len (field-bytes))
                ; flattened-datatype takes care of this case, so this line can't presently be reached
@@ -737,8 +744,13 @@
                                 (begin
                                   (f triv triv*)
                                   (let ([d ctr]) (set! ctr (add1 ctr)) d))))])
+                   ; FIXME: use of reconstitute_field should be conditioned on test
+                   ; NB: flatten-datatypes now implements a workaround that ensures
+                   ; vector->bytes gets valid inputs when test turns out to be false
                    (print-gate "reconstitute_field" `[divisor ,d] `[modulus ,triv] `[bits 8]))))]
           ; FIXME: zkir downcast-unsigned needs to respect test
+          ; NB: flatten-datatypes now implements a workaround that ensures
+          ; downcast-unsigned's safe flag is #t whenever the test might be false.
           [(downcast-unsigned ,src ,safe ,[* test] ,nat ,[* triv])
            (unless safe
              (constrain-type (with-output-language (Lflattened Primitive-Type)

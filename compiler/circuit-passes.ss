@@ -2121,7 +2121,7 @@
        (Triv expr test
          (lambda (triv)
            (k (with-output-language (Lcircuit Rhs)
-              `(vector->bytes ,len ,triv)))))]
+              `(vector->bytes ,test ,len ,triv)))))]
       [(downcast-unsigned ,src ,nat ,expr)
        (Triv expr test
          (lambda (triv)
@@ -2576,7 +2576,7 @@
                      (with-output-language (Lflattened Statement)
                        (cons `(= (,this-var-name* ...) (bytes->vector ,(car triv*)))
                              stmt*))))))]
-      [(vector->bytes ,len ,[* wump])
+      [(vector->bytes ,[Single-Triv : test] ,len ,[* wump])
        (let loop ([len len] [triv* (wump->elts wump)] [var-name* '()] [stmt* '()])
          (if (fx= len 0)
              (begin
@@ -2586,10 +2586,20 @@
                (loop (fx- len n)
                      (list-tail triv* n)
                      (cons this-var-name var-name*)
-                     (let ([this-var-name* (list-head triv* n)])
+                     (let* ([this-triv* (list-head triv* n)]
+                            [t* (maplr (lambda (triv) (make-new-id this-var-name)) this-triv*)])
                        (with-output-language (Lflattened Statement)
-                         (cons `(= ,this-var-name (vector->bytes ,(car this-var-name*) ,(cdr this-var-name*) ...))
-                               stmt*)))))))]
+                         (fold-right
+                           (lambda (t triv stmt*)
+                             (cons
+                               ; work around unknown value possibly causing a zkir proof failure
+                               ; by feeding in an innocuous value when test is false
+                               `(= ,t (select ,test ,triv 0))
+                               stmt*))
+                           (cons
+                             `(= ,this-var-name (vector->bytes ,(car t*) ,(cdr t*) ...))
+                             stmt*)
+                           t* this-triv*)))))))]
       [(downcast-unsigned ,src ,[Single-Triv : test] ,nat ,[Single-Triv : triv])
        (hashtable-set! var-ht var-name (Wump-single var-name))
        (with-output-language (Lflattened Statement)
