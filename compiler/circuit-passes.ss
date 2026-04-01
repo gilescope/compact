@@ -2570,10 +2570,6 @@
                (if (fx<= len (field-bytes))
                    (list var-name2)
                    (f (- len (fx* 2 (field-bytes))) (list var-name1 var-name2))))))
-; FIXME: remove this
-         #;(with-output-language (Lflattened Statement)
-           (list
-             `(= (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv))))
          (with-output-language (Lflattened Statement)
            (if (or (eqv? test 1) (> len (field-bytes)))
                (list `(= (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv)))
