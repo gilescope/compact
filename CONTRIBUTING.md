@@ -28,7 +28,7 @@ cd compact
 
 ## Compiler
 
-The Compact compiler is written in [Chez Scheme](https://cisco.github.io/ChezScheme/) and built with Nix.
+The Compact compiler is written in [Chez Scheme](https://cisco.github.io/ChezScheme/) and built with Nix. For detailed notes on compiler architecture, intermediate languages, and pass structure, see [`compiler.md`](./compiler.md). Please keep `compiler.md` up to date when making changes to the compiler's architecture or pass structure.
 
 ### Building
 
@@ -65,7 +65,9 @@ Other specialized shells are available:
 
 ### Running Tests
 
-From inside the default development shell:
+All compiler tests live in [`compiler/test.ss`](./compiler/test.ss). When you make changes to the compiler, add corresponding unit tests in this file following the existing formatting conventions. Tests are organized by pass name (e.g., `parse-file`, `report-unreachable`) and use check forms such as `(returns ...)`, `(oops ...)`, `(warning ...)`, and `(succeeds)`.
+
+Run tests from inside the Nix development shell:
 
 ```sh
 # enter development shell
@@ -77,6 +79,8 @@ nix develop
 # full recompilation (for coverage)
 ./compiler/go --rebuild
 ```
+
+**`./compiler/go` must pass without failures or warnings before you commit your changes.** If it reports failures or warnings, fix them before submitting a pull request.
 
 #### E2E Tests
 
@@ -90,6 +94,16 @@ sh ./run-e2e-tests.sh
 sh ./run-debug-test.sh
 ```
 
+### Updating the Language Reference
+
+If your change modifies the Compact language (new syntax, changed grammar, new keywords, etc.), you must update the language reference:
+
+1. Edit [`compiler/compact-reference-proto.mdx`](./compiler/compact-reference-proto.mdx). This is the source file for the language reference (the generated output is `doc/compact-reference.mdx`).
+2. Grammar productions are inserted using special macros -- they are **not** written as literal tables:
+   - `@(anchor-here ...)` -- defines anchor points for terminal names
+   - `@(request-snippet ...)` -- inserts grammar snippets for non-terminal productions
+3. Run `./compiler/go` after editing. It will warn about unrequested terminal and non-terminal names, helping you catch missing or mismatched grammar entries. Fix any warnings before committing.
+
 ## CLI Tool
 
 The `compact` CLI is a Rust project in `tools/compact/`. It does not require Nix.
@@ -101,6 +115,8 @@ cargo build
 ```
 
 ### Running Tests
+
+Integration tests live in `tools/compact/tests/` as `test_*.rs` files with shared helpers in `tests/common/mod.rs`. When contributing to the CLI, add tests that cover your changes in the appropriate `test_*.rs` file (or create a new one if needed) and **run the full test suite before committing**.
 
 The tests make real calls to the GitHub API, so we recommend using a GitHub token to avoid rate limiting:
 
@@ -155,6 +171,25 @@ yarn lint       # ESLint
 yarn format     # Prettier
 ```
 
+## Runtime
+
+The TypeScript runtime libraries are in `runtime/` and use Nix for development.
+
+### Development Shell
+
+```sh
+nix develop .#runtime
+```
+
+### Running Tests
+
+Tests live in `runtime/test/` (e.g., `stdlib.test.ts`) and use [Vitest](https://vitest.dev/). When contributing to the runtime, add tests covering your changes and **run the test suite before committing**:
+
+```sh
+cd runtime
+npm test
+```
+
 ## Submitting Issues
 
 Use one of the issue templates to submit a bug report, feature request, or documentation improvement. Check if a similar issue already exists before submitting.
@@ -172,7 +207,10 @@ Use one of the issue templates to submit a bug report, feature request, or docum
 2. **Create a Branch:** Make your changes in a separate branch,
    prefixed with a short name moniker (e.g. `jill-my-feature`).
 3. **Follow Coding Standards:** Adhere to the coding style guides for the component you're modifying.
-4. **Write Tests:** Include unit tests and integration tests to cover your changes.
+4. **Write and Run Tests:** Include unit tests and integration tests to cover your changes.
+   Add tests in the appropriate location for the component you're modifying
+   (see the component sections above for details) and run the full test suite
+   before committing. Pull requests without tests or with failing tests will not be merged.
 5. **Commit Messages:** Write clear and concise commit messages.
 6. **Submit Pull Request:** Submit your pull request to the appropriate branch in the main repository.
    Please do not `--force` push -- doing so means that reviewers will have to re-review all
