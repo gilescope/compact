@@ -5,7 +5,7 @@
 [![compact CLI release](https://img.shields.io/github/v/release/midnightntwrk/compact?filter=compact-*&label=compact%20CLI)](https://github.com/midnightntwrk/compact/releases)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 
-This is the home of **Compact**, the smart contract language for the [Midnight](https://midnight.network) blockchain. This repository contains the language documentation, formal specification, compiler, runtime libraries, CLI tooling, and editor extensions.
+This is the home of **Compact**. This project integrates with the [Midnight Network](https://midnight.network). It contains the language documentation, formal specification, compiler, runtime libraries, CLI tooling, and editor extensions.
 
 > **Note:** Development takes place under the [LFDT-Minokawa](https://github.com/LFDT-Minokawa) GitHub organization, which is the [Linux Foundation Decentralized Trust](https://www.lfdecentralizedtrust.org/) project for Compact. Public releases are published to [midnightntwrk/compact](https://github.com/midnightntwrk/compact).
 
