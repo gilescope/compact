@@ -29,10 +29,10 @@ updates:
 #      interval: "weekly"
 #    cooldown:
 #      default-days: 7
-
-registries:
-   github:
-     type: git
-     url: https://github.com
-     username: MidnightCI
-     password: ${{ secrets.MIDNIGHTCI_REPO }}
+#
+#registries:
+#   github:
+#     type: git
+#     url: https://github.com
+#     username: MidnightCI
+#     password: ${{ #secrets.MIDNIGHTCI_REPO }}
