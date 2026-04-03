@@ -35,4 +35,4 @@ updates:
 #     type: git
 #     url: https://github.com
 #     username: MidnightCI
-#     password: ${{ #secrets.MIDNIGHTCI_REPO }}
+#     password: ${{ secrets.MIDNIGHTCI_REPO }}
