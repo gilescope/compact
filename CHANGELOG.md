@@ -303,6 +303,14 @@ and Compact runtime versions in the range between 0.14.100 and 0.15.0.
 - The `compact fixup` tool can do these renamings except it cannot currently
   rename types (e.g. `NativePoint` to `JubjubPoint`).
 
+## [Unreleased toolchain 0.29.103, language 0.21.101, runtime 0.14.100]
+
+### Added
+
+- Schnorr signature verification over the JubJub embedded curve, via the new
+  `JubjubSchnorrSignature` struct and `jubjubSchnorrVerify` circuit in the
+  standard library.
+
 ## [Unreleased toolchain 0.29.102, language 0.21.100, runtime 0.14.100]
 
 ### Added
