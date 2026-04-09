@@ -3233,7 +3233,7 @@
           (or (not (id? triv))
               (hashtable-contains? def-ht var-name))))
       (define (insure-defined src test triv k)
-        (if (or (eqv? test 1) (defined? triv))
+        (if (defined? triv)
             (k triv)
             (with-output-language (Lflattened Statement)
               (with-temp-ids src (t)
