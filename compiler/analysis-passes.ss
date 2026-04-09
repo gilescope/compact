@@ -3063,10 +3063,10 @@
                 [(tunsigned ,src1 ,nat1)
                  (T type^
                     [(tfield ,src2)
-                     `(field->unsigned ,src ,nat1 ,expr)]
+                     `(downcast-unsigned ,src #f ,nat1 ,expr)]
                     [(tunsigned ,src2 ,nat2)
                      (assert (> nat2 nat1))
-                     `(downcast-unsigned ,src ,nat1 ,expr)]
+                     `(downcast-unsigned ,src ,nat2 ,nat1 ,expr)]
                     [(tbytes ,src2 ,len2)
                      (guard (not (= len2 0)))
                      `(cast-from-bytes ,src ,type ,len2 ,expr)]
@@ -4066,19 +4066,18 @@
                         len
                         (format-type type)))
        (with-output-language (Lnodca Type) `(tbytes ,src ,len))]
-      [(field->unsigned ,src ,nat ,[Care : expr -> * type])
-       (unless (nanopass-case (Lnodca Type) (de-alias type)
-                 [(tfield ,src) #t]
-                 [else #f])
-         (source-errorf src "expected Field, got ~a for field->unsigned"
-                              (format-type type)))
-       (with-output-language (Lnodca Type) `(tunsigned ,src ,nat))]
-      [(downcast-unsigned ,src ,nat ,[Care : expr -> * type])
-       (unless (nanopass-case (Lnodca Type) (de-alias type)
-                 [(tunsigned ,src ,nat) #t]
-                 [else #f])
-         (source-errorf src "expected Uint, got ~a for downcast-unsigned"
-                              (format-type type)))
+      [(downcast-unsigned ,src ,nat? ,nat ,[Care : expr -> * type])
+       (if nat?
+           (unless (nanopass-case (Lnodca Type) (de-alias type)
+                     [(tunsigned ,src ,nat) #t]
+                     [else #f])
+             (source-errorf src "expected Uint, got ~a for downcast-unsigned"
+                            (format-type type)))
+           (unless (nanopass-case (Lnodca Type) (de-alias type)
+                     [(tfield ,src) #t]
+                     [else #f])
+             (source-errorf src "expected Field, got ~a for downcast-unsigned"
+                            (format-type type))))
        (with-output-language (Lnodca Type) `(tunsigned ,src ,nat))]
       [(safe-cast ,src ,type ,type^ ,[Care : expr -> * type^^])
        (unless (sametype? type^^ type^)
@@ -5510,8 +5509,7 @@
       [(field->bytes ,src ,len ,[* abs]) abs]
       [(bytes->vector ,src ,len ,[* abs]) (Abs-single (Abs-atomic (abs->witnesses abs)))]
       [(vector->bytes ,src ,len ,[* abs]) (Abs-atomic (abs->witnesses abs))]
-      [(field->unsigned ,src ,nat ,[* abs]) abs]
-      [(downcast-unsigned ,src ,nat ,[* abs]) abs]
+      [(downcast-unsigned ,src ,nat? ,nat ,[* abs]) abs]
       [(safe-cast ,src ,type ,type^ ,[* abs]) abs]
 
       [(public-ledger ,src ,ledger-field-name ,sugar? (,path-elt* ...) ,src^ ,adt-op ,[* abs*] ...)
