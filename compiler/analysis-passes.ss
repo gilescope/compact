@@ -2043,7 +2043,12 @@
                     (values
                       (with-output-language (Ltypes Expression)
                         (if nat1
-                            (if (eq? op '-) result-expr `(downcast-unsigned ,src ,nat1 ,nat1 ,result-expr))
+                            (if (eq? op '-)
+                                result-expr
+                                (let ([result-nat (nanopass-case (Ltypes Type) result-type
+                                                    [(tunsigned ,src ,nat) nat]
+                                                    [else (assert cannot-happen)])])
+                                  `(downcast-unsigned ,src ,result-nat ,nat1 ,result-expr)))
                             `(safe-cast ,src ,type1 ,result-type ,result-expr)))
                       type1)))))))
       (define (relational-operator src expr1 expr2 k)

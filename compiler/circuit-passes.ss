@@ -2347,7 +2347,7 @@
       [(tadt ,src ,adt-name ([,adt-formal* ,[adt-arg*]] ...) ,vm-expr (,[adt-op*] ...))
        `(tadt ,src ,adt-name ([,adt-formal* ,adt-arg*] ...) ,vm-expr (,adt-op* ...))])
     (Statement : Statement (ir) -> * (stmt*)
-      [(= ,test ,var-name ,rhs) (Rhs rhs test var-name)]
+      [(= ,[Single-Triv : test] ,var-name ,rhs) (Rhs rhs test var-name)]
       [(assert ,src ,[Single-Triv : test] ,mesg)
        (with-output-language (Lflattened Statement)
          (list `(assert ,src ,test ,mesg)))])
@@ -2835,7 +2835,7 @@
       ; asserts if the flag is undefined, which can happen only if the statement is in
       ; a part of the circuit that is never enabled.  the undefined check is necessary
       ; for asserts but not assignments because undefined vars are given the value 0.
-      [(= ,test ,var-name ,single)
+      [(= ,[FWD-Triv : test] ,var-name ,single)
        (if (eqv? test 0)
            (begin
              (hashtable-set! var->triv var-name 0)
@@ -2856,12 +2856,12 @@
                                (hashtable-set! var->nontriv-single var-name single)
                                single])])
                (cons `(= ,test ,var-name ,single) rstmt*))))]
-      [(= ,test (,var-name* ...) ,multiple)
+      [(= ,[FWD-Triv : test] (,var-name* ...) ,multiple)
        (if (eqv? test 0)
            (begin
              (for-each (lambda (var-name) (hashtable-set! var->triv var-name 0) (undefined! var-name)) var-name*)
              rstmt*)
-           (FWD-Multiple test multiple var-name* rstmt*))]
+           (FWD-Multiple multiple test var-name* rstmt*))]
       [(assert ,src ,[FWD-Triv : test] ,mesg)
        (if (or (eqv? test 1) (undefined? test))
            rstmt*
@@ -3136,44 +3136,44 @@
             [(bytes->field ,src ,len ,triv1 ,triv2) (<= len (field-bytes))]
             [(vector->bytes ,triv ,triv* ...) #t]
             [(downcast-unsigned ,src ,safe ,nat? ,nat ,triv) #f])))
-      [(= ,test ,var-name ,single)
+      [(= ,[BWD-Triv : test] ,var-name ,single)
        (guard
          (not (hashtable-contains? ref-ht var-name))
          (pure? single))
        ; discard without processing any of the subexpressions to avoid marking any variables referenced
        stmt*]
-      [(= ,test ,var-name ,[BWD-Single : single])
+      [(= ,[BWD-Triv : test] ,var-name ,[BWD-Single : single])
        (cons `(= ,test ,var-name ,single) stmt*)]
-      [(= ,test (,var-name* ...) (call ,src ,function-name ,[BWD-Triv : triv*] ...))
+      [(= ,[BWD-Triv : test] (,var-name* ...) (call ,src ,function-name ,[BWD-Triv : triv*] ...))
        (cons `(= ,test (,var-name* ...) (call ,src ,function-name ,triv* ...)) stmt*)]
-      [(= ,test (,var-name* ...) (contract-call ,src ,elt-name (,[BWD-Triv : triv] ,primitive-type) ,[BWD-Triv : triv*] ...))
+      [(= ,[BWD-Triv : test] (,var-name* ...) (contract-call ,src ,elt-name (,[BWD-Triv : triv] ,primitive-type) ,[BWD-Triv : triv*] ...))
        (cons `(= ,test (,var-name* ...) (contract-call ,src ,elt-name (,triv ,primitive-type) ,triv* ...)) stmt*)]
-      [(= ,test (,var-name* ...) (default ,opaque-type))
+      [(= ,[BWD-Triv : test] (,var-name* ...) (default ,opaque-type))
        (guard (andmap (lambda (var-name) (not (hashtable-contains? ref-ht var-name))) var-name*))
        stmt*]
-      [(= ,test (,var-name* ...) (default ,opaque-type))
+      [(= ,[BWD-Triv : test] (,var-name* ...) (default ,opaque-type))
        (cons `(= ,test (,var-name* ...) (default ,opaque-type)) stmt*)]
-      [(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv))
+      [(= ,[BWD-Triv : test] (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv))
        (guard
          (>= len (field-bytes))
          (not (hashtable-contains? ref-ht var-name1))
          (not (hashtable-contains? ref-ht var-name2)))
        stmt*]
-      [(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,[BWD-Triv : triv]))
+      [(= ,[BWD-Triv : test] (,var-name1 ,var-name2) (field->bytes ,src ,len ,[BWD-Triv : triv]))
        (cons `(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv)) stmt*)]
-      [(= ,test (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits))
+      [(= ,[BWD-Triv : test] (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits))
        (guard
          (not (hashtable-contains? ref-ht var-name1))
          (not (hashtable-contains? ref-ht var-name2)))
        stmt*]
-      [(= ,test (,var-name1 ,var-name2) (div-mod-power-of-two ,[BWD-Triv : triv] ,bits))
+      [(= ,[BWD-Triv : test] (,var-name1 ,var-name2) (div-mod-power-of-two ,[BWD-Triv : triv] ,bits))
        (cons `(= ,test (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)) stmt*)]
-      [(= ,test (,var-name* ...) (bytes->vector ,triv))
+      [(= ,[BWD-Triv : test] (,var-name* ...) (bytes->vector ,triv))
        (guard (not (ormap (lambda (var-name) (hashtable-contains? ref-ht var-name)) var-name*)))
        stmt*]
-      [(= ,test (,var-name* ...) (bytes->vector ,[BWD-Triv : triv]))
+      [(= ,[BWD-Triv : test] (,var-name* ...) (bytes->vector ,[BWD-Triv : triv]))
        (cons `(= ,test (,var-name* ...) (bytes->vector ,triv)) stmt*)]
-      [(= ,test
+      [(= ,[BWD-Triv : test]
           (,var-name* ...)
           (public-ledger ,src ,ledger-field-name ,sugar? (,[BWD-Path-Element : path-elt*] ...) ,src^ ,adt-op ,[BWD-Triv : triv*] ...))
        (cons `(= ,test
