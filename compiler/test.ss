@@ -16887,6 +16887,7 @@ groups than for single tests.
              (tunsigned 1023)
           (if %b.1
               (downcast-unsigned
+                2026
                 1023
                 (+ 11
                    (safe-cast (tunsigned 2046) (tunsigned 1023) %x.2)
@@ -16919,7 +16920,7 @@ groups than for single tests.
                                  56539106072908298546665520023773392506479484700019806659891398441363832831)])
              (tunsigned
                56539106072908298546665520023773392506479484700019806659891398441363832831)
-          (field->unsigned 56539106072908298546665520023773392506479484700019806659891398441363832831
+          (downcast-unsigned #f 56539106072908298546665520023773392506479484700019806659891398441363832831
             (* #f
                (safe-cast (tfield)
                           (tunsigned
@@ -17056,7 +17057,7 @@ groups than for single tests.
              (tfield)
           (safe-cast (tfield)
                      (tunsigned 0)
-            (if %b.1 (downcast-unsigned 0 1) 0)))))
+            (if %b.1 (downcast-unsigned 1 0 1) 0)))))
     )
 
   (test
@@ -19434,8 +19435,7 @@ groups than for single tests.
             (circuit ([%a.2 (tunsigned 4294967295)]
                       [%n.3 (tunsigned 4294967295)])
                  (tunsigned 4294967295)
-              (downcast-unsigned
-                4294967295
+              (downcast-unsigned 8589934590 4294967295
                 (+ 33
                    (safe-cast (tunsigned 8589934590) (tunsigned 4294967295) %a.2)
                    (safe-cast (tunsigned 8589934590) (tunsigned 4294967295) %n.3))))
@@ -19446,8 +19446,7 @@ groups than for single tests.
           (fold
             (circuit ([%a.6 (tunsigned 65535)] [%n.7 (tunsigned 65535)])
                  (tunsigned 65535)
-              (downcast-unsigned
-                65535
+              (downcast-unsigned 131070 65535
                 (+ 17
                    (safe-cast (tunsigned 131070) (tunsigned 65535) %a.6)
                    (safe-cast (tunsigned 131070) (tunsigned 65535) %n.7))))
@@ -19458,8 +19457,7 @@ groups than for single tests.
           (fold
             (circuit ([%a.10 (tunsigned 255)] [%n.11 (tunsigned 255)])
                  (tunsigned 255)
-              (downcast-unsigned
-                255
+              (downcast-unsigned 510 255
                 (+ 9
                    (safe-cast (tunsigned 510) (tunsigned 255) %a.10)
                    (safe-cast (tunsigned 510) (tunsigned 255) %n.11))))
@@ -27788,7 +27786,7 @@ groups than for single tests.
         (public-ledger-declaration (constructor () (tuple)))
         (circuit %foo.0 ([%n1.1 (tfield)])
              (tunsigned 7)
-          (field->unsigned 7 %n1.1))))
+          (downcast-unsigned #f 7 %n1.1))))
     )
 
   (test
@@ -31128,7 +31126,7 @@ groups than for single tests.
                 (seq
                   (seq
                     (let* ([[%tmp.6 (tunsigned 65535)]
-                            (field->unsigned 65535 %p.3)])
+                            (downcast-unsigned #f 65535 %p.3)])
                       (public-ledger %counter.1 (0) increment %tmp.6))
                     (tuple))
                   %t.4))
@@ -31170,7 +31168,7 @@ groups than for single tests.
                 (seq
                   (seq
                     (let* ([[%tmp.6 (tunsigned 65535)]
-                            (field->unsigned 65535 %p.3)])
+                            (downcast-unsigned #f 65535 %p.3)])
                       (public-ledger %counter.1 (0) increment %tmp.6))
                     (tuple))
                   %t.4))
@@ -38927,7 +38925,7 @@ groups than for single tests.
         (circuit %foo.2 ([%x.3 (tfield)])
              (tunsigned 65535)
           (= %t.4 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.5 (field->unsigned #t 65535 %x.3))
+          (= %t.5 (downcast-unsigned #t #f 65535 %x.3))
           %t.5)
         (circuit %bar.6 ([%x.7 (tunsigned 4294967295)])
              (tunsigned 65535)
@@ -43940,7 +43938,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((abytes 1)) ((tfield 255)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger 1 %forceField.1 (0) write 7))
           (0))))
     )
 
@@ -43962,9 +43960,9 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((abytes 1)) ((tfield 255)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger 1 %forceField.1 (0) write 7))
           (assert 0 "result of subtraction would be negative")
-          (= %t.3 (- 4 12 13))
+          (= 1 %t.3 (- 4 12 13))
           (%t.3))))
     )
 
@@ -44018,25 +44016,25 @@ groups than for single tests.
                                   (tfield
                                     452312848583266388373324160190187140051835877600158453279131187530910662655)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= %t.21 (downcast-unsigned #f 1 255 %x.0))
-          (= %t.22 (downcast-unsigned #f 1 255 %y.1))
-          (= (%t.23) (public-ledger 1 %X.19 (0) read))
-          (= %t1.3 (== %z.2 0))
+          (= 1 %t.21 (downcast-unsigned #f 4294967295 255 %x.0))
+          (= 1 %t.22 (downcast-unsigned #f 255 %y.1))
+          (= 1 (%t.23) (public-ledger 1 %X.19 (0) read))
+          (= 1 %t1.3 (== %z.2 0))
           (assert %t1.3 "bytes value is too big to fit in a field")
-          (= %t1.5 (== %z.4 0))
+          (= 1 %t1.5 (== %z.4 0))
           (assert %t1.5 "bytes value is too big to fit in a field")
-          (= %t1.7 (== %z.6 0))
+          (= 1 %t1.7 (== %z.6 0))
           (assert %t1.7 "bytes value is too big to fit in a field")
-          (= %t1.9 (== %z.8 0))
+          (= 1 %t1.9 (== %z.8 0))
           (assert %t1.9 "bytes value is too big to fit in a field")
-          (= %t1.11 (== %z.10 0))
+          (= 1 %t1.11 (== %z.10 0))
           (assert %t1.11 "bytes value is too big to fit in a field")
-          (= %t1.13 (== %z.12 0))
+          (= 1 %t1.13 (== %z.12 0))
           (assert %t1.13 "bytes value is too big to fit in a field")
-          (= %t1.15 (== %z.14 0))
+          (= 1 %t1.15 (== %z.14 0))
           (assert %t1.15 "bytes value is too big to fit in a field")
-          (= %t.24 (bytes->field 1 256 %z.17 %z.16))
-          (= (%t.25 %t.26) (field->bytes 1 8 %y.1))
+          (= 1 %t.24 (bytes->field 1 256 %z.17 %z.16))
+          (= 1 (%t.25 %t.26) (field->bytes 1 8 %y.1))
           (1))))
     )
 
@@ -44057,10 +44055,10 @@ groups than for single tests.
         (public-ledger-declaration ((%ctr.2 (0) (Counter))))
         (circuit %foo.3 ()
              (ty ((afield)) ((tfield)))
-          (= (%t1.0) (public-ledger 1 %ctr.2 (0) read))
-          (= %tmp.4 (downcast-unsigned #f 1 65535 %t1.0))
-          (= () (public-ledger 1 %ctr.2 (0) increment %tmp.4))
-          (= (%t.5) (public-ledger 1 %ctr.2 (0) read))
+          (= 1 (%t1.0) (public-ledger %ctr.2 (0) read))
+          (= 1 %tmp.4 (downcast-unsigned #f 18446744073709551615 65535 %t1.0))
+          (= 1 () (public-ledger 1 %ctr.2 (0) increment %tmp.4))
+          (= 1 (%t.5) (public-ledger 1 %ctr.2 (0) read))
           (%t.5))))
     )
 
@@ -46704,8 +46702,8 @@ groups than for single tests.
                            (%is.3)
                            (ty ((abytes 2)) ((tfield 65535)))))
              (ty ((abytes 2)) ((tfield 65535)))
-          (= () (public-ledger 1 %F.1 (0) write %is.3))
-          (= (%t.4) (public-ledger 1 %F.1 (0) read))
+          (= 1 () (public-ledger %F.1 (0) write %is.3))
+          (= 1 (%t.4) (public-ledger %F.1 (0) read))
           (%t.4))))
     )
 
@@ -46728,7 +46726,7 @@ groups than for single tests.
                            (%x.0)
                            (ty ((abytes 2)) ((tfield 65535)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.3 (0) write 7))
+          (= 1 () (public-ledger %forceField.3 (0) write 7))
           ())))
     )
 
@@ -46753,7 +46751,7 @@ groups than for single tests.
                            (%x.0)
                            (ty ((abytes 2)) ((tfield 65535)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           ())))
     )
 
@@ -46788,24 +46786,24 @@ groups than for single tests.
              (ty ((abytes 10) (abytes 10))
                  ((tfield 1208925819614629174706175)
                    (tfield 1208925819614629174706175)))
-          (= (%t.2 %t.3) (field->bytes 1 32 %ix.1))
-          (= %t.4 (downcast-unsigned #t 1 0 %t.2))
-          (= %t.5
+          (= 1 (%t.2 %t.3) (field->bytes 1 32 %ix.1))
+          (= 1 %t.4 (downcast-unsigned #t 1 0 %t.2))
+          (= 1 %t.5
              (downcast-unsigned #t 1 1208925819614629174706175 %t.3))
-          (= %t1.6 (== %t.4 0))
-          (= %t2.7 (< 248 1208925819614629174706175 %t.5))
-          (= %t3.8 (select %t2.7 0 %t1.6))
-          (= %t4.9 (select %ia.0 %t3.8 1))
+          (= 1 %t1.6 (== %t.4 0))
+          (= 1 %t2.7 (< 248 1208925819614629174706175 %t.5))
+          (= 1 %t3.8 (select %t2.7 0 %t1.6))
+          (= 1 %t4.9 (select %ia.0 %t3.8 1))
           (assert %t4.9 "field value is too large to fit in 10 bytes")
-          (= %tmp.16 (select %ia.0 %t.5 0))
-          (= () (public-ledger 1 %B1.13 (0) write %tmp.16))
-          (= %t4.11 (select %ib.10 %t3.8 1))
+          (= 1 %tmp.16 (select %ia.0 %t.5 0))
+          (= 1 () (public-ledger %B1.13 (0) write %tmp.16))
+          (= 1 %t4.11 (select %ib.10 %t3.8 1))
           (assert %t4.11
             "field value is too large to fit in 10 bytes")
-          (= %tmp.17 (select %ib.10 %t.5 0))
-          (= () (public-ledger 1 %B2.14 (1) write %tmp.17))
-          (= (%t.18) (public-ledger 1 %B1.13 (0) read))
-          (= (%t.19) (public-ledger 1 %B2.14 (1) read))
+          (= 1 %tmp.17 (select %ib.10 %t.5 0))
+          (= 1 () (public-ledger %B2.14 (1) write %tmp.17))
+          (= 1 (%t.18) (public-ledger %B1.13 (0) read))
+          (= 1 (%t.19) (public-ledger %B2.14 (1) read))
           (%t.18 %t.19))))
     )
 
@@ -46839,20 +46837,20 @@ groups than for single tests.
              (ty ((abytes 10) (abytes 10))
                  ((tfield 1208925819614629174706175)
                    (tfield 1208925819614629174706175)))
-          (= (%t.2 %t.3) (field->bytes 1 32 %ix.1))
-          (= %t.4 (downcast-unsigned #t 1 0 %t.2))
-          (= %t.5
+          (= 1 (%t.2 %t.3) (field->bytes 1 32 %ix.1))
+          (= 1 %t.4 (downcast-unsigned #t 1 0 %t.2))
+          (= 1 %t.5
              (downcast-unsigned #t 1 1208925819614629174706175 %t.3))
-          (= %t1.6 (== %t.4 0))
-          (= %t2.7 (< 248 1208925819614629174706175 %t.5))
-          (= %t3.8 (select %t2.7 0 %t1.6))
-          (= %t4.9 (select %ib.0 %t3.8 1))
+          (= 1 %t1.6 (== %t.4 0))
+          (= 1 %t2.7 (< 248 1208925819614629174706175 %t.5))
+          (= 1 %t3.8 (select %t2.7 0 %t1.6))
+          (= 1 %t4.9 (select %ib.0 %t3.8 1))
           (assert %t4.9 "field value is too large to fit in 10 bytes")
-          (= %tmp.14 (select %ib.0 %t.5 0))
-          (= () (public-ledger 1 %B1.11 (0) write %tmp.14))
-          (= () (public-ledger 1 %B2.12 (1) write %tmp.14))
-          (= (%t.15) (public-ledger 1 %B1.11 (0) read))
-          (= (%t.16) (public-ledger 1 %B2.12 (1) read))
+          (= 1 %tmp.14 (select %ib.0 %t.5 0))
+          (= 1 () (public-ledger 1 %B1.11 (0) write %tmp.14))
+          (= 1 () (public-ledger 1 %B2.12 (1) write %tmp.14))
+          (= 1 (%t.15) (public-ledger 1 %B1.11 (0) read))
+          (= 1 (%t.16) (public-ledger 1 %B2.12 (1) read))
           (%t.15 %t.16))))
     )
 
@@ -46876,7 +46874,7 @@ groups than for single tests.
                            (%ix.0)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= %t.1 (== %ix.0 0))
+          (= 1 %t.1 (== %ix.0 0))
           (%t.1))))
     )
   ;; Unused `default`.
@@ -56438,7 +56436,7 @@ groups than for single tests.
                                  (tfield)
                                  (tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (%v.6))))
     )
 
@@ -56467,21 +56465,21 @@ groups than for single tests.
                                   (tfield 65535)
                                   (tfield 65535)))))
              (ty () ())
-          (= %t.2 (< 16 %v.1 %v.0))
-          (= %t.3 (select %t.2 0 1))
+          (= 1 %t.2 (< 16 %v.1 %v.0))
+          (= 1 %t.3 (select %t.2 0 1))
           (assert %t.3 "result of subtraction would be negative")
-          (= %tmp.11 (- 16 %v.1 %v.0))
-          (= () (public-ledger 1 %x.15 (0) increment %tmp.11))
-          (= %t.5 (< 16 %v.4 %v.1))
-          (= %t.6 (select %t.5 0 1))
+          (= 1 %tmp.11 (- 16 %v.1 %v.0))
+          (= 1 () (public-ledger %x.15 (0) increment %tmp.11))
+          (= 1 %t.5 (< 16 %v.4 %v.1))
+          (= 1 %t.6 (select %t.5 0 1))
           (assert %t.6 "result of subtraction would be negative")
-          (= %tmp.12 (- 16 %v.4 %v.1))
-          (= () (public-ledger 1 %x.15 (0) increment %tmp.12))
-          (= %t.8 (< 16 %v.7 %v.4))
-          (= %t.9 (select %t.8 0 1))
+          (= 1 %tmp.12 (- 16 %v.4 %v.1))
+          (= 1 () (public-ledger %x.15 (0) increment %tmp.12))
+          (= 1 %t.8 (< 16 %v.7 %v.4))
+          (= 1 %t.9 (select %t.8 0 1))
           (assert %t.9 "result of subtraction would be negative")
-          (= %tmp.13 (- 16 %v.7 %v.4))
-          (= () (public-ledger 1 %x.15 (0) increment %tmp.13))
+          (= 1 %tmp.13 (- 16 %v.7 %v.4))
+          (= 1 () (public-ledger 1 %x.15 (0) increment %tmp.13))
           ())))
     )
 
@@ -61020,14 +61018,13 @@ groups than for single tests.
         "    { \"op\": \"constrain_bits\", \"val\": \"%x.1\", \"bits\": 10 },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x00\", \"0x11\", \"0x01\", \"0x01\", \"0x01\", \"0x01\", \"0x91\"] },"
         "    { \"op\": \"add\", \"output\": \"%t.2\", \"a\": \"%x.1\", \"b\": \"0xff03\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t1.3\", \"bit\": \"%b.0\", \"a\": \"%t.2\", \"b\": \"0x00\" },"
-        "    { \"op\": \"less_than\", \"output\": \"%t2.4\", \"a\": \"0xff03\", \"b\": \"%t1.3\", \"bits\": 248 },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t3.5\", \"bit\": \"%t2.4\", \"a\": \"0x00\", \"b\": \"0x01\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t4.6\", \"bit\": \"%b.0\", \"a\": \"%t3.5\", \"b\": \"0x01\" },"
-        "    { \"op\": \"assert\", \"cond\": \"%t4.6\" },"
-        "    { \"op\": \"copy\", \"output\": \"%t.7\", \"val\": \"%t.2\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.8\", \"bit\": \"%b.0\", \"a\": \"%t.7\", \"b\": \"0x00\" },"
-        "    { \"op\": \"output\", \"val\": \"%t.8\" }"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.3\", \"bit\": \"%b.0\", \"a\": \"%t.2\", \"b\": \"0x00\" },"
+        "    { \"op\": \"less_than\", \"output\": \"%t1.4\", \"a\": \"%t.3\", \"b\": \"0x0004\", \"bits\": 11 },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t2.5\", \"bit\": \"%b.0\", \"a\": \"%t1.4\", \"b\": \"0x01\" },"
+        "    { \"op\": \"assert\", \"cond\": \"%t2.5\" },"
+        "    { \"op\": \"copy\", \"output\": \"%t.6\", \"val\": \"%t.2\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.7\", \"bit\": \"%b.0\", \"a\": \"%t.6\", \"b\": \"0x00\" },"
+        "    { \"op\": \"output\", \"val\": \"%t.7\" }"
         "  ]"
         "}"))
     )
@@ -61054,14 +61051,13 @@ groups than for single tests.
         "    { \"op\": \"constrain_bits\", \"val\": \"%x.1\", \"bits\": 10 },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x00\", \"0x11\", \"0x01\", \"0x01\", \"0x01\", \"0x01\", \"0x91\"] },"
         "    { \"op\": \"add\", \"output\": \"%t.2\", \"a\": \"%x.1\", \"b\": \"0x0004\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t1.3\", \"bit\": \"%b.0\", \"a\": \"%t.2\", \"b\": \"0x00\" },"
-        "    { \"op\": \"less_than\", \"output\": \"%t2.4\", \"a\": \"0xff03\", \"b\": \"%t1.3\", \"bits\": 248 },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t3.5\", \"bit\": \"%t2.4\", \"a\": \"0x00\", \"b\": \"0x01\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t4.6\", \"bit\": \"%b.0\", \"a\": \"%t3.5\", \"b\": \"0x01\" },"
-        "    { \"op\": \"assert\", \"cond\": \"%t4.6\" },"
-        "    { \"op\": \"copy\", \"output\": \"%t.7\", \"val\": \"%t.2\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.8\", \"bit\": \"%b.0\", \"a\": \"%t.7\", \"b\": \"0x00\" },"
-        "    { \"op\": \"output\", \"val\": \"%t.8\" }"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.3\", \"bit\": \"%b.0\", \"a\": \"%t.2\", \"b\": \"0x00\" },"
+        "    { \"op\": \"less_than\", \"output\": \"%t1.4\", \"a\": \"%t.3\", \"b\": \"0x0004\", \"bits\": 11 },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t2.5\", \"bit\": \"%b.0\", \"a\": \"%t1.4\", \"b\": \"0x01\" },"
+        "    { \"op\": \"assert\", \"cond\": \"%t2.5\" },"
+        "    { \"op\": \"copy\", \"output\": \"%t.6\", \"val\": \"%t.2\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.7\", \"bit\": \"%b.0\", \"a\": \"%t.6\", \"b\": \"0x00\" },"
+        "    { \"op\": \"output\", \"val\": \"%t.7\" }"
         "  ]"
         "}"))
     )
@@ -61189,66 +61185,70 @@ groups than for single tests.
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.22\", \"0x11\", \"0x00\", \"0x91\", \"0xa1\"] },"
         "    { \"op\": \"add\", \"output\": \"%tmp.23\", \"a\": \"%x.0\", \"b\": \"0x02\" },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.23\", \"0x11\", \"0x00\", \"0x91\", \"0xa1\"] },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.22\", \"0x11\", \"0x00\", \"0x91\", \"0xa1\"] },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.24\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x04\", \"0x0d\", \"0x01\", \"0x08\", \"%t.24\"] },"
-        "    { \"op\": \"test_eq\", \"output\": \"%t.25\", \"a\": \"%t.24\", \"b\": \"0x03\" },"
-        "    { \"op\": \"assert\", \"cond\": \"%t.25\" },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.22\", \"0x19\", \"0xa1\"] },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.26\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x04\", \"0x0d\", \"0x01\", \"0x08\", \"%t.26\"] },"
-        "    { \"op\": \"test_eq\", \"output\": \"%t.27\", \"a\": \"%t.26\", \"b\": \"0x02\" },"
-        "    { \"op\": \"assert\", \"cond\": \"%t.27\" },"
+        "    { \"op\": \"add\", \"output\": \"%tmp.24\", \"a\": \"%x.0\", \"b\": \"0x01\" },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.24\", \"0x11\", \"0x00\", \"0x91\", \"0xa1\"] },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.25\", \"guard\": null },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x04\", \"0x0d\", \"0x01\", \"0x08\", \"%t.25\"] },"
+        "    { \"op\": \"test_eq\", \"output\": \"%t.26\", \"a\": \"%t.25\", \"b\": \"0x03\" },"
+        "    { \"op\": \"assert\", \"cond\": \"%t.26\" },"
+        "    { \"op\": \"add\", \"output\": \"%tmp.27\", \"a\": \"%x.0\", \"b\": \"0x01\" },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.27\", \"0x19\", \"0xa1\"] },"
         "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.28\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x04\", \"0x10\", \"0x01\", \"0x01\", \"0x08\", \"0x00\", \"0x02\", \"0x0d\", \"0x01\", \"0x01\", \"%t.28\"] },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.29\", \"bit\": \"%t.28\", \"a\": \"0x00\", \"b\": \"0x01\" },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x04\", \"0x0d\", \"0x01\", \"0x08\", \"%t.28\"] },"
+        "    { \"op\": \"test_eq\", \"output\": \"%t.29\", \"a\": \"%t.28\", \"b\": \"0x02\" },"
         "    { \"op\": \"assert\", \"cond\": \"%t.29\" },"
         "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.30\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%x.0\", \"0x18\", \"0x0d\", \"0x01\", \"0x01\", \"%t.30\"] },"
-        "    { \"op\": \"assert\", \"cond\": \"%t.30\" },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.31\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.22\", \"0x18\", \"0x0d\", \"0x01\", \"0x01\", \"%t.31\"] },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.32\", \"bit\": \"%t.31\", \"a\": \"0x00\", \"b\": \"0x01\" },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x04\", \"0x10\", \"0x01\", \"0x01\", \"0x08\", \"0x00\", \"0x02\", \"0x0d\", \"0x01\", \"0x01\", \"%t.30\"] },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.31\", \"bit\": \"%t.30\", \"a\": \"0x00\", \"b\": \"0x01\" },"
+        "    { \"op\": \"assert\", \"cond\": \"%t.31\" },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.32\", \"guard\": null },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%x.0\", \"0x18\", \"0x0d\", \"0x01\", \"0x01\", \"%t.32\"] },"
         "    { \"op\": \"assert\", \"cond\": \"%t.32\" },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.33\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.23\", \"0x18\", \"0x0d\", \"0x01\", \"0x01\", \"%t.33\"] },"
-        "    { \"op\": \"assert\", \"cond\": \"%t.33\" },"
+        "    { \"op\": \"add\", \"output\": \"%tmp.33\", \"a\": \"%x.0\", \"b\": \"0x01\" },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.34\", \"guard\": null },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.33\", \"0x18\", \"0x0d\", \"0x01\", \"0x01\", \"%t.34\"] },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.35\", \"bit\": \"%t.34\", \"a\": \"0x00\", \"b\": \"0x01\" },"
+        "    { \"op\": \"assert\", \"cond\": \"%t.35\" },"
+        "    { \"op\": \"add\", \"output\": \"%tmp.36\", \"a\": \"%x.0\", \"b\": \"0x02\" },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%t.37\", \"guard\": null },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%tmp.36\", \"0x18\", \"0x0d\", \"0x01\", \"0x01\", \"%t.37\"] },"
+        "    { \"op\": \"assert\", \"cond\": \"%t.37\" },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x03\", \"0x11\", \"0x02\", \"0x91\"] },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x03\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%x.0\", \"0x11\", \"0x01\", \"0x06\", \"0x20\", \"0x01\", \"0x20\", \"0x20\", \"0x10\", \"0x02\", \"%y.1\", \"%y.2\", \"%y.3\", \"%y.4\", \"%y.5\", \"%y.6\", \"%y.7\", \"%y.8\", \"%y.9\", \"0x91\", \"0xa1\"] },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x04\", \"0x11\", \"0x33\", \"0x00\", \"0x00\", \"0x01\", \"0x01\", \"0x08\", \"0x00\", \"0x91\"] },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x05\", \"0x11\", \"0x23\", \"0xa4\", \"0x01\", \"0x01\", \"0x08\", \"0x00\", \"0x91\"] },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x06\", \"0x11\", \"0x33\", \"0xa4\", \"0x01\", \"0x01\", \"0x08\", \"0x00\", \"0x02\", \"0x70\", \"0x01\", \"0x01\", \"0x02\", \"0x32\", \"0x50\", \"0x01\", \"0x01\", \"0x00\", \"0x0a\", \"0x11\", \"0x00\", \"0xa2\", \"0x91\"] },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.34\", \"guard\": null },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.35\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x32\", \"0x60\", \"0x01\", \"0x01\", \"0x00\", \"0x0d\", \"0x01\", \"0x20\", \"%value.34\", \"%value.35\"] },"
-        "    { \"op\": \"cond_select\", \"output\": \"%data.36\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.34\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%data.37\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.35\" },"
-        "    { \"op\": \"persistent_hash\", \"outputs\": [\"%hash.38\", \"%hash.39\"], \"alignment\": [{ \"tag\": \"atom\", \"value\": { \"length\": 21, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 16, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 1, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }], \"inputs\": [\"0x6d69646e696768743a7a737761702d63635b76315d\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x00\", \"%data.36\", \"%data.37\"] },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x07\", \"0x33\", \"0x10\", \"0x01\", \"0x01\", \"0x20\", \"%hash.38\", \"%hash.39\", \"0x61\", \"0x01\", \"0x01\", \"0x01\", \"-0x01\", \"0x10\", \"0x01\", \"0x03\", \"0x20\", \"0x20\", \"0x10\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x40\", \"0x17\", \"0x5b\", \"0x91\"] },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.38\", \"guard\": null },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.39\", \"guard\": null },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x32\", \"0x60\", \"0x01\", \"0x01\", \"0x00\", \"0x0d\", \"0x01\", \"0x20\", \"%value.38\", \"%value.39\"] },"
+        "    { \"op\": \"cond_select\", \"output\": \"%data.40\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.38\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%data.41\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.39\" },"
+        "    { \"op\": \"persistent_hash\", \"outputs\": [\"%hash.42\", \"%hash.43\"], \"alignment\": [{ \"tag\": \"atom\", \"value\": { \"length\": 21, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 16, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 1, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }], \"inputs\": [\"0x6d69646e696768743a7a737761702d63635b76315d\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x00\", \"%data.40\", \"%data.41\"] },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x07\", \"0x33\", \"0x10\", \"0x01\", \"0x01\", \"0x20\", \"%hash.42\", \"%hash.43\", \"0x61\", \"0x01\", \"0x01\", \"0x01\", \"-0x01\", \"0x10\", \"0x01\", \"0x03\", \"0x20\", \"0x20\", \"0x10\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x40\", \"0x17\", \"0x5b\", \"0x91\"] },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x08\", \"0x11\", \"0x02\", \"0x91\"] },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.40\", \"guard\": null },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.41\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x32\", \"0x60\", \"0x01\", \"0x01\", \"0x00\", \"0x0d\", \"0x01\", \"0x20\", \"%value.40\", \"%value.41\"] },"
-        "    { \"op\": \"cond_select\", \"output\": \"%data.42\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.40\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%data.43\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.41\" },"
-        "    { \"op\": \"persistent_hash\", \"outputs\": [\"%hash.44\", \"%hash.45\"], \"alignment\": [{ \"tag\": \"atom\", \"value\": { \"length\": 21, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 16, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 1, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }], \"inputs\": [\"0x6d69646e696768743a7a737761702d63635b76315d\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x00\", \"%data.42\", \"%data.43\"] },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x08\", \"0x34\", \"0x10\", \"0x01\", \"0x01\", \"0x20\", \"%hash.44\", \"%hash.45\", \"0x61\", \"0x01\", \"0x01\", \"0x01\", \"-0x01\", \"0x10\", \"0x01\", \"0x03\", \"0x20\", \"0x20\", \"0x10\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x40\", \"0x17\", \"0x5b\", \"0x11\", \"0x00\", \"0x91\", \"0xa1\"] },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.44\", \"guard\": null },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.45\", \"guard\": null },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x32\", \"0x60\", \"0x01\", \"0x01\", \"0x00\", \"0x0d\", \"0x01\", \"0x20\", \"%value.44\", \"%value.45\"] },"
+        "    { \"op\": \"cond_select\", \"output\": \"%data.46\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.44\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%data.47\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.45\" },"
+        "    { \"op\": \"persistent_hash\", \"outputs\": [\"%hash.48\", \"%hash.49\"], \"alignment\": [{ \"tag\": \"atom\", \"value\": { \"length\": 21, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 16, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 1, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }], \"inputs\": [\"0x6d69646e696768743a7a737761702d63635b76315d\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x00\", \"%data.46\", \"%data.47\"] },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x08\", \"0x34\", \"0x10\", \"0x01\", \"0x01\", \"0x20\", \"%hash.48\", \"%hash.49\", \"0x61\", \"0x01\", \"0x01\", \"0x01\", \"-0x01\", \"0x10\", \"0x01\", \"0x03\", \"0x20\", \"0x20\", \"0x10\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x40\", \"0x17\", \"0x5b\", \"0x11\", \"0x00\", \"0x91\", \"0xa1\"] },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x09\", \"0x11\", \"0x02\", \"0x91\"] },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.46\", \"guard\": null },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.47\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x32\", \"0x60\", \"0x01\", \"0x01\", \"0x00\", \"0x0d\", \"0x01\", \"0x20\", \"%value.46\", \"%value.47\"] },"
-        "    { \"op\": \"cond_select\", \"output\": \"%data.48\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.46\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%data.49\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.47\" },"
-        "    { \"op\": \"persistent_hash\", \"outputs\": [\"%hash.50\", \"%hash.51\"], \"alignment\": [{ \"tag\": \"atom\", \"value\": { \"length\": 21, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 16, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 1, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }], \"inputs\": [\"0x6d69646e696768743a7a737761702d63635b76315d\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x00\", \"%data.48\", \"%data.49\"] },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x09\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%x.0\", \"0x35\", \"0x10\", \"0x01\", \"0x01\", \"0x20\", \"%hash.50\", \"%hash.51\", \"0x61\", \"0x01\", \"0x01\", \"0x01\", \"-0x01\", \"0x10\", \"0x01\", \"0x03\", \"0x20\", \"0x20\", \"0x10\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x40\", \"0x17\", \"0x5b\", \"0x91\", \"0xa1\"] },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.50\", \"guard\": null },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.51\", \"guard\": null },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x32\", \"0x60\", \"0x01\", \"0x01\", \"0x00\", \"0x0d\", \"0x01\", \"0x20\", \"%value.50\", \"%value.51\"] },"
+        "    { \"op\": \"cond_select\", \"output\": \"%data.52\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.50\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%data.53\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.51\" },"
+        "    { \"op\": \"persistent_hash\", \"outputs\": [\"%hash.54\", \"%hash.55\"], \"alignment\": [{ \"tag\": \"atom\", \"value\": { \"length\": 21, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 16, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 1, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }], \"inputs\": [\"0x6d69646e696768743a7a737761702d63635b76315d\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x00\", \"%data.52\", \"%data.53\"] },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x09\", \"0x10\", \"0x01\", \"0x01\", \"-0x02\", \"%x.0\", \"0x35\", \"0x10\", \"0x01\", \"0x01\", \"0x20\", \"%hash.54\", \"%hash.55\", \"0x61\", \"0x01\", \"0x01\", \"0x01\", \"-0x01\", \"0x10\", \"0x01\", \"0x03\", \"0x20\", \"0x20\", \"0x10\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x40\", \"0x17\", \"0x5b\", \"0x91\", \"0xa1\"] },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x0a\", \"0x11\", \"0x33\", \"0x00\", \"0x00\", \"0x01\", \"0x01\", \"0x08\", \"0x00\", \"0x91\"] },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.52\", \"guard\": null },"
-        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.53\", \"guard\": null },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x32\", \"0x60\", \"0x01\", \"0x01\", \"0x00\", \"0x0d\", \"0x01\", \"0x20\", \"%value.52\", \"%value.53\"] },"
-        "    { \"op\": \"cond_select\", \"output\": \"%data.54\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.52\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%data.55\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.53\" },"
-        "    { \"op\": \"persistent_hash\", \"outputs\": [\"%hash.56\", \"%hash.57\"], \"alignment\": [{ \"tag\": \"atom\", \"value\": { \"length\": 21, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 16, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 1, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }], \"inputs\": [\"0x6d69646e696768743a7a737761702d63635b76315d\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x00\", \"%data.54\", \"%data.55\"] },"
-        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x0a\", \"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x0e\", \"0x01\", \"0x11\", \"0x33\", \"0x00\", \"0x00\", \"0x00\", \"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x00\", \"0x37\", \"0x10\", \"0x01\", \"0x01\", \"0x20\", \"%hash.56\", \"%hash.57\", \"0x61\", \"0x01\", \"0x01\", \"0x01\", \"-0x01\", \"0x10\", \"0x01\", \"0x03\", \"0x20\", \"0x20\", \"0x10\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x40\", \"0x17\", \"0x5b\", \"0xa1\", \"0x40\", \"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x02\", \"0x40\", \"0xa1\", \"0x40\", \"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x01\", \"0x40\", \"0xa2\"] },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.56\", \"guard\": null },"
+        "    { \"op\": \"public_input\", \"type\": \"Scalar<BLS12-381>\", \"output\": \"%value.57\", \"guard\": null },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x32\", \"0x60\", \"0x01\", \"0x01\", \"0x00\", \"0x0d\", \"0x01\", \"0x20\", \"%value.56\", \"%value.57\"] },"
+        "    { \"op\": \"cond_select\", \"output\": \"%data.58\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.56\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%data.59\", \"bit\": \"0x00\", \"a\": \"0x00\", \"b\": \"%value.57\" },"
+        "    { \"op\": \"persistent_hash\", \"outputs\": [\"%hash.60\", \"%hash.61\"], \"alignment\": [{ \"tag\": \"atom\", \"value\": { \"length\": 21, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 16, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 1, \"tag\": \"bytes\" } }, { \"tag\": \"atom\", \"value\": { \"length\": 32, \"tag\": \"bytes\" } }], \"inputs\": [\"0x6d69646e696768743a7a737761702d63635b76315d\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x00\", \"%data.58\", \"%data.59\"] },"
+        "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x70\", \"0x01\", \"0x01\", \"0x0a\", \"0x30\", \"0x50\", \"0x01\", \"0x01\", \"0x02\", \"0x0e\", \"0x01\", \"0x11\", \"0x33\", \"0x00\", \"0x00\", \"0x00\", \"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x00\", \"0x37\", \"0x10\", \"0x01\", \"0x01\", \"0x20\", \"%hash.60\", \"%hash.61\", \"0x61\", \"0x01\", \"0x01\", \"0x01\", \"-0x01\", \"0x10\", \"0x01\", \"0x03\", \"0x20\", \"0x20\", \"0x10\", \"%ci.10\", \"%ci.11\", \"%ci.12\", \"%ci.13\", \"%ci.14\", \"0x40\", \"0x17\", \"0x5b\", \"0xa1\", \"0x40\", \"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x02\", \"0x40\", \"0xa1\", \"0x40\", \"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x01\", \"0x40\", \"0xa2\"] },"
         "    { \"op\": \"output\", \"val\": \"%q.16\" }"
         "  ]"
         "}"))
@@ -61497,17 +61497,16 @@ groups than for single tests.
         "    { \"op\": \"constrain_to_boolean\", \"val\": \"%q.2\" },"
         "    { \"op\": \"constrain_bits\", \"val\": \"%q.3\", \"bits\": 12 },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x00\", \"0x11\", \"0x01\", \"0x01\", \"0x01\", \"0x01\", \"0x91\"] },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.5\", \"bit\": \"%q.2\", \"a\": \"0x00\", \"b\": \"0x01\" },"
-        "    { \"op\": \"add\", \"output\": \"%t.6\", \"a\": \"%q.3\", \"b\": \"0x01\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.7\", \"bit\": \"%q.2\", \"a\": \"0x00\", \"b\": \"%q.3\" },"
-        "    { \"op\": \"less_than\", \"output\": \"%t.8\", \"a\": \"%t.7\", \"b\": \"%t.5\", \"bits\": 12 },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.9\", \"bit\": \"%t.8\", \"a\": \"0x00\", \"b\": \"0x01\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.10\", \"bit\": \"%q.2\", \"a\": \"0x01\", \"b\": \"%t.9\" },"
-        "    { \"op\": \"assert\", \"cond\": \"%t.10\" },"
-        "    { \"op\": \"neg\", \"output\": \"%neg.11\", \"a\": \"0x01\" },"
-        "    { \"op\": \"add\", \"output\": \"%t.12\", \"a\": \"%q.3\", \"b\": \"%neg.11\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.13\", \"bit\": \"%q.2\", \"a\": \"%t.6\", \"b\": \"%t.12\" },"
-        "    { \"op\": \"output\", \"val\": \"%t.13\" }"
+        "    { \"op\": \"add\", \"output\": \"%t.5\", \"a\": \"%q.3\", \"b\": \"0x01\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.6\", \"bit\": \"%q.2\", \"a\": \"0x00\", \"b\": \"%q.3\" },"
+        "    { \"op\": \"less_than\", \"output\": \"%t.7\", \"a\": \"%t.6\", \"b\": \"0x01\", \"bits\": 12 },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.8\", \"bit\": \"%t.7\", \"a\": \"0x00\", \"b\": \"0x01\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.9\", \"bit\": \"%q.2\", \"a\": \"0x01\", \"b\": \"%t.8\" },"
+        "    { \"op\": \"assert\", \"cond\": \"%t.9\" },"
+        "    { \"op\": \"neg\", \"output\": \"%neg.10\", \"a\": \"0x01\" },"
+        "    { \"op\": \"add\", \"output\": \"%t.11\", \"a\": \"%q.3\", \"b\": \"%neg.10\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.12\", \"bit\": \"%q.2\", \"a\": \"%t.5\", \"b\": \"%t.11\" },"
+        "    { \"op\": \"output\", \"val\": \"%t.12\" }"
         "  ]"
         "}"))
     (output-file "compiler/testdir/zkir/dos.zkir"
@@ -80182,7 +80181,7 @@ groups than for single tests.
              (ttuple (talias #t Q (tunsigned 255)) (talias #t Q (tunsigned 255))
                (talias #t Q (tunsigned 255)) (tboolean) (tboolean))
           (tuple
-            (downcast-unsigned 255
+            (downcast-unsigned 510 255
               (+ 9
                  (safe-cast (tunsigned 510)
                             (talias #t Q (tunsigned 255))
@@ -80195,7 +80194,7 @@ groups than for single tests.
                 (>= %x.10 %y.11)
                 "result of subtraction would be negative")
               (- 8 %x.10 %y.11))
-            (downcast-unsigned 255
+            (downcast-unsigned 65025 255
               (* 16
                  (safe-cast (tunsigned 65025)
                             (talias #t Q (tunsigned 255))

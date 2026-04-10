@@ -4072,6 +4072,7 @@
                         (format-type type)))
        (with-output-language (Lnodca Type) `(tbytes ,src ,len))]
       [(downcast-unsigned ,src ,nat? ,nat ,[Care : expr -> * type])
+       (when nat? (assert (< nat nat?)))
        (if nat?
            (unless (nanopass-case (Lnodca Type) (de-alias type)
                      [(tunsigned ,src ,nat) #t]

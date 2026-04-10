@@ -938,6 +938,7 @@
                         (format-type type)))
        (with-output-language (Linlined Type) `(tbytes ,src ,len))]
       [(downcast-unsigned ,src ,nat? ,nat ,[Care : expr -> * type])
+       (when nat? (assert (< nat nat?)))
        (if nat?
            (unless (nanopass-case (Linlined Type) type
                      [(tunsigned ,src ,nat) #t]
@@ -1561,7 +1562,7 @@
               `(seq ,src ,expr (quote ,src ,datum))
               ctv))]
          [else (values
-                 `(downcast-unsigned ,src ,nat ,nat ,expr)
+                 `(downcast-unsigned ,src ,nat? ,nat ,expr)
                  (CTV-unknown no-var-name))])]
       [(public-ledger ,src ,ledger-field-name ,sugar? (,[path-elt] ...) ,src^ ,[adt-op] ,[expr* ctv*] ...)
        (values
@@ -3242,14 +3243,20 @@
               (with-temp-ids src (t)
                 (cons `(= 1 ,t (select ,test ,triv 0))
                       (k t)))))))
+    (Circuit-Definition : Circuit-Definition (ir) -> Circuit-Definition ()
+      [(circuit ,src ,function-name (,arg* ...) ,type ,stmt* ... (,triv* ...))
+       (let ([stmt* (apply append (maplr Statement stmt*))])
+         `(circuit ,src ,function-name (,arg* ...) ,type ,stmt* ... (,triv* ...)))])
     (Statement : Statement (ir) -> * (stmt*)
       [(= ,test ,var-name ,single)
        (when (eqv? test 1) (defined! var-name))
-       (Single single test var-name)]
+       (if (eqv? test 1)
+           (list ir)
+           (Single single test var-name))]
       [(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv))
-       (with-output-language (Lflattened Statement)
-         (if (or (eqv? test 1) (> len (field-bytes)))
-             (list `(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv)))
+       (if (or (eqv? test 1) (> len (field-bytes)))
+           (list ir)
+           (with-output-language (Lflattened Statement)
              (with-temp-ids (id-src var-name1) (q t1 t2)
                (list
                  ; q represents everything that doesn't fit in len bytes and must be zero for the cast to succeed
@@ -3264,7 +3271,7 @@
       [(= ,test (,var-name* ...) ,multiple)
        (when (eqv? test 1) (for-each defined! var-name*))
        (list ir)]
-      [(assert ,src ,test ,mesg) ir])
+      [(assert ,src ,test ,mesg) (list ir)])
     (Single : Single (ir test var-name) -> * (stmt*)
       [(< ,bits ,triv1 ,triv2)
        (with-output-language (Lflattened Statement)
@@ -3272,11 +3279,11 @@
            (lambda (triv1)
              (insure-defined (id-src var-name) test triv2
                (lambda (triv2)
-                 `(= 1 ,var-name (< ,bits ,triv1 ,triv2)))))))]
+                 (list `(= 1 ,var-name (< ,bits ,triv1 ,triv2))))))))]
       [(bytes->field ,src ,len ,triv1 ,triv2)
-       (with-output-language (Lflattened Statement)
-         (if (or (eqv? test 1) (<= len (field-bytes)))
-             (list `(= ,test ,var-name (bytes->field ,src ,len ,triv1 ,triv2)))
+       (if (<= len (field-bytes))
+           (list `(= 1 ,var-name ,ir))
+           (with-output-language (Lflattened Statement)
              ; 256^k is one more than the largest value that fits in k bytes,
              ; i.e., k base-256 digits, and is the same as 2^(8k).  So this use
              ; of div-and-mod produces a remainder r representing the value of
@@ -3315,16 +3322,17 @@
                (let ([triv* (reverse rtriv*)])
                  (list `(= 1 ,var-name (vector->bytes ,(car triv*) ,(cdr triv*) ...))))
                (insure-defined (id-src var-name) test (car triv*)
-                 (lambda (var-name) (f (cdr triv*) (cons triv rtriv*)))))))]
+                 (lambda (triv) (f (cdr triv*) (cons triv rtriv*)))))))]
       [(downcast-unsigned ,src ,safe? ,nat? ,nat ,triv)
        (define (assert-and-cast test)
-         (list
-           `(assert ,src ,test ,(format "downcast to Uint<0..~d> failed" nat))
-           ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
-           `(= 1 ,var-name (downcast-unsigned ,src #t ,nat? ,nat ,triv))))
+         (with-output-language (Lflattened Statement)
+           (list
+             `(assert ,src ,test ,(format "downcast to Uint<0..~d> failed" nat))
+             ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
+             `(= 1 ,var-name (downcast-unsigned ,src #t ,nat? ,nat ,triv)))))
        (with-output-language (Lflattened Statement)
-         (if (or safe? (eqv? test 1))
-             (list `(= 1 ,var-name (downcast-unsigned ,src ,safe? ,nat? ,nat ,triv)))
+         (if safe?
+             (list `(= 1 ,var-name ,ir))
              (if nat?
                  (if (= nat nat?)
                      ; it's probably always the case that nat < nat?, but handle this case anyway
@@ -3333,7 +3341,7 @@
                        (lambda (triv)
                          ; triv is known to be < nat?
                          (with-temp-ids src (t1 t2)
-                           (list
+                           (cons*
                              ; t1 = triv <= nat
                              `(= 1 ,t1 (< ,(fxmax 1 (integer-length nat?)) ,triv ,(+ nat 1)))
                              ; t2 = !test || triv <= nat
@@ -3351,7 +3359,7 @@
                        (if (= nat (- (expt 2 bits) 1))
                            ; in this case, r cannot be > nat
                            (with-temp-ids (id-src var-name) (t2)
-                             (cons
+                             (cons*
                                ; t2 = !test || q == 0
                                `(= 1 ,t2 (select ,test ,t1 1))
                                (assert-and-cast t2)))
@@ -3735,7 +3743,7 @@
                (map format-primitive-type type*)))))
        (with-output-language (Lflattened Primitive-Type) `(tfield ,(- (expt 256 (fx+ (length triv*) 1)) 1)))]
       [(downcast-unsigned ,src ,safe ,nat? ,nat ,[* type])
-       (assert (< nat nat?))
+       (when nat? (assert (< nat nat?)))
        (check-tfield (format "argument to downcast-unsigned at ~a" (format-source-object src)) type)
        (with-output-language (Lflattened Primitive-Type) `(tfield ,nat))]
       [else (internal-errorf 'Single "unhandled form ~s\n" ir)])
