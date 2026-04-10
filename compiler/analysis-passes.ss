@@ -2043,7 +2043,7 @@
                     (values
                       (with-output-language (Ltypes Expression)
                         (if nat1
-                            (if (eq? op '-) result-expr `(downcast-unsigned ,src ,nat1 ,result-expr))
+                            (if (eq? op '-) result-expr `(downcast-unsigned ,src ,nat1 ,nat1 ,result-expr))
                             `(safe-cast ,src ,type1 ,result-type ,result-expr)))
                       type1)))))))
       (define (relational-operator src expr1 expr2 k)
@@ -3075,7 +3075,7 @@
                     [(tboolean ,src2)
                      (if (= nat1 0)
                          `(if ,src ,expr
-                              (downcast-unsigned ,src ,nat1 (quote ,src 1))
+                              (downcast-unsigned ,src 1 ,nat1 (quote ,src 1))
                               (quote ,src 0))
                          `(if ,src ,expr
                               ,(if (eqv? nat1 1)

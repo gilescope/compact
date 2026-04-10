@@ -3205,9 +3205,7 @@
                  0 "})("
                  expr
                  ")"))))]
-      [(field->unsigned ,src ,nat ,expr)
-       (downcast-unsigned src nat expr)]
-      [(downcast-unsigned ,src ,nat ,expr)
+      [(downcast-unsigned ,src ,nat? ,nat ,expr)
        (downcast-unsigned src nat expr)]
       [(safe-cast ,src ,type ,type^ ,expr)
        ; no checks needed for safe casts

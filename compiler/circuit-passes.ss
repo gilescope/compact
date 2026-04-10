@@ -86,7 +86,7 @@
                           [else (assert cannot-happen)])])
             (cond
               [(> nat maxval) `(safe-cast ,src ,type ,type^ ,expr)]
-              [(< nat maxval) `(downcast-unsigned ,src ,nat ,expr)]
+              [(< nat maxval) `(downcast-unsigned ,src ,maxval ,nat ,expr)]
               [else expr]))]
          [else (assert cannot-happen)])]
       [(cast-to-enum ,src ,[type] ,[type^] ,[expr])
@@ -1943,8 +1943,10 @@
         (let ([t1 (make-temp-id src 't)] [t2 (make-temp-id src 't)])
           (with-output-language (Lcircuit Statement)
             (cons*
-              `(= ,t1 (select ,triv ,test (quote #f)))
-              `(= ,t2 (select ,triv (quote #f) ,test))
+              ; t1 = triv && test
+              `(= (quote #t) ,t1 (select ,triv ,test (quote #f)))
+              ; t1 = !triv && test
+              `(= (quote #t) ,t2 (select ,triv (quote #f) ,test))
               (k t1 t2)))))
       )
     (Circuit-Definition : Circuit-Definition (ir) -> Circuit-Definition ()
@@ -2017,7 +2019,7 @@
                   (lambda (rhs)
                     (cons
                       (with-output-language (Lcircuit Statement)
-                        `(= ,var-name ,rhs))
+                        `(= ,test ,var-name ,rhs))
                       (f (cdr local*) (cdr expr*)))))])))]
       [(call ,src ,function-name ,expr* ...)
        (Triv* expr* test
@@ -2030,8 +2032,6 @@
            (let ([t1 (make-temp-id src 't)] [t2 (make-temp-id src 't)])
              (with-output-language (Lcircuit Statement)
                (cons*
-: FIXME: assert should take a test as well, then this would be just
-; (assert ,src ,test ,triv ,mesg)
                  `(= (quote #t) ,t2 (select ,test ,triv (quote #t)))
                  `(assert ,src ,t2 ,mesg)
                  (k (with-output-language (Lcircuit Rhs)
@@ -2374,11 +2374,11 @@
                            (if (feature-zkir-v3)
                                (values
                                  (Wump-single t1)
-                                 (list `(= (,t1) (default ,opaque-type))))
+                                 (list `(= ,test (,t1) (default ,opaque-type))))
                                (let ([t2 (make-new-id var-name)])
                                  (values
                                    (Wump-vector (list (Wump-single t1) (Wump-single t2)))
-                                   (list `(= (,t1 ,t2) (default ,opaque-type))))))))]
+                                   (list `(= ,test (,t1 ,t2) (default ,opaque-type))))))))]
                       [(topaque ,src ,opaque-type) (trivial (Wump-single 0))]
                       [(tvector ,src ,len ,type)
                        (let-values ([(wump stmt*) (do-type type)])
@@ -2520,7 +2520,7 @@
                    (list var-name2)
                    (f (- len (fx* 2 (field-bytes))) (list var-name1 var-name2))))))
          (with-output-language (Lflattened Statement)
-           (list `(= ,test (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv)))))]
+           (list `(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv)))))]
       [(bytes->vector ,len ,[* wump])
        (let loop ([len len] [triv* (reverse (wump->elts wump))] [rvar-name** '()] [stmt* '()])
          (if (fx= len 0)
@@ -2876,13 +2876,13 @@
     (FWD-Multiple : Multiple (ir test var-name* rstmt*) -> * (rstmt*)
       [(call ,src ,function-name ,[FWD-Triv : triv*] ...)
        (with-output-language (Lflattened Statement)
-         (cons `(= (,var-name* ...) (call ,src ,function-name ,triv* ...)) rstmt*))]
+         (cons `(= ,test (,var-name* ...) (call ,src ,function-name ,triv* ...)) rstmt*))]
       [(contract-call ,src ,elt-name (,[FWD-Triv : triv] ,primitive-type) ,[FWD-Triv : triv*] ...)
        (with-output-language (Lflattened Statement)
-         (cons `(= (,var-name* ...) (contract-call ,src ,elt-name (,triv ,primitive-type) ,triv* ...)) rstmt*))]
+         (cons `(= ,test (,var-name* ...) (contract-call ,src ,elt-name (,triv ,primitive-type) ,triv* ...)) rstmt*))]
       [(default ,opaque-type)
        (with-output-language (Lflattened Statement)
-         (cons `(= (,var-name* ...) (default ,opaque-type)) rstmt*))]
+         (cons `(= ,test (,var-name* ...) (default ,opaque-type)) rstmt*))]
       [(field->bytes ,src ,len ,[FWD-Triv : triv])
        (assert (fx= (length var-name*) 2))
        (assert (not (= len 0)))
@@ -2905,12 +2905,12 @@
                       rstmt*)]
                    [else
                     (set-cdr! a (cons var-name1 var-name2))
-                    (cons `(= (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv)) rstmt*)])))))]
+                    (cons `(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv)) rstmt*)])))))]
       [(div-mod-power-of-two ,[FWD-Triv : triv] ,bits)
        (assert (fx= (length var-name*) 2))
        (with-output-language (Lflattened Statement)
          (let ([var-name1 (car var-name*)] [var-name2 (cadr var-name*)])
-           (cons `(= (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)) rstmt*)))]
+           (cons `(= ,test (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)) rstmt*)))]
       [(bytes->vector ,[FWD-Triv : triv])
        (with-output-language (Lflattened Statement)
          (or (ifconstant triv
@@ -2935,10 +2935,11 @@
                     rstmt*)]
                  [else
                   (set-cdr! a var-name*)
-                  (cons `(= (,var-name* ...) (bytes->vector ,triv)) rstmt*)]))))]
+                  (cons `(= ,test (,var-name* ...) (bytes->vector ,triv)) rstmt*)]))))]
       [(public-ledger ,src ,ledger-field-name ,sugar? (,[FWD-Path-Element : path-elt*] ...) ,src^ ,adt-op ,[FWD-Triv : triv*] ...)
        (with-output-language (Lflattened Statement)
-         (cons `(= (,var-name* ...)
+         (cons `(= ,test
+                   (,var-name* ...)
                    (public-ledger ,src ,ledger-field-name ,sugar? (,path-elt* ...) ,src^ ,adt-op ,triv* ...))
                rstmt*))])
     (FWD-Single : Single (ir) -> Single ()
@@ -3225,14 +3226,15 @@
     ; this pass can simply be removed.
     (definitions
       (define-syntax with-temp-ids
-        [(_ src (t ...) b1 b2 ...)
-         (let* ([t (make-temp-id src 't)] ...) b1 b2 ...)])
+        (syntax-rules ()
+          [(_ src (t ...) b1 b2 ...)
+           (let* ([t (make-temp-id src 't)] ...) b1 b2 ...)]))
       (module (defined! defined?)
         (define def-ht (make-eq-hashtable))
         (define (defined! var-name) (hashtable-set! def-ht var-name #t))
         (define (defined? triv)
           (or (not (id? triv))
-              (hashtable-contains? def-ht var-name))))
+              (hashtable-contains? def-ht triv))))
       (define (insure-defined src test triv k)
         (if (defined? triv)
             (k triv)
@@ -3240,14 +3242,14 @@
               (with-temp-ids src (t)
                 (cons `(= 1 ,t (select ,test ,triv 0))
                       (k t)))))))
-    (Statement : Statement (ir) -> Statement * (stmt*)
+    (Statement : Statement (ir) -> * (stmt*)
       [(= ,test ,var-name ,single)
        (when (eqv? test 1) (defined! var-name))
        (Single single test var-name)]
       [(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv))
        (with-output-language (Lflattened Statement)
          (if (or (eqv? test 1) (> len (field-bytes)))
-             (list `(= (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv)))
+             (list `(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv)))
              (with-temp-ids (id-src var-name1) (q t1 t2)
                (list
                  ; q represents everything that doesn't fit in len bytes and must be zero for the cast to succeed
@@ -3261,7 +3263,8 @@
                  `(= 1 ,var-name1 (downcast-unsigned ,src #t #f 0 ,q))))))]
       [(= ,test (,var-name* ...) ,multiple)
        (when (eqv? test 1) (for-each defined! var-name*))
-       (list ir)])
+       (list ir)]
+      [(assert ,src ,test ,mesg) ir])
     (Single : Single (ir test var-name) -> * (stmt*)
       [(< ,bits ,triv1 ,triv2)
        (with-output-language (Lflattened Statement)
@@ -3305,12 +3308,12 @@
                             ; when bytes->field would fail, provide it something innocuous
                             `(= 1 ,t7 (select ,t5 ,triv1 0))
                             `(= 1 ,var-name (bytes->field ,src ,len ,t7 ,triv2)))))))))))]
-      [(vector->bytes ,src ,len ,triv ,triv*)
+      [(vector->bytes ,triv ,triv* ...)
        (with-output-language (Lflattened Statement)
          (let f ([triv* (cons triv triv*)] [rtriv* '()])
            (if (null? triv*)
                (let ([triv* (reverse rtriv*)])
-                 (list `(= 1 ,var-name (vector->bytes ,src ,len ,(car triv*) ,(cdr triv*) ...))))
+                 (list `(= 1 ,var-name (vector->bytes ,(car triv*) ,(cdr triv*) ...))))
                (insure-defined (id-src var-name) test (car triv*)
                  (lambda (var-name) (f (cdr triv*) (cons triv rtriv*)))))))]
       [(downcast-unsigned ,src ,safe? ,nat? ,nat ,triv)
@@ -3361,7 +3364,7 @@
                                ; t4 = !test || (q == 0 && r <= nat)
                                `(= 1 ,t4 (select ,test ,t3 1))
                                (assert-and-cast t4))))))))))]
-      [,single
+      [else
        (with-output-language (Lflattened Statement)
          (list `(= 1 ,var-name ,ir)))]))
 
@@ -3539,9 +3542,11 @@
                  (symbol->string (id-sym function-name)))))))]
       [else (void)])
     (Statement : Statement (ir) -> * (void)
-      [(= ,var-name ,[Single : single -> * type])
+      [(= ,test ,var-name ,[Single : single -> * type])
+       (verify-test program-src test)
        (set-idtype! var-name (Idtype-Base type))]
-      [(= (,var-name* ...) (call ,src ,test ,function-name ,[* type*] ...))
+      [(= ,test (,var-name* ...) (call ,src ,function-name ,[* type*] ...))
+       (verify-test src test)
        (let ([actual-type* type*])
          (define compatible?
            (let ([nactual (length actual-type*)])
@@ -3569,7 +3574,7 @@
            [else (source-errorf src "invalid context for reference to ~s (defined at ~a)"
                                 function-name
                                 (format-source-object (id-src function-name)))]))]
-      [(= (,var-name* ...) (contract-call ,src ,test ,elt-name (,[* type] ,primitive-type) ,[* type*] ...))
+      [(= ,test (,var-name* ...) (contract-call ,src ,elt-name (,[* type] ,primitive-type) ,[* type*] ...))
        (verify-test src test)
        (let ([actual-type* type*])
          (nanopass-case (Lflattened Primitive-Type) primitive-type
@@ -3604,8 +3609,9 @@
                       (loop (cdr elt-name*) (cdr type**) (cdr type*)))))]
            [else (source-errorf src "expected primitive type tcontract for contract call, received ~a"
                                 (format-primitive-type primitive-type))]))]
-      [(= (,var-name* ...) (default ,opaque-type))
+      [(= ,test (,var-name* ...) (default ,opaque-type))
        (guard (string=? opaque-type "JubjubPoint"))
+       (verify-test program-src test)
        (with-output-language (Lflattened Primitive-Type)
          (if (feature-zkir-v3)
              (begin
@@ -3615,25 +3621,27 @@
                (assert (= (length var-name*) 2))
                (set-idtype! (car var-name*) (Idtype-Base `(tfield)))
                (set-idtype! (cadr var-name*) (Idtype-Base `(tfield))))))]
-      [(= (,var-name1 ,var-name2) (field->bytes ,src ,test ,len ,[* type]))
+      [(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,[* type]))
        (verify-test src test)
        (check-tfield (format "argument to field->bytes at ~a" (format-source-object src)) type)
        (assert (not (= len 0)))
        (with-output-language (Lflattened Primitive-Type)
          (set-idtype! var-name1 (Idtype-Base `(tfield ,(max 0 (- (expt 2 (* (fxmin (fxmax 0 (fx- len (field-bytes))) (field-bytes)) 8)) 1)))))
          (set-idtype! var-name2 (Idtype-Base `(tfield ,(max 0 (- (expt 2 (* (fxmin len (field-bytes)) 8)) 1))))))]
-      [(= (,var-name1 ,var-name2) (div-mod-power-of-two ,[* type] ,bits))
+      [(= ,test (,var-name1 ,var-name2) (div-mod-power-of-two ,[* type] ,bits))
+       (verify-test program-src test)
        (check-tfield "argument to div-mod-power-of-two" type)
        (with-output-language (Lflattened Primitive-Type)
          (set-idtype! var-name1 (Idtype-Base `(tfield)))
          (set-idtype! var-name2 (Idtype-Base `(tfield ,bits))))]
-      [(= (,var-name* ...) (bytes->vector ,[* type]))
+      [(= ,test (,var-name* ...) (bytes->vector ,[* type]))
+       (verify-test program-src test)
        (check-tfield "argument to bytes->vector" type)
        (with-output-language (Lflattened Primitive-Type)
          (for-each
            (lambda (var-name) (set-idtype! var-name (Idtype-Base `(tfield 8))))
            var-name*))]
-      [(= (,var-name* ...) (public-ledger ,src ,test ,ledger-field-name ,sugar? (,[path-elt*] ...) ,src^ ,adt-op ,[* type^*] ...))
+      [(= ,test (,var-name* ...) (public-ledger ,src ,ledger-field-name ,sugar? (,[path-elt*] ...) ,src^ ,adt-op ,[* type^*] ...))
        (verify-test src test)
        (nanopass-case (Lflattened ADT-Op) adt-op
          [(,ledger-op ,op-class (,adt-name (,adt-formal* ,adt-arg*) ...) (,ledger-op-formal* ...) (,type* ...) ,type ,vm-code)
@@ -3709,8 +3717,7 @@
                  nat))
        (check-tfield "bytes-ref argument" type)
        (with-output-language (Lflattened Primitive-Type) `(tfield 255))]
-      [(bytes->field ,src ,test ,len ,[* type1] ,[* type2])
-       (verify-test src test)
+      [(bytes->field ,src ,len ,[* type1] ,[* type2])
        (nanopass-case (Lflattened Primitive-Type) type1
          [(tfield ,nat) #t]
          [else (source-errorf src "unexpected ~a of first argument to bytes->field"
@@ -3727,8 +3734,8 @@
              (source-errorf program-src "incompatible types (~{~a~^, ~}) for vector->bytes"
                (map format-primitive-type type*)))))
        (with-output-language (Lflattened Primitive-Type) `(tfield ,(- (expt 256 (fx+ (length triv*) 1)) 1)))]
-      [(downcast-unsigned ,src ,safe ,test ,nat ,[* type])
-       (verify-test src test)
+      [(downcast-unsigned ,src ,safe ,nat? ,nat ,[* type])
+       (assert (< nat nat?))
        (check-tfield (format "argument to downcast-unsigned at ~a" (format-source-object src)) type)
        (with-output-language (Lflattened Primitive-Type) `(tfield ,nat))]
       [else (internal-errorf 'Single "unhandled form ~s\n" ir)])

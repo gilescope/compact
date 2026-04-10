@@ -402,7 +402,7 @@
                        (loop var-name* q))))))]
           [(= (,var-name1 ,var-name2) (field->bytes ,src ,[* test] ,len ,[* triv]))
            ; FIXME: need to respect test: constrain_bits shouldn't happen if test is false
-           ; NB: flatten-datatypes now implements a workaround that ensures
+           ; NB: missing-guard-workarounds now implements a workaround that ensures
            ; field->bytes receives a large enough length that it won't produce
            ; constrain_bits when the test might be false
            (if (<= len (field-bytes))
@@ -739,7 +739,7 @@
              (print-gate "div_mod_power_of_two" `[var ,q] `[bits ,8])
              (set! ctr (add1 ctr)))]
           ; FIXME: zkir bytes->field needs to respect test
-          ; NB: flatten-datatypes now implements a workaround that ensures
+          ; NB: missing-guard-workarounds now implements a workaround that ensures
           ; bytes->field receives inputs that can't cause reconstitute_field
           ; to fail when test turns out to be false
           [(bytes->field ,src ,[* test] ,len ,[* triv1] ,[* triv2])
@@ -758,11 +758,11 @@
                                   (f triv triv*)
                                   (let ([d ctr]) (set! ctr (add1 ctr)) d))))])
                    ; FIXME: use of reconstitute_field should be conditioned on test
-                   ; NB: flatten-datatypes now implements a workaround that ensures
+                   ; NB: missing-guard-workarounds now implements a workaround that ensures
                    ; vector->bytes gets valid inputs when test turns out to be false
                    (print-gate "reconstitute_field" `[divisor ,d] `[modulus ,triv] `[bits 8]))))]
           ; FIXME: zkir downcast-unsigned needs to respect test
-          ; NB: flatten-datatypes now implements a workaround that ensures
+          ; NB: missing-guard-workarounds now implements a workaround that ensures
           ; downcast-unsigned's safe flag is #t whenever the test might be false.
           [(downcast-unsigned ,src ,safe ,[* test] ,nat ,[* triv])
            (assertf cannot-happen "handled directly by Statement")]
