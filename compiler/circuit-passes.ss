@@ -3210,6 +3210,19 @@
     )
 
   (define-pass missing-guard-workarounds : Lflattened (ir) -> Lflattened ()
+    ; this pass implements workarounds for the lack of conditionality of
+    ; certain zkir operators.  the lack of conditionality burns in one of
+    ; two ways: explicit checks like constrain_bits fail even when the
+    ; conditional says not to execute it, and implicit operand checks, e.g.,
+    ; by less_than, fail because an input value is undefined and might have
+    ; any value due to the conditionality of the input value's computation.
+    ; to avoid being overly paranoid, the pass records whether a variable
+    ; definitly has a value and skips remediation for unknown values when
+    ; a variable is defined.  it also implements various special cases to
+    ; avoid generating the worst-case code unless necessary.
+    ;
+    ; once zkir implements conditionality for the operators that can fail,
+    ; this pass can simply be removed.
     (definitions
       (define-syntax with-temp-ids
         [(_ src (t ...) b1 b2 ...)
@@ -3226,36 +3239,7 @@
             (with-output-language (Lflattened Statement)
               (with-temp-ids src (t)
                 (cons `(= 1 ,t (select ,test ,triv 0))
-                      (k t))))))
-      (define (field->unsigned src nat triv)
-        (with-temp-ids (id-src var-name) (q r t1 t2 t3 t4)
-          (let ([bits (fxmax 1 (integer-length nat))])
-            (cons*
-              `(= (,q ,r) (div-mod-power-of-two ,triv ,bits))
-              `(= ,t1 (== ,q 0))
-              (let ([tail (list
-                            `(assert ,src ,t4 ,(format "downcast to Uint<0..~d> failed" nat))
-                            ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
-                            `(= 1 ,var-name (downcast-unsigned ,src #t ,nat ,triv)))])
-                (if (= nat (- (expt 2 bits) 1))
-                    (cons
-                      `(= ,t4 (select ,test ,t1 1))
-                      tail)
-                    (cons*
-                      `(= ,t2 (< ,bits ,nat ,r))
-                      `(= ,t3 (select ,t2 0 ,t1))
-                      `(= ,t4 (select ,test ,t3 1))
-                      tail)))))))
-      (define (downcast-unsigned src nat triv)
-        (with-temp-ids src (t1 t2 t3 t4)
-          (list
-            `(= 1 ,t1 (select ,test ,triv 0))
-            `(= 1 ,t2 (< ,(unsigned-bits) ,nat ,t1))
-            `(= 1 ,t3 (select ,t2 0 1))
-            `(= 1 ,t4 (select ,test ,t3 1))
-            `(assert ,src ,t4 ,(format "downcast to Uint<0..~d> failed" nat))
-            ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
-            `(= 1 ,var-name (downcast-unsigned ,src #t ,nat ,triv))))))
+                      (k t)))))))
     (Statement : Statement (ir) -> Statement * (stmt*)
       [(= ,test ,var-name ,single)
        (when (eqv? test 1) (defined! var-name))
@@ -3264,18 +3248,17 @@
        (with-output-language (Lflattened Statement)
          (if (or (eqv? test 1) (> len (field-bytes)))
              (list `(= (,var-name1 ,var-name2) (field->bytes ,src 1 ,len ,triv)))
-             (with-temp-ids var-name1 (var-name1^ var-name2^ t1 t2 t3 t4)
-               (assert (= (* (field-bytes) 8) (unsigned-bits)))
+             (with-temp-ids (id-src var-name1) (q t1 t2)
                (list
-                 `(= (,var-name1^ ,var-name2^) (field->bytes ,src 1 ,(+ (field-bytes) 1) ,triv))
+                 ; q represents everything that doesn't fit in len bytes and must be zero for the cast to succeed
+                 `(= 1 (,q ,var-name2) (div-mod-power-of-two ,triv ,(fx* len 8)))
+                 ; t1 = q == 0
+                 `(= 1 ,t1 (== ,q 0))
+                 ; t2 = !test || q == 0
+                 `(= 1 ,t2 (select ,test ,t1 1))
+                 `(assert ,src ,t2 ,(format "field value is too large to fit in ~d bytes" len))
                  ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
-                 `(= ,var-name1 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin (fxmax 0 (fx- len (field-bytes))) (field-bytes)) 8)) 1)) ,var-name1^))
-                 `(= ,var-name2 (downcast-unsigned ,src #t 1 ,(max 0 (- (expt 2 (* (fxmin len (field-bytes)) 8)) 1)) ,var-name2^))
-                 `(= ,t1 (== ,var-name1 0))
-                 `(= ,t2 (< ,(unsigned-bits) ,(- (expt 256 len) 1) ,var-name2))
-                 `(= ,t3 (select ,t2 0 ,t1))
-                 `(= ,t4 (select ,test ,t3 1))
-                 `(assert ,src ,t4 ,(format "field value is too large to fit in ~d bytes" len))))))]
+                 `(= 1 ,var-name1 (downcast-unsigned ,src #t #f 0 ,q))))))]
       [(= ,test (,var-name* ...) ,multiple)
        (when (eqv? test 1) (for-each defined! var-name*))
        (list ir)])
@@ -3289,20 +3272,39 @@
                  `(= 1 ,var-name (< ,bits ,triv1 ,triv2)))))))]
       [(bytes->field ,src ,len ,triv1 ,triv2)
        (with-output-language (Lflattened Statement)
-         (if (eqv? test 1)
+         (if (or (eqv? test 1) (<= len (field-bytes)))
              (list `(= ,test ,var-name (bytes->field ,src ,len ,triv1 ,triv2)))
-             (with-temp-ids (id-src var-name) (t1 t2 t3 t4 t5 t6 t7)
-               (let-values ([(q r) (div-and-mod (max-field) (expt 2 (* 8 (field-bytes))))])
-                 (list
-                   `(= 1 ,t1 (< ,(unsigned-bits) ,triv1 ,q))
-                   `(= 1 ,t2 (== ,triv1 ,q))
-                   `(= 1 ,t3 (< ,(unsigned-bits) ,r ,triv2))
-                   `(= 1 ,t4 (select ,t3 0 ,t2))
-                   `(= 1 ,t5 (select ,t1 1 ,t4))
-                   `(= 1 ,t6 (select ,test ,t5 1))
-                   `(assert ,src ,t6 "bytes value is too big to fit in a field")
-                   `(= 1 ,t7 (select ,t5 ,triv1 0))
-                   `(= 1 ,var-name (bytes->field ,src ,len ,t7 ,triv2)))))))]
+             ; 256^k is one more than the largest value that fits in k bytes,
+             ; i.e., k base-256 digits, and is the same as 2^(8k).  So this use
+             ; of div-and-mod produces a remainder r representing the value of
+             ; the low-order (field-bytes) bytes of (max-field) and a quotient
+             ; q representing the value of the bits above that.  triv1 must be
+             ; less than or equal to q, and when triv1 = q, triv2 must be less
+             ; than or equal to r.
+             (let-values ([(q r) (div-and-mod (max-field) (expt 256 (field-bytes)))])
+               (insure-defined (id-src var-name) test triv1
+                 (lambda (triv1)
+                    (insure-defined (id-src var-name) test triv2
+                      (lambda (triv2)
+                        (with-temp-ids (id-src var-name) (t1 t2 t3 t4 t5 t6 t7)
+                          (list
+                            ; t1 = triv1 < q
+                            `(= 1 ,t1 (< ,(unsigned-bits) ,triv1 ,q))
+                            ; t2 = triv1 == q
+                            `(= 1 ,t2 (== ,triv1 ,q))
+                            ; t3 = triv2 > r
+                            `(= 1 ,t3 (< ,(unsigned-bits) ,r ,triv2))
+                            ; t4 = !(triv2 > r) && triv1 == 0
+                            ;    = triv1 == 0 && triv2 <= r
+                            `(= 1 ,t4 (select ,t3 0 ,t2))
+                            ; t5 = triv1 < q || triv1 == 0 && triv2 <= r
+                            `(= 1 ,t5 (select ,t1 1 ,t4))
+                            ; t6 = !test || triv1 < q || triv1 == 0 && triv2 <= r
+                            `(= 1 ,t6 (select ,test ,t5 1))
+                            `(assert ,src ,t6 "bytes value is too big to fit in a field")
+                            ; when bytes->field would fail, provide it something innocuous
+                            `(= 1 ,t7 (select ,t5 ,triv1 0))
+                            `(= 1 ,var-name (bytes->field ,src ,len ,t7 ,triv2)))))))))))]
       [(vector->bytes ,src ,len ,triv ,triv*)
        (with-output-language (Lflattened Statement)
          (let f ([triv* (cons triv triv*)] [rtriv* '()])
@@ -3311,18 +3313,54 @@
                  (list `(= 1 ,var-name (vector->bytes ,src ,len ,(car triv*) ,(cdr triv*) ...))))
                (insure-defined (id-src var-name) test (car triv*)
                  (lambda (var-name) (f (cdr triv*) (cons triv rtriv*)))))))]
-      [(field->unsigned ,src ,safe? ,nat ,triv)
+      [(downcast-unsigned ,src ,safe? ,nat? ,nat ,triv)
+       (define (assert-and-cast test)
+         (list
+           `(assert ,src ,test ,(format "downcast to Uint<0..~d> failed" nat))
+           ; downcast-unsigned is used here with safe = #t to make check-types/Lflattened happy
+           `(= 1 ,var-name (downcast-unsigned ,src #t ,nat? ,nat ,triv))))
        (with-output-language (Lflattened Statement)
          (if (or safe? (eqv? test 1))
-             (list `(= 1 ,var-name (downcast-unsigned ,src ,safe? ,test ,nat ,triv)))
-             (field->unsigned src nat triv)))]
-      [(downcast-unsigned ,src ,safe? ,nat ,triv)
-       (with-output-language (Lflattened Statement)
-         (if (or safe? (eqv? test 1))
-             (list `(= 1 ,var-name (downcast-unsigned ,src ,safe? ,nat ,triv)))
-             (if (defined? triv)
-                 (downcast-unsigned src nat triv)
-                 (field->unsigned src nat triv))))]
+             (list `(= 1 ,var-name (downcast-unsigned ,src ,safe? ,nat? ,nat ,triv)))
+             (if nat?
+                 (if (= nat nat?)
+                     ; it's probably always the case that nat < nat?, but handle this case anyway
+                     (list `(= 1 ,var-name ,triv))
+                     (insure-defined (id-src var-name) test triv
+                       (lambda (triv)
+                         ; triv is known to be < nat?
+                         (with-temp-ids src (t1 t2)
+                           (list
+                             ; t1 = triv <= nat
+                             `(= 1 ,t1 (< ,(fxmax 1 (integer-length nat?)) ,triv ,(+ nat 1)))
+                             ; t2 = !test || triv <= nat
+                             `(= 1 ,t2 (select ,test ,t1 1))
+                             (assert-and-cast t2))))))
+                 ; triv might have any field value
+                 (let ([bits (fxmax 1 (integer-length nat))])
+                   (with-temp-ids (id-src var-name) (q r t1)
+                     (cons*
+                       `(= 1 (,q ,r) (div-mod-power-of-two ,triv ,bits))
+                       ; q represents the high bits and must be zero for the cast to succeed
+                       ; t1 = q == 0
+                       `(= 1 ,t1 (== ,q 0))
+                       ; r represents the low bits and must be <= nat for the cast to succeed
+                       (if (= nat (- (expt 2 bits) 1))
+                           ; in this case, r cannot be > nat
+                           (with-temp-ids (id-src var-name) (t2)
+                             (cons
+                               ; t2 = !test || q == 0
+                               `(= 1 ,t2 (select ,test ,t1 1))
+                               (assert-and-cast t2)))
+                           (with-temp-ids (id-src var-name) (t2 t3 t4)
+                             (cons*
+                               ; t2 = r <= nat
+                               `(= 1 ,t2 (< ,bits ,r ,(+ nat 1)))
+                               ; t3 = q == 0 && r <= nat
+                               `(= 1 ,t3 (select ,t1 ,t2 0))
+                               ; t4 = !test || (q == 0 && r <= nat)
+                               `(= 1 ,t4 (select ,test ,t3 1))
+                               (assert-and-cast t4))))))))))]
       [,single
        (with-output-language (Lflattened Statement)
          (list `(= 1 ,var-name ,ir)))]))
@@ -3723,6 +3761,7 @@
     (flatten-datatypes               Lflattened)
     (optimize-circuit                Lflattened)
     (missing-guard-workarounds       Lflattened)
+    ; rereun optimize-circuit to optimize code added by missing-guard-workarounds
     (optimize-circuit                Lflattened))
 
   (define-checker check-types/Linlined Linlined)
