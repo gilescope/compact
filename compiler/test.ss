@@ -47513,8 +47513,7 @@ groups than for single tests.
         "    { \"op\": \"declare_pub_input\", \"var\": 7 },"
         "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 1 },"
         "    { \"op\": \"constrain_bits\", \"var\": 0, \"bits\": 16 },"
-        "    { \"op\": \"copy\", \"var\": 0 },"
-        "    { \"op\": \"output\", \"var\": 8 }"
+        "    { \"op\": \"output\", \"var\": 0 }"
         "  ]"
         "}"))
     (output-file "compiler/testdir/zkir/bar.zkir"
@@ -47547,8 +47546,7 @@ groups than for single tests.
         "    { \"op\": \"declare_pub_input\", \"var\": 7 },"
         "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 1 },"
         "    { \"op\": \"constrain_bits\", \"var\": 0, \"bits\": 16 },"
-        "    { \"op\": \"copy\", \"var\": 0 },"
-        "    { \"op\": \"output\", \"var\": 8 }"
+        "    { \"op\": \"output\", \"var\": 0 }"
         "  ]"
         "}"))
     )
@@ -49631,7 +49629,6 @@ groups than for single tests.
         "    { \"op\": \"declare_pub_input\", \"var\": 6 },"
         "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 1 },"
         "    { \"op\": \"constrain_bits\", \"var\": 1, \"bits\": 32 },"
-        "    { \"op\": \"copy\", \"var\": 1 },"
         "    { \"op\": \"output\", \"var\": 2 }"
         "  ]"
         "}"))
@@ -51656,9 +51653,8 @@ groups than for single tests.
         "    { \"op\": \"less_than\", \"a\": 9, \"b\": 10, \"bits\": 11 },"
         "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 11, \"b\": 2 },"
         "    { \"op\": \"assert\", \"cond\": 12 },"
-        "    { \"op\": \"copy\", \"var\": 8 },"
-        "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 13, \"b\": 4 },"
-        "    { \"op\": \"output\", \"var\": 14 }"
+        "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 8, \"b\": 4 },"
+        "    { \"op\": \"output\", \"var\": 13 }"
         "  ]"
         "}"))
     )
@@ -51705,9 +51701,8 @@ groups than for single tests.
         "    { \"op\": \"less_than\", \"a\": 9, \"b\": 7, \"bits\": 11 },"
         "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 10, \"b\": 2 },"
         "    { \"op\": \"assert\", \"cond\": 11 },"
-        "    { \"op\": \"copy\", \"var\": 8 },"
-        "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 12, \"b\": 4 },"
-        "    { \"op\": \"output\", \"var\": 13 }"
+        "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 8, \"b\": 4 },"
+        "    { \"op\": \"output\", \"var\": 12 }"
         "  ]"
         "}"))
     )

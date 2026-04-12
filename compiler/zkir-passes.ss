@@ -344,18 +344,16 @@
                                   [(ty (,alignment* ...) (,primitive-type* ...)) (length primitive-type*)]))])
              (list ledger-op (apply + (type-length type) (map type-length type*))))])
         (Statement : Statement (ir) -> * (void)
+          ; FIXME: zkir downcast-unsigned needs to respect test
+          ; NB: missing-guard-workarounds now implements a workaround that ensures
+          ; downcast-unsigned's safe flag is #t whenever the test might be false.
           [(= ,[* test] ,var-name (downcast-unsigned ,src ,safe ,nat? ,nat ,[* triv]))
            (unless safe
              (constrain-type (with-output-language (Lflattened Primitive-Type)
                                                    `(tfield ,nat))
                              triv))
-           (if (id? triv)
-               (let ([index (var-idx triv)])
-                 (hashtable-set! varid-ht var-name index)
-                 index)
-               (begin
-                 (print-gate "copy" `[var ,triv])
-                 (new-var! var-name)))]
+           ; triv is a stack index for a literal or variable
+           (hashtable-set! varid-ht var-name triv)]
           [(= ,[* test] ,var-name ,single)
            (Single single)
            (new-var! var-name)]
@@ -374,8 +372,8 @@
                         (print-gate "private_input" '[guard null])
                         (print-gate "private_input" `[guard ,test]))
                     (let ([index (new-var! var)])
-                      ; NB: the public inputs are 0 if a conditionally executed witness
-                      ; call is not executed, and at present constrain_type is always
+                      ; NB: the private inputs are 0 if a conditionally executed witness
+                      ; call is not executed, and at present constrain-type is always
                       ; okay with zero
                       (constrain-type type index)
                       index))
@@ -761,9 +759,6 @@
                    ; NB: missing-guard-workarounds now implements a workaround that ensures
                    ; vector->bytes gets valid inputs when test turns out to be false
                    (print-gate "reconstitute_field" `[divisor ,d] `[modulus ,triv] `[bits 8]))))]
-          ; FIXME: zkir downcast-unsigned needs to respect test
-          ; NB: missing-guard-workarounds now implements a workaround that ensures
-          ; downcast-unsigned's safe flag is #t whenever the test might be false.
           [(downcast-unsigned ,src ,safe ,nat? ,nat ,[* triv])
            (assertf cannot-happen "handled directly by Statement")]
           [(select ,[* triv0] ,[* triv1] ,[* triv2])
