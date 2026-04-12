@@ -2684,31 +2684,33 @@
         (define (commutative-trivs-equal? triv1 triv1^ triv2 triv2^)
           (or (trivs-equal? triv1 triv1^ triv2 triv2^)
               (trivs-equal? triv1 triv2^ triv2 triv1^)))
-        (define (nontriv-single-equal? single single^)
-          (T Single single single^
-             [(+ ,mbits ,triv1 ,triv2) (+ ,mbits^ ,triv1^ ,triv2^)
-              (and (eqv? mbits mbits^)
-                   (commutative-trivs-equal? triv1 triv1^ triv2 triv2^))]
-             [(- ,mbits ,triv1 ,triv2) (- ,mbits^ ,triv1^ ,triv2^)
-              (and (eqv? mbits mbits^)
-                   (trivs-equal? triv1 triv1^ triv2 triv2^))]
-             [(* ,mbits ,triv1 ,triv2) (* ,mbits^ ,triv1^ ,triv2^)
-              (and (eqv? mbits mbits^)
-                   (commutative-trivs-equal? triv1 triv1^ triv2 triv2^))]
-             [(< ,bits ,triv1 ,triv2) (< ,bits^ ,triv1^ ,triv2^)
-              (and (eqv? bits bits^)
-                   (trivs-equal? triv1 triv1^ triv2 triv2^))]
-             [(== ,triv1 ,triv2) (== ,triv1^ ,triv2^)
-              (commutative-trivs-equal? triv1 triv1^ triv2 triv2^)]
-             [(select ,triv0 ,triv1 ,triv2) (select ,triv0^ ,triv1^ ,triv2^)
-              (trivs-equal? triv0 triv0^ triv1 triv1^ triv2 triv2^)]
-             [(bytes-ref ,triv ,nat) (bytes-ref ,triv^ ,nat^)
-              (and (eqv? nat nat^)
-                   (triv-equal? triv triv^))]
-             [(downcast-unsigned ,src ,safe ,nat? ,nat ,triv) (downcast-unsigned ,src^ ,safe^ ,nat?^ ,nat^ ,triv^)
-              (and (eqv? nat? nat?^)
-                   (eqv? nat nat^)
-                   (triv-equal? triv triv^))]))
+        (define (nontriv-single-equal? test.single test.single^)
+          (and (triv-equal? (car test.single) (car test.single^))
+               (let ([single (cdr test.single)] [single^ (cdr test.single^)])
+                 (T Single single single^
+                    [(+ ,mbits ,triv1 ,triv2) (+ ,mbits^ ,triv1^ ,triv2^)
+                     (and (eqv? mbits mbits^)
+                          (commutative-trivs-equal? triv1 triv1^ triv2 triv2^))]
+                    [(- ,mbits ,triv1 ,triv2) (- ,mbits^ ,triv1^ ,triv2^)
+                     (and (eqv? mbits mbits^)
+                          (trivs-equal? triv1 triv1^ triv2 triv2^))]
+                    [(* ,mbits ,triv1 ,triv2) (* ,mbits^ ,triv1^ ,triv2^)
+                     (and (eqv? mbits mbits^)
+                          (commutative-trivs-equal? triv1 triv1^ triv2 triv2^))]
+                    [(< ,bits ,triv1 ,triv2) (< ,bits^ ,triv1^ ,triv2^)
+                     (and (eqv? bits bits^)
+                          (trivs-equal? triv1 triv1^ triv2 triv2^))]
+                    [(== ,triv1 ,triv2) (== ,triv1^ ,triv2^)
+                     (commutative-trivs-equal? triv1 triv1^ triv2 triv2^)]
+                    [(select ,triv0 ,triv1 ,triv2) (select ,triv0^ ,triv1^ ,triv2^)
+                     (trivs-equal? triv0 triv0^ triv1 triv1^ triv2 triv2^)]
+                    [(bytes-ref ,triv ,nat) (bytes-ref ,triv^ ,nat^)
+                     (and (eqv? nat nat^)
+                          (triv-equal? triv triv^))]
+                    [(downcast-unsigned ,src ,safe ,nat? ,nat ,triv) (downcast-unsigned ,src^ ,safe^ ,nat?^ ,nat^ ,triv^)
+                     (and (eqv? nat? nat?^)
+                          (eqv? nat nat^)
+                          (triv-equal? triv triv^))]))))
         (define (triv-vec-equal? v1 v2)
           (let ([n (vector-length v1)])
             (and (fx= (vector-length v2) n)
@@ -2723,20 +2725,20 @@
       ; Copyright 1984-2017 Cisco Systems Inc. and licensed under Apache Version 2.0
       (module (nontriv-single-hash triv-vec-hash assert-hash)
         (define (update hc k)
-          (fxlogxor (#3%fx+ (#3%fxsll hc 2) hc) k))
+          (#3%fx+ (#3%fxsll hc 2) hc k))
         (define (nat-hash nat hc)
           (update hc (if (fixnum? nat) nat (modulo nat (most-positive-fixnum)))))
         (define (bits-hash bits hc)
           (nat-hash bits hc))
         (define (mbits-hash mbits hc)
-          (if mbits (bits-hash mbits hc) (update hc 729589248)))
+          (if mbits (bits-hash mbits hc) hc))
         (define (triv-hash triv hc)
           (nanopass-case (Lflattened Triv) triv
             [,var-name (update hc (id-uniq var-name))]
             [,nat (nat-hash nat hc)]
             [else (assert cannot-happen)]))
         (define (commutative-triv-hash triv1 triv2 hc)
-          (fxlogxor (triv-hash triv1 hc) (triv-hash triv2 hc)))
+          (update hc (#3%fx+ (triv-hash triv1 0) (triv-hash triv2 0))))
         (define (nontriv-single-hash test.single)
           (triv-hash (car test.single)
             (nanopass-case (Lflattened Single) (cdr test.single)
@@ -2744,22 +2746,22 @@
               [(- ,mbits ,triv1 ,triv2) (mbits-hash mbits (triv-hash triv1 (triv-hash triv2 410225874)))]
               [(* ,mbits ,triv1 ,triv2) (mbits-hash mbits (commutative-triv-hash triv1 triv2 513566316))]
               [(< ,bits ,triv1 ,triv2) (bits-hash bits (triv-hash triv1 (triv-hash triv2 730407)))]
-              [(== ,triv1 ,triv2) (commutative-triv-hash triv1 triv2 729589248)]
+              [(== ,triv1 ,triv2) (commutative-triv-hash triv1 triv2 45862114)]
               [(select ,triv0 ,triv1 ,triv2)
                (triv-hash triv0
                  (triv-hash triv1
                    (triv-hash triv2
-                     729589248)))]
+                     33905826)))]
               [(bytes-ref ,triv ,nat)
                (triv-hash nat
-                 (triv-hash triv 729589248))]
+                 (triv-hash triv 29360158))]
               [(bytes->field ,src ,len ,triv1 ,triv2)
                (triv-hash triv1
                  (triv-hash triv2
                    (triv-hash len 536285952)))]
               [(vector->bytes ,triv ,triv* ...)
                (fold-left (lambda (hc triv) (triv-hash triv hc))
-                 729589248
+                 447395717
                  (cons triv triv*))]
               [(downcast-unsigned ,src ,safe ,nat? ,nat ,triv)
                (triv-hash triv
@@ -3763,6 +3765,8 @@
       [,nat (with-output-language (Lflattened Primitive-Type) `(tfield ,nat))])
     )
 
+  (define optimize-circuit2 (lambda (x) (optimize-circuit x)))
+
   (define-passes circuit-passes
     (drop-ledger-runtime             Lposttypescript)
     (replace-enums                   Lnoenums)
@@ -3777,7 +3781,7 @@
     (optimize-circuit                Lflattened)
     (missing-guard-workarounds       Lflattened)
     ; rereun optimize-circuit to optimize code added by missing-guard-workarounds
-    (optimize-circuit                Lflattened))
+    (optimize-circuit2               Lflattened))
 
   (define-checker check-types/Linlined Linlined)
   (define-checker check-types/Lflattened Lflattened)
