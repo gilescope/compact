@@ -1006,7 +1006,7 @@
     (Argument (arg)
       (var-name type) => (bracket var-name type))
     (Statement (stmt)
-      (= test var-name rhs)                  => (= var-name 2 rhs)
+      (= test var-name rhs)             => (= test var-name 2 rhs)
       (assert src test mesg)            => (assert test #f mesg))
     (Rhs (rhs)
       triv
