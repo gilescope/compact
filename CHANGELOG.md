@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Toolchain 0.30.106, language 0.22.101, runtime 0.15.101]
+## [Toolchain 0.30.107, language 0.22.101, runtime 0.15.101]
 
 ### Fixed
 
@@ -36,6 +36,19 @@ If the increase in circuit size is problematic for a particular contract, develo
 should consider moving downcasts, conversions, and relational comparisons outside
 of `if` expressions where possible until zkir supports the required guards and the
 compiler workarounds have been removed.
+
+## [Toolchain 0.30.106, language 0.22.101, runtime 0.15.101]
+
+### Added
+
+- Adds a `ledger` key to `contract-info.json` listing the contract's
+  ledger fields. Each entry contains the field name, path index,
+  export status, storage kind (Cell, Counter, Map, Set, List,
+  MerkleTree, HistoricMerkleTree), and fully-resolved type tree.
+  This enables language-agnostic tooling to discover a contract's
+  ledger layout from the compiler output alone. Both exported and
+  non-exported fields are included since the full layout is required
+  to navigate the on-chain state tree and construct initial states.
 
 ## [Toolchain 0.30.105, language 0.22.101, runtime 0.15.101]
 
