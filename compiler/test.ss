@@ -27579,6 +27579,7 @@ groups than for single tests.
              (tunsigned 1023)
           (if %b.1
               (downcast-unsigned
+                2046
                 1023
                 (+ 11
                    (safe-cast (tunsigned 2046) (tunsigned 1023) %x.2)
@@ -27699,6 +27700,7 @@ groups than for single tests.
              (tunsigned 1023)
           (if %b.1
               (downcast-unsigned
+                2046
                 1023
                 (+ 11
                    (safe-cast (tunsigned 2046) (tunsigned 1023) %x.2)
@@ -27828,7 +27830,7 @@ groups than for single tests.
         (public-ledger-declaration (constructor () (tuple)))
         (circuit %foo.0 ([%n1.1 (tunsigned 8191)])
              (tunsigned 127)
-          (downcast-unsigned 127 %n1.1))))
+          (downcast-unsigned 8191 127 %n1.1))))
     )
 
   (test
@@ -27932,7 +27934,7 @@ groups than for single tests.
         (public-ledger-declaration (constructor () (tuple)))
         (circuit %foo.0 ([%b.1 (tboolean)])
              (tunsigned 0)
-          (if %b.1 (downcast-unsigned 0 1) 0))))
+          (if %b.1 (downcast-unsigned 1 0 1) 0))))
     )
 
   (test
@@ -30172,6 +30174,7 @@ groups than for single tests.
                  (tunsigned 65535)
               (let* ([[%x.8 (tunsigned 65535)]
                       (downcast-unsigned
+                        196605
                         65535
                         (+ 18
                            (safe-cast (tunsigned 196605)
@@ -30303,6 +30306,7 @@ groups than for single tests.
                       [%n.5 (tunsigned 65535)])
                  (tunsigned 4294967295)
               (downcast-unsigned
+                4295032830 
                 4294967295
                 (+ 33
                    (safe-cast (tunsigned 4295032830) (tunsigned 4294967295) %a.4)
@@ -37908,13 +37912,13 @@ groups than for single tests.
                       (tuple
                         (let* ([[%x.7 (tunsigned 255)] (tuple-ref %t.5 0)]
                                [[%y.8 (tunsigned 255)] (tuple-ref %t.6 0)])
-                          (downcast-unsigned 255 (+ 9 %x.7 %y.8)))
+                          (downcast-unsigned 510 255 (+ 9 %x.7 %y.8)))
                         (let* ([[%x.9 (tunsigned 255)] (tuple-ref %t.5 1)]
                                [[%y.10 (tunsigned 255)] (tuple-ref %t.6 1)])
-                          (downcast-unsigned 255 (+ 9 %x.9 %y.10)))
+                          (downcast-unsigned 510 255 (+ 9 %x.9 %y.10)))
                         (let* ([[%x.11 (tunsigned 255)] (tuple-ref %t.5 2)]
                                [[%y.12 (tunsigned 255)] (tuple-ref %t.6 2)])
-                          (downcast-unsigned 255 (+ 9 %x.11 %y.12)))))])
+                          (downcast-unsigned 510 255 (+ 9 %x.11 %y.12)))))])
               (public-ledger %a.1 (0) write %tmp.4))
             (let* ([[%tmp.13 (tvector 3 (tunsigned 255))]
                     (let* ([[%t.14 (tvector 3 (tunsigned 255))]
@@ -37927,13 +37931,13 @@ groups than for single tests.
                       (tuple
                         (let* ([[%x.16 (tunsigned 255)] (tuple-ref %t.14 0)]
                                [[%y.17 (tunsigned 255)] (tuple-ref %t.15 0)])
-                          (downcast-unsigned 255 (+ 9 %x.16 %y.17)))
+                          (downcast-unsigned 510 255 (+ 9 %x.16 %y.17)))
                         (let* ([[%x.18 (tunsigned 255)] (tuple-ref %t.14 1)]
                                [[%y.19 (tunsigned 255)] (tuple-ref %t.15 1)])
-                          (downcast-unsigned 255 (+ 9 %x.18 %y.19)))
+                          (downcast-unsigned 510 255 (+ 9 %x.18 %y.19)))
                         (let* ([[%x.20 (tunsigned 255)] (tuple-ref %t.14 2)]
                                [[%y.21 (tunsigned 255)] (tuple-ref %t.15 2)])
-                          (downcast-unsigned 255 (+ 9 %x.20 %y.21)))))])
+                          (downcast-unsigned 510 255 (+ 9 %x.20 %y.21)))))])
               (public-ledger %a.1 (0) write %tmp.13))
             (public-ledger %a.1 (0) read)))))
     )
@@ -38030,13 +38034,13 @@ groups than for single tests.
                       (tuple
                         (let* ([[%x.7 (tunsigned 255)] (tuple-ref %t.5 0)]
                                [[%y.8 (tunsigned 255)] (tuple-ref %t.6 0)])
-                          (downcast-unsigned 255 (+ 9 %x.7 %y.8)))
+                          (downcast-unsigned 510 255 (+ 9 %x.7 %y.8)))
                         (let* ([[%x.9 (tunsigned 255)] (tuple-ref %t.5 1)]
                                [[%y.10 (tunsigned 255)] (tuple-ref %t.6 1)])
-                          (downcast-unsigned 255 (+ 9 %x.9 %y.10)))
+                          (downcast-unsigned 510 255 (+ 9 %x.9 %y.10)))
                         (let* ([[%x.11 (tunsigned 255)] (tuple-ref %t.5 2)]
                                [[%y.12 (tunsigned 255)] (tuple-ref %t.6 2)])
-                          (downcast-unsigned 255 (+ 9 %x.11 %y.12)))))])
+                          (downcast-unsigned 510 255 (+ 9 %x.11 %y.12)))))])
               (public-ledger %a.1 (0) write %tmp.4))
             (let* ([[%tmp.13 (tvector 3 (tunsigned 255))]
                     (let* ([[%t.14 (tvector 3 (tunsigned 255))]
@@ -38049,13 +38053,13 @@ groups than for single tests.
                       (tuple
                         (let* ([[%x.16 (tunsigned 255)] (tuple-ref %t.14 0)]
                                [[%y.17 (tunsigned 255)] (tuple-ref %t.15 0)])
-                          (downcast-unsigned 255 (+ 9 %x.16 %y.17)))
+                          (downcast-unsigned 510 255 (+ 9 %x.16 %y.17)))
                         (let* ([[%x.18 (tunsigned 255)] (tuple-ref %t.14 1)]
                                [[%y.19 (tunsigned 255)] (tuple-ref %t.15 1)])
-                          (downcast-unsigned 255 (+ 9 %x.18 %y.19)))
+                          (downcast-unsigned 510 255 (+ 9 %x.18 %y.19)))
                         (let* ([[%x.20 (tunsigned 255)] (tuple-ref %t.14 2)]
                                [[%y.21 (tunsigned 255)] (tuple-ref %t.15 2)])
-                          (downcast-unsigned 255 (+ 9 %x.20 %y.21)))))])
+                          (downcast-unsigned 510 255 (+ 9 %x.20 %y.21)))))])
               (public-ledger %a.1 (0) write %tmp.13))
             (public-ledger %a.1 (0) read)))))
     )
@@ -38441,7 +38445,7 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %foo.2 ([%b.3 (tboolean)] [%x.4 (tfield)])
              (tboolean)
-          (= %t.5 (public-ledger #t %forceField.1 (0) write 7))
+          (= #t %t.5 (public-ledger %forceField.1 (0) write 7))
           #t)))
     )
 
@@ -38461,11 +38465,11 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %foo.2 ([%b.3 (tboolean)] [%x.4 (tfield)])
              (tboolean)
-          (= %t.5 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.6 (== %x.4 3))
-          (= %t.7 (select #t %t.6 #t))
+          (= #t %t.5 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.6 (== %x.4 3))
+          (= #t %t.7 (select #t %t.6 #t))
           (assert %t.7 "oops 1")
-          (= %t.8 (tuple))
+          (= #t %t.8 (tuple))
           %b.3)))
     )
 
@@ -38485,11 +38489,11 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %foo.2 ([%b.3 (tboolean)] [%x.4 (tunsigned 65535)])
              (tboolean)
-          (= %t.5 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.6 (< 16 #t %x.4 3))
-          (= %t.7 (select #t %t.6 #t))
+          (= #t %t.5 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.6 (< 16 %x.4 3))
+          (= #t %t.7 (select #t %t.6 #t))
           (assert %t.7 "oops 1")
-          (= %t.8 (tuple))
+          (= #t %t.8 (tuple))
           %b.3)))
     )
 
@@ -38512,18 +38516,18 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %foo.2 ([%b.3 (tboolean)] [%x.4 (tfield)])
              (tboolean)
-          (= %t.5 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.6 (select %b.3 #t #f))
-          (= %t.7 (select %b.3 #f #t))
-          (= %t.8 (tuple))
-          (= %t.9 (== %x.4 3))
-          (= %t.10 (select %t.7 %t.9 #t))
+          (= #t %t.5 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.6 (select %b.3 #t #f))
+          (= #t %t.7 (select %b.3 #f #t))
+          (= %t.6 %t.8 (tuple))
+          (= %t.7 %t.9 (== %x.4 3))
+          (= #t %t.10 (select %t.7 %t.9 #t))
           (assert %t.10 "oops 2")
-          (= %t.11 (tuple))
-          (= %t.12 (select %b.3 #t #f))
-          (= %t.13 (select %b.3 #f #t))
-          (= %t.14 (== %x.4 3))
-          (= %t.15 (select %b.3 %t.14 #f))
+          (= %t.7 %t.11 (tuple))
+          (= #t %t.12 (select %b.3 #t #f))
+          (= #t %t.13 (select %b.3 #f #t))
+          (= %t.12 %t.14 (== %x.4 3))
+          (= #t %t.15 (select %b.3 %t.14 #f))
           %t.15)))
     )
 
@@ -38542,11 +38546,11 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %foo.2 ()
              (tvector 3 (tvector 2 (tfield)))
-          (= %t.3 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.4 (tuple 1 2))
-          (= %t.5 (tuple 3 4))
-          (= %t.6 (tuple 5 6))
-          (= %t.7 (tuple %t.4 %t.5 %t.6))
+          (= #t %t.3 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.4 (tuple 1 2))
+          (= #t %t.5 (tuple 3 4))
+          (= #t %t.6 (tuple 5 6))
+          (= #t %t.7 (tuple %t.4 %t.5 %t.6))
           %t.7)))
     )
 
@@ -38562,8 +38566,8 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %baz.2 ([%arg.3 (tbytes 20)])
              (tfield)
-          (= %t.4 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.5 (bytes->field #t 20 %arg.3))
+          (= #t %t.4 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.5 (bytes->field 20 %arg.3))
           %t.5))))
 
   (test
@@ -38578,8 +38582,8 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %foo.2 ([%arg.3 (tfield)])
              (tbytes 20)
-          (= %t.4 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.5 (field->bytes #t 20 %arg.3))
+          (= #t %t.4 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.5 (field->bytes 20 %arg.3))
           %t.5))))
 
   (test
@@ -38611,22 +38615,22 @@ groups than for single tests.
         (circuit %foo.2 ([%v.3 (tvector 7 (tfield))]
                          [%b.4 (tbytes 7)])
              (tfield)
-          (= %t.5 (public-ledger #t %forceField.1 (0) write 7))
+          (= #t %t.5 (public-ledger %forceField.1 (0) write 7))
           17)
         (circuit %foo.6 ([%v.7 (tvector 30 (tboolean))]
                          [%b.8 (tbytes 30)])
              (tfield)
-          (= %t.9 (public-ledger #t %forceField.1 (0) write 7))
+          (= #t %t.9 (public-ledger %forceField.1 (0) write 7))
           17)
         (circuit %foo.10 ([%x.11 (tfield)])
              (tfield)
-          (= %t.12 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.13 (+ #f %x.11 1))
+          (= #t %t.12 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.13 (+ #f %x.11 1))
           %t.13)
         (circuit %bar.14 ([%x.15 (tfield)])
              (tfield)
-          (= %t.16 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.17 (- #f %x.15 1))
+          (= #t %t.16 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.17 (- #f %x.15 1))
           %t.17)))
     )
 
@@ -38645,7 +38649,7 @@ groups than for single tests.
         (public-ledger-declaration ((%field1.2 (0) (Counter))))
         (circuit %foo.3 ()
              (tfield)
-          (= %t.0 (public-ledger #t %field1.2 (0) read))
+          (= #t %t.0 (public-ledger %field1.2 (0) read))
           %t.0)))
     )
 
@@ -38764,83 +38768,83 @@ groups than for single tests.
                                     (value (tunsigned
                                              340282366920938463463374607431768211455)))])
              (tboolean)
-          (= %t.15 (public-ledger #t %field0.1 (0) resetToDefault))
-          (= %t.16 (public-ledger #t %field0.1 (0) increment 5))
-          (= %t.17 (public-ledger #t %field0.1 (0) decrement 2))
-          (= %t.18 (public-ledger #t %field0.1 (0) lessThan 4))
-          (= %t.19 (select #t %t.18 #t))
+          (= #t %t.15 (public-ledger %field0.1 (0) resetToDefault))
+          (= #t %t.16 (public-ledger %field0.1 (0) increment 5))
+          (= #t %t.17 (public-ledger %field0.1 (0) decrement 2))
+          (= #t %t.18 (public-ledger %field0.1 (0) lessThan 4))
+          (= #t %t.19 (select #t %t.18 #t))
           (assert %t.19 "oops 1")
-          (= %t.20 (tuple))
-          (= %t.21 (public-ledger #t %field1.2 (1) write #t))
-          (= %q.22 (public-ledger #t %field1.2 (1) read))
-          (= %t.23 (public-ledger #t %field2.3 (2) resetToDefault))
-          (= %t.24 (public-ledger #t %field2.3 (2) isEmpty))
-          (= %t.25 (select #t %t.24 #t))
+          (= #t %t.20 (tuple))
+          (= #t %t.21 (public-ledger %field1.2 (1) write #t))
+          (= #t %q.22 (public-ledger %field1.2 (1) read))
+          (= #t %t.23 (public-ledger %field2.3 (2) resetToDefault))
+          (= #t %t.24 (public-ledger %field2.3 (2) isEmpty))
+          (= #t %t.25 (select #t %t.24 #t))
           (assert %t.25 "oops 2a")
-          (= %t.26 (tuple))
-          (= %t.27 (public-ledger #t %field2.3 (2) size))
-          (= %t.28 (== %t.27 0))
-          (= %t.29 (select #t %t.28 #t))
+          (= #t %t.26 (tuple))
+          (= #t %t.27 (public-ledger %field2.3 (2) size))
+          (= #t %t.28 (== %t.27 0))
+          (= #t %t.29 (select #t %t.28 #t))
           (assert %t.29 "oops 2b")
-          (= %t.30 (tuple))
-          (= %t.31 (public-ledger #t %field2.3 (2) member %x.13))
-          (= %t.32 (select %t.31 #t #f))
-          (= %t.33 (select %t.31 #f #t))
-          (= %t.34 (select %t.31 #f #t))
-          (= %t.35 (select #t %t.34 #t))
+          (= #t %t.30 (tuple))
+          (= #t %t.31 (public-ledger %field2.3 (2) member %x.13))
+          (= #t %t.32 (select %t.31 #t #f))
+          (= #t %t.33 (select %t.31 #f #t))
+          (= #t %t.34 (select %t.31 #f #t))
+          (= #t %t.35 (select #t %t.34 #t))
           (assert %t.35 "oops 2c")
-          (= %t.36 (tuple))
-          (= %t.37 (public-ledger #t %field2.3 (2) insert %x.13))
-          (= %tmp.38 (+ #f %x.13 1))
-          (= %t.39 (public-ledger #t %field2.3 (2) insert %tmp.38))
-          (= %tmp.40 (+ #f %x.13 2))
-          (= %t.41 (public-ledger #t %field2.3 (2) insert %tmp.40))
-          (= %tmp.42 (+ #f %x.13 1))
-          (= %t.43 (public-ledger #t %field2.3 (2) insert %tmp.42))
-          (= %t.44 (public-ledger #t %field2.3 (2) size))
-          (= %t.45 (== %t.44 3))
-          (= %t.46 (select #t %t.45 #t))
+          (= #t %t.36 (tuple))
+          (= #t %t.37 (public-ledger %field2.3 (2) insert %x.13))
+          (= #t %tmp.38 (+ #f %x.13 1))
+          (= #t %t.39 (public-ledger %field2.3 (2) insert %tmp.38))
+          (= #t %tmp.40 (+ #f %x.13 2))
+          (= #t %t.41 (public-ledger %field2.3 (2) insert %tmp.40))
+          (= #t %tmp.42 (+ #f %x.13 1))
+          (= #t %t.43 (public-ledger %field2.3 (2) insert %tmp.42))
+          (= #t %t.44 (public-ledger %field2.3 (2) size))
+          (= #t %t.45 (== %t.44 3))
+          (= #t %t.46 (select #t %t.45 #t))
           (assert %t.46 "oops 2d")
-          (= %t.47 (tuple))
-          (= %tmp.48 (+ #f %x.13 1))
-          (= %t.49 (public-ledger #t %field2.3 (2) remove %tmp.48))
-          (= %t.50 (public-ledger #t %field2.3 (2) size))
-          (= %t.51 (== %t.50 2))
-          (= %t.52 (select #t %t.51 #t))
+          (= #t %t.47 (tuple))
+          (= #t %tmp.48 (+ #f %x.13 1))
+          (= #t %t.49 (public-ledger %field2.3 (2) remove %tmp.48))
+          (= #t %t.50 (public-ledger %field2.3 (2) size))
+          (= #t %t.51 (== %t.50 2))
+          (= #t %t.52 (select #t %t.51 #t))
           (assert %t.52 "oops 2e")
-          (= %t.53 (tuple))
-          (= %t.54 (public-ledger #t %field2.3 (2) isEmpty))
-          (= %t.55 (select %t.54 #t #f))
-          (= %t.56 (select %t.54 #f #t))
-          (= %t.57 (select %t.54 #f #t))
-          (= %t.58 (select #t %t.57 #t))
+          (= #t %t.53 (tuple))
+          (= #t %t.54 (public-ledger %field2.3 (2) isEmpty))
+          (= #t %t.55 (select %t.54 #t #f))
+          (= #t %t.56 (select %t.54 #f #t))
+          (= #t %t.57 (select %t.54 #f #t))
+          (= #t %t.58 (select #t %t.57 #t))
           (assert %t.58 "oops 2f")
-          (= %t.59 (tuple))
-          (= %t.60 (public-ledger #t %field2.3 (2) member %x.13))
-          (= %t.61 (select #t %t.60 #t))
+          (= #t %t.59 (tuple))
+          (= #t %t.60 (public-ledger %field2.3 (2) member %x.13))
+          (= #t %t.61 (select #t %t.60 #t))
           (assert %t.61 "oops 2g")
-          (= %t.62 (tuple))
-          (= %tmp.63 (+ #f %x.13 1))
-          (= %t.64 (public-ledger #t %field2.3 (2) member %tmp.63))
-          (= %t.65 (select %t.64 #t #f))
-          (= %t.66 (select %t.64 #f #t))
-          (= %t.67 (select %t.64 #f #t))
-          (= %t.68 (select #t %t.67 #t))
+          (= #t %t.62 (tuple))
+          (= #t %tmp.63 (+ #f %x.13 1))
+          (= #t %t.64 (public-ledger %field2.3 (2) member %tmp.63))
+          (= #t %t.65 (select %t.64 #t #f))
+          (= #t %t.66 (select %t.64 #f #t))
+          (= #t %t.67 (select %t.64 #f #t))
+          (= #t %t.68 (select #t %t.67 #t))
           (assert %t.68 "oops 2h")
-          (= %t.69 (tuple))
-          (= %tmp.70 (+ #f %x.13 2))
-          (= %t.71 (public-ledger #t %field2.3 (2) member %tmp.70))
-          (= %t.72 (select #t %t.71 #t))
+          (= #t %t.69 (tuple))
+          (= #t %tmp.70 (+ #f %x.13 2))
+          (= #t %t.71 (public-ledger %field2.3 (2) member %tmp.70))
+          (= #t %t.72 (select #t %t.71 #t))
           (assert %t.72 "oops 2i")
-          (= %t.73 (tuple))
-          (= %t.74 (public-ledger #t %field3.4 (3) resetToDefault))
-          (= %t.75 (public-ledger #t %field4.5 (4) resetToDefault))
-          (= %t.76 (public-ledger #t %field5.6 (5) resetToDefault))
-          (= %t.77 (public-ledger #t %field6.7 (6) resetToDefault))
-          (= %value.78 (public-ledger #t %kernel.0 () self))
-          (= %t.79
+          (= #t %t.73 (tuple))
+          (= #t %t.74 (public-ledger %field3.4 (3) resetToDefault))
+          (= #t %t.75 (public-ledger %field4.5 (4) resetToDefault))
+          (= #t %t.76 (public-ledger %field5.6 (5) resetToDefault))
+          (= #t %t.77 (public-ledger %field6.7 (6) resetToDefault))
+          (= #t %value.78 (public-ledger %kernel.0 () self))
+          (= #t %t.79
              (default (tstruct ZswapCoinPublicKey (bytes (tbytes 32)))))
-          (= %tmp.80
+          (= #t %tmp.80
              (new (tstruct Either
                     (is_left (tboolean))
                     (left (tstruct ZswapCoinPublicKey (bytes (tbytes 32))))
@@ -38848,13 +38852,13 @@ groups than for single tests.
                #f
                %t.79
                %value.78))
-          (= %t.81
-             (public-ledger #t %field7.8 (7) writeCoin %ci.14 %tmp.80))
-          (= %t.82 (public-ledger #t %field8.9 (8) resetToDefault))
-          (= %value.83 (public-ledger #t %kernel.0 () self))
-          (= %t.84
+          (= #t %t.81
+             (public-ledger %field7.8 (7) writeCoin %ci.14 %tmp.80))
+          (= #t %t.82 (public-ledger %field8.9 (8) resetToDefault))
+          (= #t %value.83 (public-ledger %kernel.0 () self))
+          (= #t %t.84
              (default (tstruct ZswapCoinPublicKey (bytes (tbytes 32)))))
-          (= %tmp.85
+          (= #t %tmp.85
              (new (tstruct Either
                     (is_left (tboolean))
                     (left (tstruct ZswapCoinPublicKey (bytes (tbytes 32))))
@@ -38862,13 +38866,13 @@ groups than for single tests.
                #f
                %t.84
                %value.83))
-          (= %t.86
-             (public-ledger #t %field8.9 (8) insertCoin %ci.14 %tmp.85))
-          (= %t.87 (public-ledger #t %field9.10 (9) resetToDefault))
-          (= %value.88 (public-ledger #t %kernel.0 () self))
-          (= %t.89
+          (= #t %t.86
+             (public-ledger %field8.9 (8) insertCoin %ci.14 %tmp.85))
+          (= #t %t.87 (public-ledger %field9.10 (9) resetToDefault))
+          (= #t %value.88 (public-ledger %kernel.0 () self))
+          (= #t %t.89
              (default (tstruct ZswapCoinPublicKey (bytes (tbytes 32)))))
-          (= %tmp.90
+          (= #t %tmp.90
              (new (tstruct Either
                     (is_left (tboolean))
                     (left (tstruct ZswapCoinPublicKey (bytes (tbytes 32))))
@@ -38876,16 +38880,16 @@ groups than for single tests.
                #f
                %t.89
                %value.88))
-          (= %t.91
-             (public-ledger #t %field9.10 (9) insertCoin
+          (= #t %t.91
+             (public-ledger %field9.10 (9) insertCoin
                %x.13
                %ci.14
                %tmp.90))
-          (= %t.92 (public-ledger #t %field10.11 (10) resetToDefault))
-          (= %value.93 (public-ledger #t %kernel.0 () self))
-          (= %t.94
+          (= #t %t.92 (public-ledger %field10.11 (10) resetToDefault))
+          (= #t %value.93 (public-ledger %kernel.0 () self))
+          (= #t %t.94
              (default (tstruct ZswapCoinPublicKey (bytes (tbytes 32)))))
-          (= %tmp.95
+          (= #t %tmp.95
              (new (tstruct Either
                     (is_left (tboolean))
                     (left (tstruct ZswapCoinPublicKey (bytes (tbytes 32))))
@@ -38893,8 +38897,8 @@ groups than for single tests.
                #f
                %t.94
                %value.93))
-          (= %t.96
-             (public-ledger #t %field10.11 (10) pushFrontCoin
+          (= #t %t.96
+             (public-ledger %field10.11 (10) pushFrontCoin
                %ci.14
                %tmp.95))
           %q.22)))
@@ -38924,13 +38928,13 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %foo.2 ([%x.3 (tfield)])
              (tunsigned 65535)
-          (= %t.4 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.5 (downcast-unsigned #t #f 65535 %x.3))
+          (= #t %t.4 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.5 (downcast-unsigned #f 65535 %x.3))
           %t.5)
         (circuit %bar.6 ([%x.7 (tunsigned 4294967295)])
              (tunsigned 65535)
-          (= %t.8 (public-ledger #t %forceField.1 (0) write 7))
-          (= %t.9 (downcast-unsigned #t 65535 %x.7))
+          (= #t %t.8 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.9 (downcast-unsigned 4294967295 65535 %x.7))
           %t.9)))
     )
 
@@ -38951,11 +38955,11 @@ groups than for single tests.
           ((%field1.0 (0) (Map (tfield) (tboolean)))))
         (circuit %foo.3 ([%n.4 (tfield)])
              (tboolean)
-          (= %t.5 (public-ledger #t %field1.0 (0) lookup %n.4))
+          (= #t %t.5 (public-ledger %field1.0 (0) lookup %n.4))
           %t.5)
         (circuit %call_foo.6 ([%i.1 (tfield)])
              (tboolean)
-          (= %t.7 (public-ledger #t %field1.0 (0) lookup %i.1))
+          (= #t %t.7 (public-ledger %field1.0 (0) lookup %i.1))
           %t.7)))
     )
 
@@ -38976,11 +38980,11 @@ groups than for single tests.
           ((%field1.1 (0) (Map (tfield) (tboolean)))))
         (circuit %foo.2 ([%n.3 (tfield)])
              (tboolean)
-          (= %t.4 (public-ledger #t %field1.1 (0) lookup %n.3))
+          (= #t %t.4 (public-ledger %field1.1 (0) lookup %n.3))
           %t.4)
         (circuit %call_foo.5 ([%i.6 (tfield)])
              (tboolean)
-          (= %t.7 (public-ledger #t %field1.1 (0) lookup 1))
+          (= #t %t.7 (public-ledger %field1.1 (0) lookup 1))
           %t.7)))
     )
 
@@ -39001,11 +39005,11 @@ groups than for single tests.
           ((%field1.0 (0) (Map (tfield) (tboolean)))))
         (circuit %foo.3 ([%n.4 (tfield)])
              (tboolean)
-          (= %t.5 (public-ledger #t %field1.0 (0) lookup %n.4))
+          (= #t %t.5 (public-ledger %field1.0 (0) lookup %n.4))
           %t.5)
         (circuit %call_foo.6 ([%n.1 (tfield)])
              (tboolean)
-          (= %t.7 (public-ledger #t %field1.0 (0) lookup %n.1))
+          (= #t %t.7 (public-ledger %field1.0 (0) lookup %n.1))
           %t.7)))
     )
 
@@ -39026,13 +39030,13 @@ groups than for single tests.
           ((%field1.1 (0) (Map (tfield) (Map (tfield) (tboolean))))))
         (circuit %foo.2 ([%n.3 (tfield)])
              (tboolean)
-          (= %t.4
-             (public-ledger #t %field1.1 (0 ((tfield) 1)) lookup 2))
+          (= #t %t.4
+             (public-ledger %field1.1 (0 ((tfield) 1)) lookup 2))
           %t.4)
         (circuit %call_foo.5 ([%i.6 (tfield)])
              (tboolean)
-          (= %t.7
-             (public-ledger #t %field1.1 (0 ((tfield) 1)) lookup 2))
+          (= #t %t.7
+             (public-ledger %field1.1 (0 ((tfield) 1)) lookup 2))
           %t.7)))
     )
 
@@ -39053,13 +39057,13 @@ groups than for single tests.
           ((%field1.1 (0) (Map (tfield) (Map (tfield) (tboolean))))))
         (circuit %foo.2 ([%n.3 (tfield)])
              (tboolean)
-          (= %t.4
-             (public-ledger #t %field1.1 (0 ((tfield) 1)) lookup %n.3))
+          (= #t %t.4
+             (public-ledger %field1.1 (0 ((tfield) 1)) lookup %n.3))
           %t.4)
         (circuit %call_foo.5 ([%i.6 (tfield)])
              (tboolean)
-          (= %t.7
-             (public-ledger #t %field1.1 (0 ((tfield) 1)) lookup 2))
+          (= #t %t.7
+             (public-ledger %field1.1 (0 ((tfield) 1)) lookup 2))
           %t.7)))
     )
 
@@ -39080,13 +39084,13 @@ groups than for single tests.
           ((%field1.1 (0) (Map (tfield) (Map (tfield) (tboolean))))))
         (circuit %foo.2 ([%n.3 (tfield)])
              (tboolean)
-          (= %t.4
-             (public-ledger #t %field1.1 (0 ((tfield) %n.3)) lookup 1))
+          (= #t %t.4
+             (public-ledger %field1.1 (0 ((tfield) %n.3)) lookup 1))
           %t.4)
         (circuit %call_foo.5 ([%i.6 (tfield)])
              (tboolean)
-          (= %t.7
-             (public-ledger #t %field1.1 (0 ((tfield) 2)) lookup 1))
+          (= #t %t.7
+             (public-ledger %field1.1 (0 ((tfield) 2)) lookup 1))
           %t.7)))
     )
 
@@ -39107,12 +39111,12 @@ groups than for single tests.
           ((%field1.1 (0) (Map (tfield) (Map (tfield) (tboolean))))))
         (circuit %foo.2 ([%n.3 (tfield)])
              (tboolean)
-          (= %t.4
+          (= #t %t.4
              (public-ledger %field1.1 (0 ((tfield) %n.3)) lookup 1))
           %t.4)
         (circuit %call_foo.5 ([%i.6 (tfield)])
              (tboolean)
-          (= %t.7
+          (= #t %t.7
              (public-ledger %field1.1 (0 ((tfield) %i.6)) lookup 1))
           %t.7)))
     )
@@ -39132,8 +39136,8 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %foo.2 ([%x.3 (tboolean)] [%y.4 (tboolean)])
              (ttuple)
-          (= %t.5 (public-ledger %forceField.1 (0) write 7))
-          (= %t.6 (tuple))
+          (= #t %t.5 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.6 (tuple))
           %t.6)))
     )
 
@@ -39176,11 +39180,11 @@ groups than for single tests.
           ((%forceField.1 (0) (__compact_Cell (tfield)))))
         (circuit %foo.2 ([%x.3 (tboolean)])
              (ttuple)
-          (= %t.4 (public-ledger %forceField.1 (0) write 7))
-          (= %t.5 (select #t %x.3 #t))
+          (= #t %t.4 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.5 (select #t %x.3 #t))
           (assert %t.5 "oops")
-          (= %t.6 (tuple))
-          (= %t.7 (tuple))
+          (= #t %t.6 (tuple))
+          (= #t %t.7 (tuple))
           %t.7)))
     )
 
@@ -39201,8 +39205,8 @@ groups than for single tests.
         (witness %W.2 () (tunsigned 65535))
         (circuit %foo.3 ()
              (tunsigned 65535)
-          (= %t.4 (public-ledger %forceField.1 (0) write 7))
-          (= %t.5 (call %W.2))
+          (= #t %t.4 (public-ledger %forceField.1 (0) write 7))
+          (= #t %t.5 (call %W.2))
           %t.5)))
     )
 )
@@ -51648,8 +51652,8 @@ groups than for single tests.
         "    { \"op\": \"load_imm\", \"imm\": \"FF03\" },"
         "    { \"op\": \"add\", \"a\": 1, \"b\": 7 },"
         "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 8, \"b\": 4 },"
-        "    { \"op\": \"less_than\", \"a\": 7, \"b\": 9, \"bits\": 248 },"
-        "    { \"op\": \"cond_select\", \"bit\": 10, \"a\": 4, \"b\": 2 },"
+        "    { \"op\": \"load_imm\", \"imm\": \"0004\" },"
+        "    { \"op\": \"less_than\", \"a\": 9, \"b\": 10, \"bits\": 11 },"
         "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 11, \"b\": 2 },"
         "    { \"op\": \"assert\", \"cond\": 12 },"
         "    { \"op\": \"copy\", \"var\": 8 },"
@@ -51698,14 +51702,12 @@ groups than for single tests.
         "    { \"op\": \"load_imm\", \"imm\": \"0004\" },"
         "    { \"op\": \"add\", \"a\": 1, \"b\": 7 },"
         "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 8, \"b\": 4 },"
-        "    { \"op\": \"load_imm\", \"imm\": \"FF03\" },"
-        "    { \"op\": \"less_than\", \"a\": 10, \"b\": 9, \"bits\": 248 },"
-        "    { \"op\": \"cond_select\", \"bit\": 11, \"a\": 4, \"b\": 2 },"
-        "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 12, \"b\": 2 },"
-        "    { \"op\": \"assert\", \"cond\": 13 },"
+        "    { \"op\": \"less_than\", \"a\": 9, \"b\": 7, \"bits\": 11 },"
+        "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 10, \"b\": 2 },"
+        "    { \"op\": \"assert\", \"cond\": 11 },"
         "    { \"op\": \"copy\", \"var\": 8 },"
-        "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 14, \"b\": 4 },"
-        "    { \"op\": \"output\", \"var\": 15 }"
+        "    { \"op\": \"cond_select\", \"bit\": 0, \"a\": 12, \"b\": 4 },"
+        "    { \"op\": \"output\", \"var\": 13 }"
         "  ]"
         "}"))
     )
@@ -52953,17 +52955,16 @@ groups than for single tests.
         "    { \"op\": \"load_imm\", \"imm\": \"91\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
         "    { \"op\": \"pi_skip\", \"guard\": 5, \"count\": 1 },"
-        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 7, \"b\": 5 },"
         "    { \"op\": \"add\", \"a\": 3, \"b\": 5 },"
         "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 7, \"b\": 3 },"
-        "    { \"op\": \"less_than\", \"a\": 12, \"b\": 10, \"bits\": 12 },"
-        "    { \"op\": \"cond_select\", \"bit\": 13, \"a\": 7, \"b\": 5 },"
-        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 5, \"b\": 14 },"
-        "    { \"op\": \"assert\", \"cond\": 15 },"
+        "    { \"op\": \"less_than\", \"a\": 11, \"b\": 5, \"bits\": 12 },"
+        "    { \"op\": \"cond_select\", \"bit\": 12, \"a\": 7, \"b\": 5 },"
+        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 5, \"b\": 13 },"
+        "    { \"op\": \"assert\", \"cond\": 14 },"
         "    { \"op\": \"neg\", \"a\": 5 },"
-        "    { \"op\": \"add\", \"a\": 3, \"b\": 16 },"
-        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 11, \"b\": 17 },"
-        "    { \"op\": \"output\", \"var\": 18 }"
+        "    { \"op\": \"add\", \"a\": 3, \"b\": 15 },"
+        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 10, \"b\": 16 },"
+        "    { \"op\": \"output\", \"var\": 17 }"
         "  ]"
         "}"))
     (output-file "compiler/testdir/zkir/dos.zkir"
@@ -56594,47 +56595,47 @@ groups than for single tests.
         "  \"num_inputs\": 1,"
         "  \"instructions\": ["
         "    { \"op\": \"constrain_bits\", \"var\": 0, \"bits\": 40 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 0, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 1, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 3, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 5, \"bits\": 8 },"
         "    { \"op\": \"load_imm\", \"imm\": \"01\" },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 0, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 2, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 4, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 6, \"bits\": 8 },"
         "    { \"op\": \"load_imm\", \"imm\": \"10\" },"
         "    { \"op\": \"load_imm\", \"imm\": \"00\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 10 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 11 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 9, \"count\": 5 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 5 },"
         "    { \"op\": \"load_imm\", \"imm\": \"11\" },"
         "    { \"op\": \"load_imm\", \"imm\": \"05\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 12 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 13 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 4 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 6 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 8 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 3 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 5 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 7 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 9, \"count\": 13 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 8 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 13 },"
         "    { \"op\": \"load_imm\", \"imm\": \"91\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 14 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 9, \"count\": 1 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 1 },"
         "    { \"op\": \"load_imm\", \"imm\": \"30\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 15 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 9, \"count\": 1 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 1 },"
         "    { \"op\": \"load_imm\", \"imm\": \"50\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 16 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 11 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 9, \"count\": 4 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 4 },"
         "    { \"op\": \"public_input\", \"guard\": null },"
         "    { \"op\": \"public_input\", \"guard\": null },"
         "    { \"op\": \"public_input\", \"guard\": null },"
@@ -56643,17 +56644,17 @@ groups than for single tests.
         "    { \"op\": \"load_imm\", \"imm\": \"0C\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 22 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 13 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 17 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 18 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 19 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 20 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 21 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 9, \"count\": 12 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 12 },"
         "    { \"op\": \"output\", \"var\": 17 },"
         "    { \"op\": \"output\", \"var\": 18 },"
         "    { \"op\": \"output\", \"var\": 19 },"
@@ -56683,125 +56684,125 @@ groups than for single tests.
         "  \"num_inputs\": 1,"
         "  \"instructions\": ["
         "    { \"op\": \"constrain_bits\", \"var\": 0, \"bits\": 248 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 0, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 1, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 3, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 5, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 7, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 9, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 11, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 13, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 15, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 17, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 19, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 21, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 23, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 25, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 27, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 29, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 31, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 33, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 35, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 37, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 39, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 41, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 43, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 45, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 47, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 49, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 51, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 53, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 55, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 57, \"bits\": 8 },"
         "    { \"op\": \"load_imm\", \"imm\": \"01\" },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 0, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 2, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 4, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 6, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 8, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 10, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 12, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 14, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 16, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 18, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 20, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 22, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 24, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 26, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 28, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 30, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 32, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 34, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 36, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 38, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 40, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 42, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 44, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 46, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 48, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 50, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 52, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 54, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 56, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 58, \"bits\": 8 },"
         "    { \"op\": \"load_imm\", \"imm\": \"10\" },"
         "    { \"op\": \"load_imm\", \"imm\": \"00\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 62 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 63 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 61, \"count\": 5 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 5 },"
         "    { \"op\": \"load_imm\", \"imm\": \"11\" },"
         "    { \"op\": \"load_imm\", \"imm\": \"1F\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 64 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 65 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 4 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 6 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 8 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 10 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 12 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 14 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 16 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 18 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 20 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 22 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 24 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 26 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 28 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 30 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 32 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 34 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 36 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 38 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 40 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 42 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 44 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 46 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 48 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 50 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 52 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 54 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 56 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 58 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 60 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 3 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 5 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 7 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 11 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 13 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 15 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 17 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 19 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 21 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 23 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 25 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 27 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 29 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 31 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 33 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 35 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 37 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 39 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 41 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 43 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 45 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 47 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 49 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 51 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 53 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 55 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 57 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 59 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 61, \"count\": 65 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 60 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 65 },"
         "    { \"op\": \"load_imm\", \"imm\": \"91\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 66 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 61, \"count\": 1 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 1 },"
         "    { \"op\": \"load_imm\", \"imm\": \"30\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 67 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 61, \"count\": 1 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 1 },"
         "    { \"op\": \"load_imm\", \"imm\": \"50\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 68 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 63 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 61, \"count\": 4 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 4 },"
         "    { \"op\": \"public_input\", \"guard\": null },"
         "    { \"op\": \"public_input\", \"guard\": null },"
         "    { \"op\": \"public_input\", \"guard\": null },"
@@ -56836,37 +56837,37 @@ groups than for single tests.
         "    { \"op\": \"load_imm\", \"imm\": \"0C\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 100 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 65 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 69 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 71 },"
@@ -56898,7 +56899,7 @@ groups than for single tests.
         "    { \"op\": \"declare_pub_input\", \"var\": 97 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 98 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 99 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 61, \"count\": 64 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 64 },"
         "    { \"op\": \"output\", \"var\": 69 },"
         "    { \"op\": \"output\", \"var\": 70 },"
         "    { \"op\": \"output\", \"var\": 71 },"
@@ -56955,139 +56956,139 @@ groups than for single tests.
         "  \"instructions\": ["
         "    { \"op\": \"constrain_bits\", \"var\": 0, \"bits\": 40 },"
         "    { \"op\": \"constrain_bits\", \"var\": 1, \"bits\": 248 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 0, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 2, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 4, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 6, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 1, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 10, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 12, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 14, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 16, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 18, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 20, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 22, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 24, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 26, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 28, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 30, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 32, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 34, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 36, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 38, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 40, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 42, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 44, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 46, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 48, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 50, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 52, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 54, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 56, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 58, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 60, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 62, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 64, \"bits\": 8 },"
-        "    { \"op\": \"div_mod_power_of_two\", \"var\": 66, \"bits\": 8 },"
         "    { \"op\": \"load_imm\", \"imm\": \"01\" },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 0, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 3, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 5, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 7, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 1, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 11, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 13, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 15, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 17, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 19, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 21, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 23, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 25, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 27, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 29, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 31, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 33, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 35, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 37, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 39, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 41, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 43, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 45, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 47, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 49, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 51, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 53, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 55, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 57, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 59, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 61, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 63, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 65, \"bits\": 8 },"
+        "    { \"op\": \"div_mod_power_of_two\", \"var\": 67, \"bits\": 8 },"
         "    { \"op\": \"load_imm\", \"imm\": \"10\" },"
         "    { \"op\": \"load_imm\", \"imm\": \"00\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 71 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 72 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 70, \"count\": 5 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 5 },"
         "    { \"op\": \"load_imm\", \"imm\": \"11\" },"
         "    { \"op\": \"load_imm\", \"imm\": \"24\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 73 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 74 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 11 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 13 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 15 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 17 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 19 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 21 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 23 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 25 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 27 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 29 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 31 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 33 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 35 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 37 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 39 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 41 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 43 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 45 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 47 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 49 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 51 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 53 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 55 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 57 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 59 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 61 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 63 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 65 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 67 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 69 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 12 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 14 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 16 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 18 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 20 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 22 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 24 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 26 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 28 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 30 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 32 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 34 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 36 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 38 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 40 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 42 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 44 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 46 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 48 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 50 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 52 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 54 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 56 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 58 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 60 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 62 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 64 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 66 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 68 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 3 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 5 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 7 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 69 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 4 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 6 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 8 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 70, \"count\": 75 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 10 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 75 },"
         "    { \"op\": \"load_imm\", \"imm\": \"91\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 75 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 70, \"count\": 1 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 1 },"
         "    { \"op\": \"load_imm\", \"imm\": \"30\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 76 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 70, \"count\": 1 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 1 },"
         "    { \"op\": \"load_imm\", \"imm\": \"50\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 77 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 72 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 70, \"count\": 4 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 4 },"
         "    { \"op\": \"public_input\", \"guard\": null },"
         "    { \"op\": \"public_input\", \"guard\": null },"
         "    { \"op\": \"public_input\", \"guard\": null },"
@@ -57127,42 +57128,42 @@ groups than for single tests.
         "    { \"op\": \"load_imm\", \"imm\": \"0C\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 114 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 74 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 70 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 78 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 79 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 80 },"
@@ -57199,7 +57200,7 @@ groups than for single tests.
         "    { \"op\": \"declare_pub_input\", \"var\": 111 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 112 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 113 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 70, \"count\": 74 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 74 },"
         "    { \"op\": \"output\", \"var\": 78 },"
         "    { \"op\": \"output\", \"var\": 79 },"
         "    { \"op\": \"output\", \"var\": 80 },"
@@ -57315,42 +57316,42 @@ groups than for single tests.
         "  \"num_inputs\": 1,"
         "  \"instructions\": ["
         "    { \"op\": \"constrain_bits\", \"var\": 0, \"bits\": 8 },"
-        "    { \"op\": \"copy\", \"var\": 0 },"
         "    { \"op\": \"load_imm\", \"imm\": \"01\" },"
+        "    { \"op\": \"copy\", \"var\": 0 },"
         "    { \"op\": \"load_imm\", \"imm\": \"10\" },"
         "    { \"op\": \"load_imm\", \"imm\": \"00\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 3 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 4 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 5 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 5 },"
         "    { \"op\": \"load_imm\", \"imm\": \"11\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 5 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 5 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 5 },"
         "    { \"op\": \"load_imm\", \"imm\": \"91\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 6 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 1 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 1 },"
         "    { \"op\": \"load_imm\", \"imm\": \"30\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 7 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 1 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 1 },"
         "    { \"op\": \"load_imm\", \"imm\": \"50\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 8 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 4 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 4 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 4 },"
         "    { \"op\": \"public_input\", \"guard\": null },"
         "    { \"op\": \"load_imm\", \"imm\": \"0C\" },"
         "    { \"op\": \"declare_pub_input\", \"var\": 10 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
-        "    { \"op\": \"declare_pub_input\", \"var\": 2 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
+        "    { \"op\": \"declare_pub_input\", \"var\": 1 },"
         "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
-        "    { \"op\": \"pi_skip\", \"guard\": 2, \"count\": 4 },"
+        "    { \"op\": \"pi_skip\", \"guard\": 1, \"count\": 4 },"
         "    { \"op\": \"output\", \"var\": 9 }"
         "  ]"
         "}"))
