@@ -71,7 +71,7 @@
             (fold-left
               (lambda (instr* var-name primitive-type)
                 ; NB: the public inputs are 0 if a conditionally executed witness
-                ; call is not executed, and at present constrain_type is always
+                ; call is not executed, and at present emit-constraints-for is always
                 ; okay with zero
                 (emit-constraints-for var-name primitive-type
                   (cons (make-private-input var-name primitive-type) instr*)))
