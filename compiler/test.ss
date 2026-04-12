@@ -36405,8 +36405,8 @@ groups than for single tests.
                                  452312848583266388373324160190187140051835877600158453279131187530910662655)))))))))))
          (circuit %hello.2 ()
               (ty () ())
-           (= (%t.3) (public-ledger 1 %contract_c.1 (0) read))
-           (= (%t.4) (public-ledger 1 %contract_c.1 (0) read))
+           (= 1 (%t.3) (public-ledger %contract_c.1 (0) read))
+           (= 1 (%t.4) (public-ledger %contract_c.1 (0) read))
            (= (%t.5 %t.6)
               (contract-call 1 barr
                    (%t.4 (tcontract C
@@ -39230,13 +39230,13 @@ groups than for single tests.
                                              (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= %t.4 (== %n.0 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= ()
-             (public-ledger %t.7 %ledger_counter.2 (0) increment 1))
+          (= 1 %t.4 (== %n.0 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= %t.7 ()
+             (public-ledger %ledger_counter.2 (0) increment 1))
           ())))
     )
 
@@ -39266,19 +39266,19 @@ groups than for single tests.
                                              (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= %t.4 (== %n.0 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (== %n.0 0))
-          (= %t.10 (select 1 %t.9 0))
-          (= %t.11 %t.10)
-          (= %t.12 (select %t.10 %t.7 0))
-          (= %t.13 (select %t.10 0 %t.7))
-          (= ()
-             (public-ledger %t.12 %ledger_counter.2 (0) decrement 1))
-          (= (%t.14) (public-ledger %t.13 %ledger_counter.2 (0) read))
+          (= 1 %t.4 (== %n.0 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (== %n.0 0))
+          (= 1 %t.10 (select 1 %t.9 0))
+          (= 1 %t.11 %t.10)
+          (= 1 %t.12 (select %t.10 %t.7 0))
+          (= 1 %t.13 (select %t.10 0 %t.7))
+          (= %t.12 ()
+             (public-ledger %ledger_counter.2 (0) decrement 1))
+          (= %t.13 (%t.14) (public-ledger %ledger_counter.2 (0) read))
           ())))
     )
 
@@ -39308,20 +39308,20 @@ groups than for single tests.
                                              (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= %t.4 (== %n.0 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (== %n.0 0))
-          (= %t.10 (select 1 %t.9 0))
-          (= %t.11 %t.10)
-          (= %t.12 (select %t.10 %t.7 0))
-          (= %t.13 (select %t.10 0 %t.7))
-          (= ()
-             (public-ledger %t.12 %ledger_counter.2 (0) decrement 1))
-          (= ()
-             (public-ledger %t.13 %ledger_counter.2 (0) increment 1))
+          (= 1 %t.4 (== %n.0 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (== %n.0 0))
+          (= 1 %t.10 (select 1 %t.9 0))
+          (= 1 %t.11 %t.10)
+          (= 1 %t.12 (select %t.10 %t.7 0))
+          (= 1 %t.13 (select %t.10 0 %t.7))
+          (= %t.12 ()
+             (public-ledger %ledger_counter.2 (0) decrement 1))
+          (= %t.13 ()
+             (public-ledger %ledger_counter.2 (0) increment 1))
           ())))
     )
 
@@ -39349,18 +39349,18 @@ groups than for single tests.
                                              (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= %t.4 (== %n.0 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (== %n.0 0))
-          (= %t.10 (select 1 %t.9 0))
-          (= %t.11 %t.10)
-          (= %t.12 (select %t.10 %t.7 0))
-          (= %t.13 (select %t.10 0 %t.7))
-          (= ()
-             (public-ledger %t.12 %ledger_counter.2 (0) decrement 1))
+          (= 1 %t.4 (== %n.0 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (== %n.0 0))
+          (= 1 %t.10 (select 1 %t.9 0))
+          (= 1 %t.11 %t.10)
+          (= 1 %t.12 (select %t.10 %t.7 0))
+          (= 1 %t.13 (select %t.10 0 %t.7))
+          (= %t.12 ()
+             (public-ledger %ledger_counter.2 (0) decrement 1))
           ())))
     )
 
@@ -39412,18 +39412,18 @@ groups than for single tests.
                                              (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= %t.4 (== %n.0 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (== %n.0 1))
-          (= %t.10 (select 1 %t.9 0))
-          (= %t.11 %t.10)
-          (= %t.12 (select %t.10 %t.7 0))
-          (= %t.13 (select %t.10 0 %t.7))
-          (= ()
-             (public-ledger %t.12 %ledger_counter.2 (0) decrement 1))
+          (= 1 %t.4 (== %n.0 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (== %n.0 1))
+          (= 1 %t.10 (select 1 %t.9 0))
+          (= 1 %t.11 %t.10)
+          (= 1 %t.12 (select %t.10 %t.7 0))
+          (= 1 %t.13 (select %t.10 0 %t.7))
+          (= %t.12 ()
+             (public-ledger %ledger_counter.2 (0) decrement 1))
           ())))
     )
 
@@ -39449,7 +39449,7 @@ groups than for single tests.
           ((%ledger_counter.1 (0) (Counter))))
         (circuit %minimal_error_circuit.2 ()
              (ty () ())
-          (= () (public-ledger 1 %ledger_counter.1 (0) increment 1))
+          (= 1 () (public-ledger %ledger_counter.1 (0) increment 1))
           ())))
     )
 
@@ -39477,32 +39477,32 @@ groups than for single tests.
                                              (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= %t.4 (== %n.0 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (== %n.0 0))
-          (= %t.10 (select 1 %t.9 0))
-          (= %t.11 %t.10)
-          (= %t.12 (select %t.5 %t.10 0))
-          (= %t.13 (select %t.12 1 0))
-          (= %t.14 (select %t.12 0 1))
-          (= ()
-             (public-ledger %t.13 %ledger_counter.2 (0) increment 1))
-          (= %t.15 (== %n.0 0))
-          (= %t.16 (select 1 %t.15 0))
-          (= %t.17 %t.16)
-          (= %t.18 (select %t.16 %t.14 0))
-          (= %t.19 (select %t.16 0 %t.14))
-          (= %t.20 (== %n.0 1))
-          (= %t.21 (select 1 %t.20 0))
-          (= %t.22 %t.21)
-          (= %t.23 (select %t.16 %t.21 0))
-          (= %t.24 (select %t.23 %t.14 0))
-          (= %t.25 (select %t.23 0 %t.14))
-          (= ()
-             (public-ledger %t.24 %ledger_counter.2 (0) increment 2))
+          (= 1 %t.4 (== %n.0 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (== %n.0 0))
+          (= 1 %t.10 (select 1 %t.9 0))
+          (= 1 %t.11 %t.10)
+          (= 1 %t.12 (select %t.5 %t.10 0))
+          (= 1 %t.13 (select %t.12 1 0))
+          (= 1 %t.14 (select %t.12 0 1))
+          (= %t.13 ()
+             (public-ledger %ledger_counter.2 (0) increment 1))
+          (= 1 %t.15 (== %n.0 0))
+          (= 1 %t.16 (select 1 %t.15 0))
+          (= 1 %t.17 %t.16)
+          (= 1 %t.18 (select %t.16 %t.14 0))
+          (= 1 %t.19 (select %t.16 0 %t.14))
+          (= 1 %t.20 (== %n.0 1))
+          (= 1 %t.21 (select 1 %t.20 0))
+          (= 1 %t.22 %t.21)
+          (= 1 %t.23 (select %t.16 %t.21 0))
+          (= 1 %t.24 (select %t.23 %t.14 0))
+          (= 1 %t.25 (select %t.23 0 %t.14))
+          (= %t.24 ()
+             (public-ledger %ledger_counter.2 (0) increment 2))
           ())))
     )
 
@@ -39533,7 +39533,7 @@ groups than for single tests.
                            (%n.3)
                            (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %field1.1 (0) remove 1))
+          (= 1 () (public-ledger %field1.1 (0) remove 1))
           ())))
     )
 
@@ -39564,17 +39564,17 @@ groups than for single tests.
                            (%n.0)
                            (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= %t.4 (== %n.0 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (== %n.0 0))
-          (= %t.10 (select 1 %t.9 0))
-          (= %t.11 %t.10)
-          (= %t.12 (select %t.10 %t.7 0))
-          (= %t.13 (select %t.10 0 %t.7))
-          (= () (public-ledger %t.12 %field1.2 (0) remove 1))
+          (= 1 %t.4 (== %n.0 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (== %n.0 0))
+          (= 1 %t.10 (select 1 %t.9 0))
+          (= 1 %t.11 %t.10)
+          (= 1 %t.12 (select %t.10 %t.7 0))
+          (= 1 %t.13 (select %t.10 0 %t.7))
+          (= %t.12 () (public-ledger %field1.2 (0) remove 1))
           ())))
     )
 
@@ -39600,13 +39600,13 @@ groups than for single tests.
                            (%n.2)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.3) (public-ledger 1 %field1.0 (0) lookup %n.2))
+          (= 1 (%t.3) (public-ledger %field1.0 (0) lookup %n.2))
           (%t.3))
         (circuit %call_foo.4 ((argument
                                 (%i.5)
                                 (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.6) (public-ledger 1 %field1.0 (0) lookup %i.5))
+          (= 1 (%t.6) (public-ledger %field1.0 (0) lookup %i.5))
           (%t.6))))
     )
 
@@ -39634,8 +39634,8 @@ groups than for single tests.
                            (%n.2)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.3)
-             (public-ledger 1 %field1.0 (0 ((ty ((afield)) ((tfield)))
+          (= 1 (%t.3)
+             (public-ledger %field1.0 (0 ((ty ((afield)) ((tfield)))
                                              %n.2)) lookup
                1))
           (%t.3))
@@ -39643,8 +39643,8 @@ groups than for single tests.
                                 (%i.5)
                                 (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.6)
-             (public-ledger 1 %field1.0 (0 ((ty ((afield)) ((tfield)))
+          (= 1 (%t.6)
+             (public-ledger %field1.0 (0 ((ty ((afield)) ((tfield)))
                                              %i.5)) lookup
                1))
           (%t.6))))
@@ -39672,13 +39672,13 @@ groups than for single tests.
                            (%n.2)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.3) (public-ledger 1 %field1.0 (0) lookup %n.2))
+          (= 1 (%t.3) (public-ledger %field1.0 (0) lookup %n.2))
           (%t.3))
         (circuit %call_foo.4 ((argument
                                 (%i.5)
                                 (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.6) (public-ledger 1 %field1.0 (0) lookup %i.5))
+          (= 1 (%t.6) (public-ledger %field1.0 (0) lookup %i.5))
           (%t.6))))
     )
 
@@ -39705,8 +39705,8 @@ groups than for single tests.
                            (%n.2)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.3)
-             (public-ledger 1 %field1.0 (0 ((ty ((afield)) ((tfield)))
+          (= 1 (%t.3)
+             (public-ledger %field1.0 (0 ((ty ((afield)) ((tfield)))
                                              %n.2)) lookup
                1))
           (%t.3))))
@@ -39736,16 +39736,16 @@ groups than for single tests.
                            (%n.2)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.3)
-             (public-ledger 1 %field1.0 (0 ((ty ((afield)) ((tfield))) 1)) lookup
+          (= 1 (%t.3)
+             (public-ledger %field1.0 (0 ((ty ((afield)) ((tfield))) 1)) lookup
                2))
           (%t.3))
         (circuit %call_foo.4 ((argument
                                 (%i.5)
                                 (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.6)
-             (public-ledger 1 %field1.0 (0 ((ty ((afield)) ((tfield))) 1)) lookup
+          (= 1 (%t.6)
+             (public-ledger %field1.0 (0 ((ty ((afield)) ((tfield))) 1)) lookup
                2))
           (%t.6))))
     )
@@ -39774,16 +39774,16 @@ groups than for single tests.
                            (%n.2)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.3)
-             (public-ledger 1 %field1.0 (0 ((ty ((afield)) ((tfield))) 1)) lookup
+          (= 1 (%t.3)
+             (public-ledger %field1.0 (0 ((ty ((afield)) ((tfield))) 1)) lookup
                %n.2))
           (%t.3))
         (circuit %call_foo.4 ((argument
                                 (%i.5)
                                 (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.6)
-             (public-ledger 1 %field1.0 (0 ((ty ((afield)) ((tfield))) 1)) lookup
+          (= 1 (%t.6)
+             (public-ledger %field1.0 (0 ((ty ((afield)) ((tfield))) 1)) lookup
                2))
           (%t.6))))
     )
@@ -39812,8 +39812,8 @@ groups than for single tests.
                            (%n.2)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.3)
-             (public-ledger 1 %field1.0 (0 ((ty ((afield)) ((tfield)))
+          (= 1 (%t.3)
+             (public-ledger %field1.0 (0 ((ty ((afield)) ((tfield)))
                                            %n.2)) lookup
                1))
           (%t.3))
@@ -39821,8 +39821,8 @@ groups than for single tests.
                                 (%i.5)
                                 (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.6)
-             (public-ledger 1 %field1.0 (0 ((ty ((afield)) ((tfield))) 2)) lookup
+          (= 1 (%t.6)
+             (public-ledger %field1.0 (0 ((ty ((afield)) ((tfield))) 2)) lookup
                1))
           (%t.6))))
     )
@@ -39849,11 +39849,11 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.4) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.5 (== %x.4 3))
-          (= %t.6 (select 1 %t.5 0))
-          (= %t.7 %t.6)
-          (= %t.8 (select 1 %t.6 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.5 (== %x.4 3))
+          (= 1 %t.6 (select 1 %t.5 0))
+          (= 1 %t.7 %t.6)
+          (= 1 %t.8 (select 1 %t.6 1))
           (assert %t.8 "oops 1")
           (%b.3))
         (circuit %call_foo.9 ((argument
@@ -39861,12 +39861,12 @@ groups than for single tests.
                                 (ty ((abytes 1)) ((tfield 1))))
                               (argument (%x.11) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.12 (== %x.11 3))
-          (= %t.13 (select 1 %t.12 0))
-          (= %t.14 %t.13)
-          (= %t.15 (select 1 %t.13 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.12 (== %x.11 3))
+          (= 1 %t.13 (select 1 %t.12 0))
+          (= 1 %t.14 %t.13)
+          (= 1 %t.15 (select 1 %t.13 1))
           (assert %t.15 "oops 1")
           (%b.10))))
     )
@@ -39903,11 +39903,11 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.4) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.5 (== %x.4 3))
-          (= %t.6 (select 1 %t.5 0))
-          (= %t.7 %t.6)
-          (= %t.8 (select 1 %t.6 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.5 (== %x.4 3))
+          (= 1 %t.6 (select 1 %t.5 0))
+          (= 1 %t.7 %t.6)
+          (= 1 %t.8 (select 1 %t.6 1))
           (assert %t.8 "oops 1")
           (%b.3))))
     )
@@ -39933,14 +39933,14 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.4) (ty ((abytes 2)) ((tfield 65535)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.5 (select 1 3 0))
-          (= %t.6 (select 1 %x.4 0))
-          (= %t.7 (< 16 %t.5 %t.6))
-          (= %t.8 (select %t.7 1 0))
-          (= %t.9 (select %t.7 0 1))
-          (= %t.10 (select %t.7 0 1))
-          (= %t.11 (select 1 %t.10 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.5 (select 1 3 0))
+          (= 1 %t.6 (select 1 %x.4 0))
+          (= 1 %t.7 (< 16 %t.5 %t.6))
+          (= 1 %t.8 (select %t.7 1 0))
+          (= 1 %t.9 (select %t.7 0 1))
+          (= 1 %t.10 (select %t.7 0 1))
+          (= 1 %t.11 (select 1 %t.10 1))
           (assert %t.11 "oops 1")
           (%b.3))))
     )
@@ -39969,20 +39969,20 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.4) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.5 (select %b.3 1 0))
-          (= %t.6 (select %b.3 0 1))
-          (= %t.7 (== %x.4 3))
-          (= %t.8 (select 1 %t.7 0))
-          (= %t.9 %t.8)
-          (= %t.10 (select %t.6 %t.8 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.5 (select %b.3 1 0))
+          (= 1 %t.6 (select %b.3 0 1))
+          (= 1 %t.7 (== %x.4 3))
+          (= 1 %t.8 (select 1 %t.7 0))
+          (= 1 %t.9 %t.8)
+          (= 1 %t.10 (select %t.6 %t.8 1))
           (assert %t.10 "oops 2")
-          (= %t.11 (select %b.3 1 0))
-          (= %t.12 (select %b.3 0 1))
-          (= %t.13 (== %x.4 3))
-          (= %t.14 (select 1 %t.13 0))
-          (= %t.15 %t.14)
-          (= %t.16 (select %b.3 %t.14 0))
+          (= 1 %t.11 (select %b.3 1 0))
+          (= 1 %t.12 (select %b.3 0 1))
+          (= 1 %t.13 (== %x.4 3))
+          (= 1 %t.14 (select 1 %t.13 0))
+          (= 1 %t.15 %t.14)
+          (= 1 %t.16 (select %b.3 %t.14 0))
           (%t.16))))
     )
 
@@ -40004,7 +40004,7 @@ groups than for single tests.
         (circuit %foo.2 ()
              (ty ((afield) (afield) (afield) (afield) (afield) (afield))
                  ((tfield) (tfield) (tfield) (tfield) (tfield) (tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (1 2 3 4 5 6))))
     )
 
@@ -40035,7 +40035,7 @@ groups than for single tests.
                                ((tfield
                                   1461501637330902918203684832716283019655932542975)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (%arg.3))))
     )
 
@@ -40065,8 +40065,8 @@ groups than for single tests.
                                  (tfield
                                    452312848583266388373324160190187140051835877600158453279131187530910662655)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.5 (bytes->field 1 32 %arg.3 %arg.4))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.5 (bytes->field 32 %arg.3 %arg.4))
           (%t.5))))
     )
 
@@ -40099,11 +40099,11 @@ groups than for single tests.
                                  (tfield
                                    452312848583266388373324160190187140051835877600158453279131187530910662655)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t1.6 (== %arg.3 0))
-          (= %t2.7 (select 1 %t1.6 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t1.6 (== %arg.3 0))
+          (= 1 %t2.7 (select 1 %t1.6 1))
           (assert %t2.7 "bytes value is too big to fit in a field")
-          (= %t.8 (bytes->field 1 80 %arg.4 %arg.5))
+          (= 1 %t.8 (bytes->field 80 %arg.4 %arg.5))
           (%t.8))))
     )
 
@@ -40134,8 +40134,8 @@ groups than for single tests.
              (ty ((abytes 20))
                  ((tfield
                     1461501637330902918203684832716283019655932542975)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.4 %t.5) (field->bytes 1 20 %arg.3))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.4 %t.5) (field->bytes 20 %arg.3))
           (%t.5))))
     )
 
@@ -40167,8 +40167,8 @@ groups than for single tests.
                      452312848583266388373324160190187140051835877600158453279131187530910662655)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.4 %t.5) (field->bytes 1 80 %arg.3))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.4 %t.5) (field->bytes 80 %arg.3))
           (0 %t.4 %t.5))))
     )
 
@@ -40188,10 +40188,10 @@ groups than for single tests.
                            (%arg.3)
                            (ty ((abytes 1)) ((tfield 1)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.4 (select %arg.3 1 0))
-          (= %t.5 (select %arg.3 0 1))
-          (= %t.6 (select %arg.3 1 0))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.4 (select %arg.3 1 0))
+          (= 1 %t.5 (select %arg.3 0 1))
+          (= 1 %t.6 (select %arg.3 1 0))
           (%t.6))))
     )
 
@@ -40219,13 +40219,13 @@ groups than for single tests.
                            (%arg.3)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.4 (== %arg.3 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (select %t.5 0 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.4 (== %arg.3 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (select %t.5 0 1))
           (%t.9))))
     )
 
@@ -40267,7 +40267,7 @@ groups than for single tests.
                            (%b.10)
                            (ty ((abytes 7)) ((tfield 72057594037927935)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (17))
         (circuit %foo.11 ((argument
                             (%v.12 %v.13 %v.14 %v.15 %v.16 %v.17 %v.18 %v.19
@@ -40296,21 +40296,21 @@ groups than for single tests.
                                 ((tfield
                                    1766847064778384329583297500742918515827483896875618958121606201292619775)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (17))
         (circuit %foo.43 ((argument
                             (%x.44)
                             (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.45 (+ #f %x.44 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.45 (+ #f %x.44 1))
           (%t.45))
         (circuit %bar.46 ((argument
                             (%x.47)
                             (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.48 (- #f %x.47 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.48 (- #f %x.47 1))
           (%t.48))))
     )
 
@@ -40334,14 +40334,14 @@ groups than for single tests.
                            (ty ((afield) (afield) (afield))
                                ((tfield) (tfield) (tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.6 (== %x.3 3))
-          (= %t.7 (select 1 %t.6 0))
-          (= %t.8 (== %x.4 4))
-          (= %t.9 (select %t.7 %t.8 0))
-          (= %t.10 (== %x.5 5))
-          (= %t.11 (select %t.9 %t.10 0))
-          (= %t.12 %t.11)
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.6 (== %x.3 3))
+          (= 1 %t.7 (select 1 %t.6 0))
+          (= 1 %t.8 (== %x.4 4))
+          (= 1 %t.9 (select %t.7 %t.8 0))
+          (= 1 %t.10 (== %x.5 5))
+          (= 1 %t.11 (select %t.9 %t.10 0))
+          (= 1 %t.12 %t.11)
           (%t.11))))
     )
 
@@ -40362,7 +40362,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ((argument () (ty ((abytes 0)) ())))
              (ty ((abytes 0)) ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -40383,7 +40383,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -40410,7 +40410,7 @@ groups than for single tests.
              (ty ((abytes 31))
                  ((tfield
                     452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (%b.3))))
     )
 
@@ -40433,7 +40433,7 @@ groups than for single tests.
              (ty ((abytes 31))
                  ((tfield
                     452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (92229389609740816795180269993859972877376305008880425034764490106789388897))))
     )
 
@@ -40478,7 +40478,7 @@ groups than for single tests.
                  ((tfield 4722366482869645213695)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (889566821702876541746
             86908332635947936520937639616427602624961814622853568299663208045469708849))))
     )
@@ -40503,7 +40503,7 @@ groups than for single tests.
                  ((tfield 4722366482869645213695)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (0 36762444129640))))
     )
 
@@ -40533,8 +40533,8 @@ groups than for single tests.
              (ty () ()))
         (circuit %foo.5 ()
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= () (call 1 %bar.2 0 36762444129640))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 () (call %bar.2 0 36762444129640))
           ())))
     )
 
@@ -40564,8 +40564,8 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.4 %t.5) (call 1 %bar.2))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.4 %t.5) (call %bar.2))
           (%t.4 %t.5))))
     )
 
@@ -40591,11 +40591,11 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.4 (select %b.3 1 0))
-          (= %t.5 (select %b.3 0 1))
-          (= %t.6 (select %b.3 0 146740295883472840746347634))
-          (= %t.7
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.4 (select %b.3 1 0))
+          (= 1 %t.5 (select %b.3 0 1))
+          (= 1 %t.6 (select %b.3 0 146740295883472840746347634))
+          (= 1 %t.7
              (select
                %b.3
                36762444129640
@@ -40624,7 +40624,7 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (0 36762444129640))))
     )
 
@@ -40656,14 +40656,14 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%x.4 %x.5) (call 1 %bar.2))
-          (= %t.6 (== %x.4 0))
-          (= %t.7 (select 1 %t.6 0))
-          (= %t.8 (== %x.5 36762444129640))
-          (= %t.9 (select %t.7 %t.8 0))
-          (= %t.10 %t.9)
-          (= %t.11 (select 1 %t.9 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%x.4 %x.5) (call 1 %bar.2))
+          (= 1 %t.6 (== %x.4 0))
+          (= 1 %t.7 (select 1 %t.6 0))
+          (= 1 %t.8 (== %x.5 36762444129640))
+          (= 1 %t.9 (select %t.7 %t.8 0))
+          (= 1 %t.10 %t.9)
+          (= 1 %t.11 (select 1 %t.9 1))
           (assert %t.11 "oops")
           (%x.4 %x.5))))
     )
@@ -40696,16 +40696,16 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%x.4 %x.5) (call 1 %bar.2))
-          (= %t.6 (== %x.4 146740295883472840746347634))
-          (= %t.7 (select 1 %t.6 0))
-          (= %t.8
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%x.4 %x.5) (call %bar.2))
+          (= 1 %t.6 (== %x.4 146740295883472840746347634))
+          (= 1 %t.7 (select 1 %t.6 0))
+          (= 1 %t.8
              (== %x.5
                  172089018921478248217018581585884075052860504307373738624254165310312246895))
-          (= %t.9 (select %t.7 %t.8 0))
-          (= %t.10 %t.9)
-          (= %t.11 (select 1 %t.9 1))
+          (= 1 %t.9 (select %t.7 %t.8 0))
+          (= 1 %t.10 %t.9)
+          (= 1 %t.11 (select 1 %t.9 1))
           (assert %t.11 "oops")
           (%x.4 %x.5))))
     )
@@ -40740,29 +40740,29 @@ groups than for single tests.
                      452312848583266388373324160190187140051835877600158453279131187530910662655)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.3 (== 0 0))
-          (= %t.4 (select 1 %t.3 0))
-          (= %t.5
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.3 (== 0 0))
+          (= 1 %t.4 (select 1 %t.3 0))
+          (= 1 %t.5
              (== 0
                  655673852914079535706832728104650208561044890911829149250927))
-          (= %t.6 (select %t.4 %t.5 0))
-          (= %t.7
+          (= 1 %t.6 (select %t.4 %t.5 0))
+          (= 1 %t.7
              (== 36762444129640
                  57307987020550611804426281024220409105956829700898855016698443841058205542))
-          (= %t.8 (select %t.6 %t.7 0))
-          (= %t.9 (== 0 0))
-          (= %t.10 (select %t.8 %t.9 0))
-          (= %t.11
+          (= 1 %t.8 (select %t.6 %t.7 0))
+          (= 1 %t.9 (== 0 0))
+          (= 1 %t.10 (select %t.8 %t.9 0))
+          (= 1 %t.11
              (== 655673852914079535706832728104650208561044890911829149250927
                  0))
-          (= %t.12 (select %t.10 %t.11 0))
-          (= %t.13
+          (= 1 %t.12 (select %t.10 %t.11 0))
+          (= 1 %t.13
              (== 57307987020550611804426281024220409105956829700898855016698443841058205542
                  36762444129640))
-          (= %t.14 (select %t.12 %t.13 0))
-          (= %t.15 %t.14)
-          (= %t.16 (select 1 %t.14 1))
+          (= 1 %t.14 (select %t.12 %t.13 0))
+          (= 1 %t.15 %t.14)
+          (= 1 %t.16 (select 1 %t.14 1))
           (assert %t.16 "oops")
           (0 0 36762444129640 0
              655673852914079535706832728104650208561044890911829149250927
@@ -40810,12 +40810,12 @@ groups than for single tests.
                            (%n.3)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.4
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.4
              (== %n.3
                  452312848583266388373324160190187140051835877600158453279131187530910662655))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
           (%t.5))))
     )
 
@@ -40838,12 +40838,12 @@ groups than for single tests.
                            (%n.3)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.4
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.4
              (== %n.3
                  52435875175126190479447740508185965837690552500527637822603658699938581184512))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
           (%t.5))))
     )
 
@@ -40869,8 +40869,8 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %bar.2 ()
              (ty ((abytes 1)) ((tfield 3)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (1))))
     )
 
@@ -40889,7 +40889,7 @@ groups than for single tests.
         (public-ledger-declaration ((field1 (0) (Counter))))
         (circuit %foo.0 ()
              (ty ((afield)) ((tfield)))
-          (= (%t.1) (public-ledger 1 field1 (0) read))
+          (= 1 (%t.1) (public-ledger field1 (0) read))
           (%t.1))))
     )
 
@@ -40910,15 +40910,15 @@ groups than for single tests.
                            (ty ((abytes 1) (abytes 1) (abytes 1))
                                ((tfield 1) (tfield 1) (tfield 1)))))
              (ty () ())
-          (= %t.5 (select %v.2 1 0))
-          (= %t.6 (select %v.2 0 1))
-          (= () (public-ledger %t.5 %x.0 (0) increment 1))
-          (= %t.7 (select %v.3 1 0))
-          (= %t.8 (select %v.3 0 1))
-          (= () (public-ledger %t.7 %x.0 (0) increment 1))
-          (= %t.9 (select %v.4 1 0))
-          (= %t.10 (select %v.4 0 1))
-          (= () (public-ledger %t.9 %x.0 (0) increment 1))
+          (= 1 %t.5 (select %v.2 1 0))
+          (= 1 %t.6 (select %v.2 0 1))
+          (= %t.5 () (public-ledger %x.0 (0) increment 1))
+          (= 1 %t.7 (select %v.3 1 0))
+          (= 1 %t.8 (select %v.3 0 1))
+          (= %t.7 () (public-ledger %x.0 (0) increment 1))
+          (= 1 %t.9 (select %v.4 1 0))
+          (= 1 %t.10 (select %v.4 0 1))
+          (= %t.9 () (public-ledger %x.0 (0) increment 1))
           ())))
     )
 
@@ -40936,10 +40936,10 @@ groups than for single tests.
         (public-ledger-declaration ((x (0) (Counter))))
         (circuit %foo.0 ()
              (ty () ())
-          (= () (public-ledger 1 x (0) increment 3))
-          (= () (public-ledger 1 x (0) increment 4))
-          (= () (public-ledger 1 x (0) increment 5))
-          (= () (public-ledger 1 x (0) increment 6))
+          (= 1 () (public-ledger x (0) increment 3))
+          (= 1 () (public-ledger x (0) increment 4))
+          (= 1 () (public-ledger x (0) increment 5))
+          (= 1 () (public-ledger x (0) increment 6))
           ())))
     )
 
@@ -40968,9 +40968,9 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 15))))
                          (argument (%b.6) (ty ((abytes 1)) ((tfield 15)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.7 (+ 5 %a.5 %b.6))
-          (= () (call 1 %foo.2 %t.7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.7 (+ 5 %a.5 %b.6))
+          (= 1 () (call %foo.2 %t.7))
           ())))
     )
 
@@ -40999,17 +40999,13 @@ groups than for single tests.
                            (ty ((afield)) ((tfield))))
                          (argument (%x.4) (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.5 (== %x.4 0))
-          (= %t.6 (select 1 %t.5 0))
-          (= %t.7 %t.6)
-          (= %t.8 (select %t.6 1 0))
-          (= %t.9 (select %t.6 0 1))
-          (= (%q.10 %r.11) (div-mod-power-of-two %f.3 3))
-          (= %t1.12 (== %q.10 0))
-          (= %t4.13 (select %t.8 %t1.12 1))
-          (assert %t4.13 "downcast to Uint<0..7> failed")
-          (= %t.14 (downcast-unsigned #t %t.8 7 %f.3))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.5 (== %x.4 0))
+          (= 1 %t.6 (select 1 %t.5 0))
+          (= 1 %t.7 %t.6)
+          (= 1 %t.8 (select %t.6 1 0))
+          (= 1 %t.9 (select %t.6 0 1))
+          (= %t.8 %t.10 (downcast-unsigned #f #f 7 %f.3))
           ())))
     )
 
@@ -41037,17 +41033,13 @@ groups than for single tests.
                            (ty ((afield)) ((tfield))))
                          (argument (%x.4) (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.5 (== %x.4 0))
-          (= %t.6 (select 1 %t.5 0))
-          (= %t.7 %t.6)
-          (= %t.8 (select %t.6 1 0))
-          (= %t.9 (select %t.6 0 1))
-          (= (%q.10 %r.11) (div-mod-power-of-two %f.3 3))
-          (= %t1.12 (== %q.10 0))
-          (= %t4.13 (select %t.8 %t1.12 1))
-          (assert %t4.13 "downcast to Uint<0..7> failed")
-          (= %t.14 (downcast-unsigned #t %t.8 7 %f.3))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.5 (== %x.4 0))
+          (= 1 %t.6 (select 1 %t.5 0))
+          (= 1 %t.7 %t.6)
+          (= 1 %t.8 (select %t.6 1 0))
+          (= 1 %t.9 (select %t.6 0 1))
+          (= %t.8 %t.10 (downcast-unsigned #f #f 7 %f.3))
           ())))
     )
 
@@ -41075,17 +41067,13 @@ groups than for single tests.
                            (ty ((afield)) ((tfield))))
                          (argument (%x.4) (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.5 (== %x.4 0))
-          (= %t.6 (select 1 %t.5 0))
-          (= %t.7 %t.6)
-          (= %t.8 (select %t.6 1 0))
-          (= %t.9 (select %t.6 0 1))
-          (= (%q.10 %r.11) (div-mod-power-of-two %f.3 3))
-          (= %t1.12 (== %q.10 0))
-          (= %t4.13 (select %t.8 %t1.12 1))
-          (assert %t4.13 "downcast to Uint<0..7> failed")
-          (= %t.14 (downcast-unsigned #t %t.8 7 %f.3))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.5 (== %x.4 0))
+          (= 1 %t.6 (select 1 %t.5 0))
+          (= 1 %t.7 %t.6)
+          (= 1 %t.8 (select %t.6 1 0))
+          (= 1 %t.9 (select %t.6 0 1))
+          (= %t.8 %t.10 (downcast-unsigned #f #f 7 %f.3))
           ())))
     )
 
@@ -41112,22 +41100,20 @@ groups than for single tests.
                            (%x.3)
                            (ty ((abytes 1)) ((tfield 255)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.4 (== %x.3 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (select %t.5 0 1))
-          (= %t.10 (select %t.9 1 0))
-          (= %t.11 (select %t.9 0 1))
-          (= %t.12 (select %t.10 %x.3 0))
-          (= %t.13 (select %t.10 7 0))
-          (= %t.14 (< 8 %t.12 %t.13))
-          (= %t.15 (select %t.14 %t.10 0))
-          (= %t.16 (select %t.14 0 %t.10))
-          (= %t.17 (select %t.15 0 1))
-          (assert %t.17 "oops")
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.4 (== %x.3 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (select %t.5 0 1))
+          (= 1 %t.10 (select %t.9 1 0))
+          (= 1 %t.11 (select %t.9 0 1))
+          (= %t.10 %t.12 (< 8 %x.3 7))
+          (= 1 %t.13 (select %t.12 %t.10 0))
+          (= 1 %t.14 (select %t.12 0 %t.10))
+          (= 1 %t.15 (select %t.13 0 1))
+          (assert %t.15 "oops")
           ())))
     )
 
@@ -41154,7 +41140,7 @@ groups than for single tests.
                            (%x.3)
                            (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -41181,21 +41167,21 @@ groups than for single tests.
                            (%x.3)
                            (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.4 (== %x.3 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (select %t.5 0 1))
-          (= %t.10 (select %t.9 1 0))
-          (= %t.11 (select %t.9 0 1))
-          (= %t.12 (== %x.3 7))
-          (= %t.13 (select 1 %t.12 0))
-          (= %t.14 %t.13)
-          (= %t.15 (select %t.13 %t.10 0))
-          (= %t.16 (select %t.13 0 %t.10))
-          (= %t.17 (select %t.15 0 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.4 (== %x.3 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (select %t.5 0 1))
+          (= 1 %t.10 (select %t.9 1 0))
+          (= 1 %t.11 (select %t.9 0 1))
+          (= %t.10 %t.12 (== %x.3 7))
+          (= %t.10 %t.13 (select 1 %t.12 0))
+          (= %t.10 %t.14 %t.13)
+          (= 1 %t.15 (select %t.13 %t.10 0))
+          (= 1 %t.16 (select %t.13 0 %t.10))
+          (= 1 %t.17 (select %t.15 0 1))
           (assert %t.17 "oops")
           ())))
     )
@@ -41220,7 +41206,7 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%y.4) (ty ((abytes 1)) ((tfield 1)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -41244,15 +41230,15 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%y.4) (ty ((abytes 1)) ((tfield 1)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.5 (select %x.3 1 0))
-          (= %t.6 (select %x.3 0 1))
-          (= %t.7 (select %y.4 %t.5 0))
-          (= %t.8 (select %y.4 0 %t.5))
-          (= %t.9 (select %y.4 0 1))
-          (= %t.10 (select %t.9 %t.5 0))
-          (= %t.11 (select %t.9 0 %t.5))
-          (= %t.12 (select %t.10 0 1))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.5 (select %x.3 1 0))
+          (= 1 %t.6 (select %x.3 0 1))
+          (= 1 %t.7 (select %y.4 %t.5 0))
+          (= 1 %t.8 (select %y.4 0 %t.5))
+          (= %t.5 %t.9 (select %y.4 0 1))
+          (= 1 %t.10 (select %t.9 %t.5 0))
+          (= 1 %t.11 (select %t.9 0 %t.5))
+          (= 1 %t.12 (select %t.10 0 1))
           (assert %t.12 "oops")
           ())))
     )
@@ -41298,7 +41284,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (1))))
     )
 
@@ -41325,13 +41311,13 @@ groups than for single tests.
                            (%x.3)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t.4 (== %x.3 0))
-          (= %t.5 (select 1 %t.4 0))
-          (= %t.6 %t.5)
-          (= %t.7 (select %t.5 1 0))
-          (= %t.8 (select %t.5 0 1))
-          (= %t.9 (select %t.5 1 0))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t.4 (== %x.3 0))
+          (= 1 %t.5 (select 1 %t.4 0))
+          (= 1 %t.6 %t.5)
+          (= 1 %t.7 (select %t.5 1 0))
+          (= 1 %t.8 (select %t.5 0 1))
+          (= 1 %t.9 (select %t.5 1 0))
           (%t.9))))
     )
 
@@ -41391,7 +41377,7 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.4) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (1))))
     )
 
@@ -41416,8 +41402,8 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.0) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.3 (0) write 7))
-          (= %t.1 (== %x.0 3))
+          (= 1 () (public-ledger %forceField.3 (0) write 7))
+          (= 1 %t.1 (== %x.0 3))
           (assert %t.1 "oops 1")
           (%b.5))))
     )
@@ -41443,9 +41429,9 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.0) (ty ((abytes 2)) ((tfield 65535)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.4 (0) write 7))
-          (= %t.1 (< 16 3 %x.0))
-          (= %t.2 (select %t.1 0 1))
+          (= 1 () (public-ledger %forceField.4 (0) write 7))
+          (= 1 %t.1 (< 16 3 %x.0))
+          (= 1 %t.2 (select %t.1 0 1))
           (assert %t.2 "oops 1")
           (%b.6))))
     )
@@ -41471,7 +41457,7 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.4) (ty ((abytes 2)) ((tfield 65535)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (assert 0 "oops 1")
           (%b.3))))
 
@@ -41497,8 +41483,8 @@ groups than for single tests.
                            (%x.0)
                            (ty ((abytes 2)) ((tfield 65535)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.3 (0) write 7))
-          (= %t.1 (< 16 %x.0 100))
+          (= 1 () (public-ledger %forceField.3 (0) write 7))
+          (= 1 %t.1 (< 16 %x.0 100))
           (assert %t.1 "oops 1")
           (%t.1))))
     )
@@ -41522,7 +41508,7 @@ groups than for single tests.
                            (%b.0)
                            (ty ((abytes 1)) ((tfield 1)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (%b.0))))
     )
 
@@ -41545,7 +41531,7 @@ groups than for single tests.
                            (%b.0)
                            (ty ((abytes 1)) ((tfield 1)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (0))))
     )
 
@@ -41569,7 +41555,7 @@ groups than for single tests.
                            (%b.0)
                            (ty ((abytes 1)) ((tfield 1)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (0))))
     )
 
@@ -41593,7 +41579,7 @@ groups than for single tests.
                            (%b.0)
                            (ty ((abytes 1)) ((tfield 1)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (%b.0))))
     )
 
@@ -41617,7 +41603,7 @@ groups than for single tests.
                            (%b.0)
                            (ty ((abytes 1)) ((tfield 1)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (%b.0))))
     )
 
@@ -41645,11 +41631,11 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.1) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.5 (0) write 7))
-          (= %t.2 (== %x.1 3))
-          (= %t.3 (select %b.0 1 %t.2))
+          (= 1 () (public-ledger %forceField.5 (0) write 7))
+          (= 1 %t.2 (== %x.1 3))
+          (= 1 %t.3 (select %b.0 1 %t.2))
           (assert %t.3 "oops 2")
-          (= %t.7 (select %b.0 %t.2 0))
+          (= 1 %t.7 (select %b.0 %t.2 0))
           (%t.7))))
     )
 
@@ -41671,7 +41657,7 @@ groups than for single tests.
         (circuit %foo.2 ()
              (ty ((afield) (afield) (afield) (afield) (afield) (afield))
                  ((tfield) (tfield) (tfield) (tfield) (tfield) (tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (1 2 3 4 5 6))))
     )
 
@@ -41698,8 +41684,8 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.5) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.6) (call 1 %W.2))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.6) (call %W.2))
           (1))))
     )
 
@@ -41720,7 +41706,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -41759,10 +41745,10 @@ groups than for single tests.
                             (ty ((abytes 1)) ((tfield 1))))
                           (argument (%x.12) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.13 %t.14 %t.15 %t.16 %t.17 %t.18) (call 1 %S.9))
-          (= (%t.19 %t.20)
-             (call 1 %W.2 %t.13 %t.14 %t.15 %t.16 %t.17 %t.18))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.13 %t.14 %t.15 %t.16 %t.17 %t.18) (call %S.9))
+          (= 1 (%t.19 %t.20)
+             (call %W.2 %t.13 %t.14 %t.15 %t.16 %t.17 %t.18))
           (%t.19))))
     )
 
@@ -41802,12 +41788,12 @@ groups than for single tests.
                             (ty ((abytes 1)) ((tfield 1))))
                           (argument (%x.15) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.5 (0) write 7))
-          (= (%t.16 %t.17 %t.18 %t.19 %t.20 %t.21) (call 1 %S.13))
-          (= (%p.3 %p.0)
-             (call 1 %W.6 %t.16 %t.17 %t.18 %t.19 %t.20 %t.21))
-          (= %t.1 (== %p.0 19))
-          (= %t.22 (select %t.1 %p.3 %b.2))
+          (= 1 () (public-ledger %forceField.5 (0) write 7))
+          (= 1 (%t.16 %t.17 %t.18 %t.19 %t.20 %t.21) (call %S.13))
+          (= 1 (%p.3 %p.0)
+             (call %W.6 %t.16 %t.17 %t.18 %t.19 %t.20 %t.21))
+          (= 1 %t.1 (== %p.0 19))
+          (= 1 %t.22 (select %t.1 %p.3 %b.2))
           (%t.22))))
     )
 
@@ -41855,18 +41841,18 @@ groups than for single tests.
                             (ty ((abytes 1)) ((tfield 1))))
                           (argument (%x.26) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.9 (0) write 7))
-          (= %t.27 (select %b.0 0 1))
-          (= (%t.28 %t.29 %t.30 %t.31 %t.32 %t.33) (call %b.0 %S.24))
-          (= (%t.2 %t.4)
-             (call %b.0 %W1.10 %t.28 %t.29 %t.30 %t.31 %t.32 %t.33))
-          (= (%t.34 %t.35 %t.36 %t.37 %t.38 %t.39) (call %t.27 %S.24))
-          (= (%t.1 %t.3)
-             (call %t.27 %W2.17 %t.34 %t.35 %t.36 %t.37 %t.38 %t.39))
-          (= %p.7 (select %b.0 %t.2 %t.1))
-          (= %p.5 (select %b.0 %t.4 %t.3))
-          (= %t.6 (== %p.5 19))
-          (= %t.40 (select %t.6 %p.7 %b.0))
+          (= 1 () (public-ledger %forceField.9 (0) write 7))
+          (= 1 %t.27 (select %b.0 0 1))
+          (= %b.0 (%t.28 %t.29 %t.30 %t.31 %t.32 %t.33) (call %S.24))
+          (= %b.0 (%t.2 %t.4)
+             (call %W1.10 %t.28 %t.29 %t.30 %t.31 %t.32 %t.33))
+          (= %t.27 (%t.34 %t.35 %t.36 %t.37 %t.38 %t.39) (call %S.24))
+          (= %t.27 (%t.1 %t.3)
+             (call %W2.17 %t.34 %t.35 %t.36 %t.37 %t.38 %t.39))
+          (= 1 %p.7 (select %b.0 %t.2 %t.1))
+          (= 1 %p.5 (select %b.0 %t.4 %t.3))
+          (= 1 %t.6 (== %p.5 19))
+          (= 1 %t.40 (select %t.6 %p.7 %b.0))
           (%t.40))))
     )
 
@@ -41905,20 +41891,20 @@ groups than for single tests.
              (ty ((abytes 1)) ((tfield 1))))
         (circuit %C.7 ((argument () (ty () ())))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (1))
         (circuit %C.8 ((argument (%v.9) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.2 (1) write 7))
-          (= (%t.10) (call 1 %foo.4 1 %v.9))
+          (= 1 () (public-ledger %forceField.2 (1) write 7))
+          (= 1 (%t.10) (call %foo.4 1 %v.9))
           (%t.10))
         (circuit %C.11 ((argument
                           (%v.12 %v.13)
                           (ty ((afield) (afield)) ((tfield) (tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.3 (2) write 7))
-          (= (%x.14) (call 1 %foo.4 1 %v.12))
-          (= (%t.15) (call 1 %foo.4 %x.14 %v.13))
+          (= 1 () (public-ledger %forceField.3 (2) write 7))
+          (= 1 (%x.14) (call %foo.4 1 %v.12))
+          (= 1 (%t.15) (call %foo.4 %x.14 %v.13))
           (%t.15))))
     )
 
@@ -41957,10 +41943,10 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %bar1.4 ()
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= () (public-ledger 1 %forceField.2 (1) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (1) write 7))
           (assert 0 "oops 1")
-          (= () (public-ledger 1 %forceField.3 (2) write 7))
+          (= 1 () (public-ledger %forceField.3 (2) write 7))
           (assert 0 "oops 2")
           ())))
     )
@@ -41997,12 +41983,12 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%n.1) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1) (abytes 1)) ((tfield 1) (tfield 1)))
-          (= () (public-ledger 1 %forceField.5 (0) write 7))
-          (= %t.2 (== %n.1 0))
-          (= %t.3 (select %b.0 1 %t.2))
+          (= 1 () (public-ledger %forceField.5 (0) write 7))
+          (= 1 %t.2 (== %n.1 0))
+          (= 1 %t.3 (select %b.0 1 %t.2))
           (assert %t.3 "oops")
-          (= (%t.9) (call 1 %foo.6 3))
-          (= (%t.10) (call 1 %foo.6 7))
+          (= 1 (%t.9) (call %foo.6 3))
+          (= 1 (%t.10) (call %foo.6 7))
           (%t.9 %t.10))))
     )
 
@@ -42030,7 +42016,7 @@ groups than for single tests.
         (circuit %C.3 ((argument (%v.4) (ty ((afield)) ((tfield))))
                        (argument (%b.0) (ty ((abytes 1)) ((tfield 1)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (%b.0))))
     )
 
@@ -42062,16 +42048,16 @@ groups than for single tests.
                         (argument (%b.0) (ty ((abytes 1)) ((tfield 1)))))
              (ty ((abytes 1) (abytes 1) (abytes 1))
                  ((tfield 1) (tfield 1) (tfield 1)))
-          (= () (public-ledger 1 %forceField.8 (0) write 7))
-          (= %t.12 (+ #f %v.1 1))
-          (= (%t.2) (call %b.0 %foo.9 %t.12))
-          (= %t.13 (select %b.0 %t.2 0))
-          (= %t.14 (+ #f %v.3 1))
-          (= (%t.4) (call %b.0 %foo.9 %t.14))
-          (= %t.15 (select %b.0 %t.4 0))
-          (= %t.16 (+ #f %v.5 1))
-          (= (%t.6) (call %b.0 %foo.9 %t.16))
-          (= %t.17 (select %b.0 %t.6 0))
+          (= 1 () (public-ledger %forceField.8 (0) write 7))
+          (= 1 %t.12 (+ #f %v.1 1))
+          (= %b.0 (%t.2) (call %foo.9 %t.12))
+          (= 1 %t.13 (select %b.0 %t.2 0))
+          (= 1 %t.14 (+ #f %v.3 1))
+          (= %b.0 (%t.4) (call %foo.9 %t.14))
+          (= 1 %t.15 (select %b.0 %t.4 0))
+          (= 1 %t.16 (+ #f %v.5 1))
+          (= %b.0 (%t.6) (call %foo.9 %t.16))
+          (= 1 %t.17 (select %b.0 %t.6 0))
           (%t.13 %t.15 %t.17))))
     )
 
@@ -42107,12 +42093,12 @@ groups than for single tests.
                            (%v2.2 %v2.4)
                            (ty ((afield) (afield)) ((tfield) (tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.8 (0) write 7))
-          (= %t.1 (== %v1.0 0))
+          (= 1 () (public-ledger %forceField.8 (0) write 7))
+          (= 1 %t.1 (== %v1.0 0))
           (assert %t.1 "oops 1")
-          (= %b.3 (== %v2.2 0))
-          (= %t.5 (== %v2.4 0))
-          (= %t.6 (select %b.3 %t.5 0))
+          (= 1 %b.3 (== %v2.2 0))
+          (= 1 %t.5 (== %v2.4 0))
+          (= 1 %t.6 (select %b.3 %t.5 0))
           (assert %t.6 "oops 2")
           ())))
     )
@@ -42140,11 +42126,11 @@ groups than for single tests.
                          (ty ((abytes 1)) ((tfield 1))))
                        (argument (%n.0) (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.6 (0) write 7))
-          (= %m.2 (* #f %n.0 2))
-          (= %t.4 (+ #f %m.2 1))
-          (= %t.3 (+ #f %m.2 2))
-          (= %t.8 (select %b.1 %t.4 %t.3))
+          (= 1 () (public-ledger %forceField.6 (0) write 7))
+          (= 1 %m.2 (* #f %n.0 2))
+          (= 1 %t.4 (+ #f %m.2 1))
+          (= 1 %t.3 (+ #f %m.2 2))
+          (= 1 %t.8 (select %b.1 %t.4 %t.3))
           (%t.8))))
     )
 
@@ -42171,7 +42157,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %C.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (32))))
     )
 
@@ -42199,11 +42185,11 @@ groups than for single tests.
                          (%v.0 %v.3)
                          (ty ((abytes 1) (abytes 1)) ((tfield 1) (tfield 1)))))
              (ty ((afield) (afield)) ((tfield) (tfield)))
-          (= () (public-ledger 1 %forceField.7 (0) write 7))
-          (= %t.2 (* #f 2 %u.1))
-          (= %t.9 (select %v.0 %t.2 0))
-          (= %t.5 (* #f 2 %u.4))
-          (= %t.10 (select %v.3 %t.5 0))
+          (= 1 () (public-ledger %forceField.7 (0) write 7))
+          (= 1 %t.2 (* #f 2 %u.1))
+          (= 1 %t.9 (select %v.0 %t.2 0))
+          (= 1 %t.5 (* #f 2 %u.4))
+          (= 1 %t.10 (select %v.3 %t.5 0))
           (%t.9 %t.10))))
     )
 
@@ -42232,7 +42218,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %D.2 ()
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (assert 0 "oops 1")
           ())))
     )
@@ -42258,8 +42244,8 @@ groups than for single tests.
              (ty ((abytes 1) (afield)) ((tfield 1) (tfield))))
         (circuit %C.3 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.4 %t.5) (call 1 %foo.2))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.4 %t.5) (call %foo.2))
           (%t.5))))
     )
 
@@ -42283,7 +42269,7 @@ groups than for single tests.
                          (%p.3 %p.4)
                          (ty ((abytes 1) (afield)) ((tfield 1) (tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (%p.4))))
     )
 
@@ -42323,9 +42309,9 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %C.5 ((argument (%n.0) (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.4 (0) write 7))
-          (= %t.1 (== %n.0 0))
-          (= %t.2 (select %t.1 0 1))
+          (= 1 () (public-ledger %forceField.4 (0) write 7))
+          (= 1 %t.1 (== %n.0 0))
+          (= 1 %t.2 (select %t.1 0 1))
           (assert %t.2 "oops")
           (1))))
     )
@@ -42349,16 +42335,16 @@ groups than for single tests.
                            (%n.3)
                            (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())
         (circuit %C.4 ((argument
                          (%v.5 %v.6 %v.7)
                          (ty ((afield) (afield) (afield))
                              ((tfield) (tfield) (tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -42380,16 +42366,16 @@ groups than for single tests.
         (circuit %foo.2 ((argument () (ty () ()))
                          (argument (%n.3) (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())
         (circuit %C.4 ((argument
                          (%v.5 %v.6 %v.7)
                          (ty ((afield) (afield) (afield))
                              ((tfield) (tfield) (tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -42416,7 +42402,7 @@ groups than for single tests.
                        (argument (%n.4) (ty ((afield)) ((tfield))))
                        (argument (%m.5) (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           ())))
     )
 
@@ -42453,9 +42439,9 @@ groups than for single tests.
              (ty ((abytes 1)) ((tfield 1))))
         (circuit %bar.4 ()
              (ty ((abytes 1) (abytes 1)) ((tfield 1) (tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.5) (call 1 %foo.2 4))
-          (= (%t.6) (call 1 %foo.2 8))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.5) (call %foo.2 4))
+          (= 1 (%t.6) (call %foo.2 8))
           (%t.5 %t.6))))
     )
 
@@ -42497,7 +42483,7 @@ groups than for single tests.
                            (%b.12)
                            (ty ((abytes 7)) ((tfield 72057594037927935)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.3 (0) write 7))
+          (= 1 () (public-ledger %forceField.3 (0) write 7))
           (17))
         (circuit %foo.13 ((argument
                             (%v.14 %v.15 %v.16 %v.17 %v.18 %v.19 %v.20 %v.21
@@ -42526,21 +42512,21 @@ groups than for single tests.
                                 ((tfield
                                    1766847064778384329583297500742918515827483896875618958121606201292619775)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.3 (0) write 7))
+          (= 1 () (public-ledger %forceField.3 (0) write 7))
           (17))
         (circuit %foo.45 ((argument
                             (%x.0)
                             (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.3 (0) write 7))
-          (= %t.46 (+ #f %x.0 1))
+          (= 1 () (public-ledger %forceField.3 (0) write 7))
+          (= 1 %t.46 (+ #f %x.0 1))
           (%t.46))
         (circuit %bar.47 ((argument
                             (%x.1)
                             (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.3 (0) write 7))
-          (= %t.48 (- #f %x.1 1))
+          (= 1 () (public-ledger %forceField.3 (0) write 7))
+          (= 1 %t.48 (- #f %x.1 1))
           (%t.48))))
     )
 
@@ -42566,9 +42552,9 @@ groups than for single tests.
              (ty ((abytes 20))
                  ((tfield
                     1461501637330902918203684832716283019655932542975)))
-          (= () (public-ledger 1 %forceField.4 (0) write 7))
-          (= %t.1 (== %x.0 0))
-          (= %t.2 (select %t.1 0 1))
+          (= 1 () (public-ledger %forceField.4 (0) write 7))
+          (= 1 %t.1 (== %x.0 0))
+          (= 1 %t.2 (select %t.1 0 1))
           (assert %t.2 "oops")
           (1718579047))))
     )
@@ -42600,23 +42586,23 @@ groups than for single tests.
                             (%x.0)
                             (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.14 (0) write 7))
+          (= 1 () (public-ledger %forceField.14 (0) write 7))
           (assert 0 "oops")
-          (= %t.1 (== %x.0 17))
-          (= %t.2 (select %t.1 0 1))
+          (= 1 %t.1 (== %x.0 17))
+          (= 1 %t.2 (select %t.1 0 1))
           (assert %t.2 "oops 1")
-          (= %t.3 (== 0 %x.0))
-          (= %t.5 (select %t.3 1 %t.2))
+          (= 1 %t.3 (== 0 %x.0))
+          (= 1 %t.5 (select %t.3 1 %t.2))
           (assert %t.5 "oops 3")
-          (= %t.6 (== %x.0 59))
-          (= %t.7 (== %x.0 61))
-          (= %t.8 (select %t.6 0 %t.7))
+          (= 1 %t.6 (== %x.0 59))
+          (= 1 %t.7 (== %x.0 61))
+          (= 1 %t.8 (select %t.6 0 %t.7))
           (assert %t.8 "oops 4")
-          (= %t.9 (== %x.0 7))
-          (= %t.10 (== %x.0 19))
-          (= %t.11 (select %t.9 %t.1 %t.10))
+          (= 1 %t.9 (== %x.0 7))
+          (= 1 %t.10 (== %x.0 19))
+          (= 1 %t.11 (select %t.9 %t.1 %t.10))
           (assert %t.11 "oops 6")
-          (= %t.12 (select %t.11 0 1))
+          (= 1 %t.12 (select %t.11 0 1))
           (assert %t.12 "oops 7")
           (%x.0))))
     )
@@ -42642,13 +42628,13 @@ groups than for single tests.
                            (ty ((afield)) ((tfield))))
                          (argument (%y.3) (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.6 (0) write 7))
-          (= %t.1 (* #f %x.0 5))
-          (= %t.2
+          (= 1 () (public-ledger %forceField.6 (0) write 7))
+          (= 1 %t.1 (* #f %x.0 5))
+          (= 1 %t.2
              (+ #f
                 %t.1
                 99999999999999999999999999999999999999999999999999))
-          (= %t.4 (== %t.2 %y.3))
+          (= 1 %t.4 (== %t.2 %y.3))
           (assert %t.4 "oops 2")
           (%t.2))))
     )
@@ -42674,12 +42660,12 @@ groups than for single tests.
                            (ty ((afield)) ((tfield))))
                          (argument (%y.1) (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.6 (0) write 7))
-          (= %t.2 (== %x.0 %y.1))
-          (= %t.3 (== %x.0 0))
-          (= %t.4 (select %t.2 %t.3 1))
+          (= 1 () (public-ledger %forceField.6 (0) write 7))
+          (= 1 %t.2 (== %x.0 %y.1))
+          (= 1 %t.3 (== %x.0 0))
+          (= 1 %t.4 (select %t.2 %t.3 1))
           (assert %t.4 "oops")
-          (= %t.8 (select %t.4 %x.0 %y.1))
+          (= 1 %t.8 (select %t.4 %x.0 %y.1))
           (%t.8))))
     )
 
@@ -42705,7 +42691,7 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%b.4) (ty ((abytes 1)) ((tfield 1)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -42729,7 +42715,7 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%b.0) (ty ((abytes 1)) ((tfield 1)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (assert %b.0 "oops 2")
           ())))
     )
@@ -42758,10 +42744,10 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%b.2) (ty ((abytes 1)) ((tfield 1)))))
              (ty () ())
-          (= () (public-ledger 1 %forceField.6 (0) write 7))
-          (= %t.1 (select %a.0 0 1))
-          (= %t.3 (select %b.2 %t.1 0))
-          (= %t.4 (select %t.3 0 1))
+          (= 1 () (public-ledger %forceField.6 (0) write 7))
+          (= 1 %t.1 (select %a.0 0 1))
+          (= 1 %t.3 (select %b.2 %t.1 0))
+          (= 1 %t.4 (select %t.3 0 1))
           (assert %t.4 "oops 1")
           ())))
     )
@@ -42786,12 +42772,12 @@ groups than for single tests.
                            (ty ((afield) (afield) (afield))
                                ((tfield) (tfield) (tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.8 (0) write 7))
-          (= %t.3 (== %x.0 3))
-          (= %t.2 (== %x.1 4))
-          (= %t.6 (select %t.3 %t.2 0))
-          (= %t.5 (== %x.4 5))
-          (= %t.10 (select %t.6 %t.5 0))
+          (= 1 () (public-ledger %forceField.8 (0) write 7))
+          (= 1 %t.3 (== %x.0 3))
+          (= 1 %t.2 (== %x.1 4))
+          (= 1 %t.6 (select %t.3 %t.2 0))
+          (= 1 %t.5 (== %x.4 5))
+          (= 1 %t.10 (select %t.6 %t.5 0))
           (%t.10))))
     )
 
@@ -42824,8 +42810,8 @@ groups than for single tests.
                             (%x.5)
                             (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.6) (call 1 %W.2 %x.5))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.6) (call %W.2 %x.5))
           (%t.6))))
     )
 
@@ -42858,8 +42844,8 @@ groups than for single tests.
                             (%x.5)
                             (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.6) (call 1 %W.2 %x.5))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.6) (call %W.2 %x.5))
           (%t.6))))
     )
 
@@ -42894,8 +42880,8 @@ groups than for single tests.
                             (%x.5)
                             (ty ((abytes 1)) ((tfield 1)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.6) (call 1 %W.2 %x.5))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.6) (call %W.2 %x.5))
           (%t.6))))
     )
 
@@ -42930,8 +42916,8 @@ groups than for single tests.
                             (%x.5)
                             (ty ((abytes 1)) ((tfield 1)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.6) (call 1 %W.2 %x.5))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.6) (call %W.2 %x.5))
           (%t.6))))
     )
 
@@ -42959,7 +42945,7 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%c.0) (ty ((abytes 1)) ((tfield 1)))))
              (ty ((abytes 10)) ((tfield 1208925819614629174706175)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (502515278406210103239265))))
     )
 
@@ -43015,10 +43001,10 @@ groups than for single tests.
                            (ty ((abytes 10))
                                ((tfield 1208925819614629174706175)))))
              (ty ((abytes 10)) ((tfield 1208925819614629174706175)))
-          (= () (public-ledger 1 %forceField.6 (0) write 7))
-          (= %z.4 (select %b.0 502515278406210103239265 %d.1))
-          (= %w.3 (select %b.0 %d.1 502515278406210103239265))
-          (= %t.8 (select %c.2 %z.4 %w.3))
+          (= 1 () (public-ledger %forceField.6 (0) write 7))
+          (= 1 %z.4 (select %b.0 502515278406210103239265 %d.1))
+          (= 1 %w.3 (select %b.0 %d.1 502515278406210103239265))
+          (= 1 %t.8 (select %c.2 %z.4 %w.3))
           (%t.8))))
     )
 
@@ -43041,7 +43027,7 @@ groups than for single tests.
         (witness %bar.2 () (ty () ()))
         (circuit %foo.3 ()
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -43068,7 +43054,7 @@ groups than for single tests.
                  ((tfield) (tfield) (tfield))))
         (circuit %foo.3 ()
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           ())))
     )
 
@@ -43092,7 +43078,7 @@ groups than for single tests.
                  ((tfield 4722366482869645213695)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (0 36762444129640))))
     )
 
@@ -43122,8 +43108,8 @@ groups than for single tests.
              (ty () ()))
         (circuit %foo.5 ()
              (ty () ())
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= () (call 1 %bar.2 0 36762444129640))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 () (call %bar.2 0 36762444129640))
           ())))
     )
 
@@ -43153,14 +43139,14 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= (%t.4 %t.5) (call 1 %bar.2))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 (%t.4 %t.5) (call %bar.2))
           (%t.4 %t.5))))
     )
 
   (test
     '(
-      "ledger forceField: Field; circuit forceProof(): [] { forceField = 7; }"
+      "ledger forceField: Field; circuit forceProof(): [] { forceField =  7; }"
       "export circuit foo(b: Boolean) : Bytes<50> {"
       "  forceProof();"
       "  return b ? pad(50, 'hello!') : pad(50, 'once upon a time in a galaxy far, far away');"
@@ -43180,9 +43166,9 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
-          (= %t.4 (select %b.0 0 146740295883472840746347634))
-          (= %t.5
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
+          (= 1 %t.4 (select %b.0 0 146740295883472840746347634))
+          (= 1 %t.5
              (select
                %b.0
                36762444129640
@@ -43192,11 +43178,11 @@ groups than for single tests.
 
   (test
     '(
-      "ledger forceField: Field; circuit forceProof(): [] { forceField = 7; }"
+      "ledger forceField: Field; circuit forceProof(): [] { forceField =  7; }"
       "export circuit foo() : Vector<2, Bytes<80>> {"
       "  forceProof();"
-      "  const x = [pad(80, 'hello!'), pad(80, 'four score and seven years ago our fathers brought forth')];"
-      "  const y = [pad(80, 'four score and seven years ago our fathers brought forth'), pad(80, 'hello!')];"
+      "  const x =  [pad(80, 'hello!'), pad(80, 'four score and seven years ago our fathers brought forth')];"
+      "  const y =  [pad(80, 'four score and seven years ago our fathers brought forth'), pad(80, 'hello!')];"
       "  assert(x == y, 'oops');"
       "  return x;"
       "}"
@@ -43220,7 +43206,7 @@ groups than for single tests.
                      452312848583266388373324160190187140051835877600158453279131187530910662655)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (assert 0 "oops")
           (0 0 36762444129640 0
              655673852914079535706832728104650208561044890911829149250927
@@ -43230,10 +43216,10 @@ groups than for single tests.
   (test
     '(
       "circuit bar() : Bytes<50> { return pad(50, 'hello!'); }"
-      "ledger forceField: Field; circuit forceProof(): [] { forceField = 7; }"
+      "ledger forceField: Field; circuit forceProof(): [] { forceField =  7; }"
       "export circuit foo() : Bytes<50> {"
       "  forceProof();"
-      "  const x : Bytes<50> = bar();"
+      "  const x : Bytes<50> =  bar();"
       "  return x;"
       "}"
       )
@@ -43249,17 +43235,17 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (0 36762444129640))))
     )
 
   (test
     '(
       "circuit bar() : Bytes<50> { return pad(50, 'hello!'); }"
-      "ledger forceField: Field; circuit forceProof(): [] { forceField = 7; }"
+      "ledger forceField: Field; circuit forceProof(): [] { forceField =  7; }"
       "export circuit foo() : Bytes<50> {"
       "  forceProof();"
-      "  const x : Bytes<50> = bar();"
+      "  const x : Bytes<50> =  bar();"
       "  assert(x == pad(50, 'hello!'), 'oops');"
       "  return x;"
       "}"
@@ -43276,17 +43262,17 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (0 36762444129640))))
     )
 
   (test
     '(
       "circuit bar() : Bytes<50> { return pad(50, 'hello!'); }"
-      "ledger forceField: Field; circuit forceProof(): [] { forceField = 7; }"
+      "ledger forceField: Field; circuit forceProof(): [] { forceField =  7; }"
       "export circuit foo() : Bytes<50> {"
       "  forceProof();"
-      "  const x : Bytes<50> = bar();"
+      "  const x : Bytes<50> =  bar();"
       "  assert(x == pad(50, 'once upon a time in a galaxy far, far away'), 'oops');"
       "  return x;"
       "}"
@@ -43303,14 +43289,14 @@ groups than for single tests.
                  ((tfield 5708990770823839524233143877797980545530986495)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (assert 0 "oops")
           (0 36762444129640))))
     )
 
   (test
     '(
-      "ledger forceField: Field; circuit forceProof(): [] { forceField = 7; }"
+      "ledger forceField: Field; circuit forceProof(): [] { forceField =  7; }"
       "export circuit foo(b: Boolean, x: Field): Field {"
       "  forceProof();"
       "  return 1 + ((b: Field, x: Boolean): Field => x ? b - 1 : b + 1)(x + 1, !b);"
@@ -43328,18 +43314,18 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.0) (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.7 (0) write 7))
-          (= %b.2 (+ #f %x.0 1))
-          (= %t.3 (- #f %b.2 1))
-          (= %t.4 (+ #f %b.2 1))
-          (= %t.5 (select %b.1 %t.4 %t.3))
-          (= %t.9 (+ #f 1 %t.5))
+          (= 1 () (public-ledger %forceField.7 (0) write 7))
+          (= 1 %b.2 (+ #f %x.0 1))
+          (= 1 %t.3 (- #f %b.2 1))
+          (= 1 %t.4 (+ #f %b.2 1))
+          (= 1 %t.5 (select %b.1 %t.4 %t.3))
+          (= 1 %t.9 (+ #f 1 %t.5))
           (%t.9))))
     )
 
   (test
     '(
-      "ledger forceField: Field; circuit forceProof(): [] { forceField = 7; }"
+      "ledger forceField: Field; circuit forceProof(): [] { forceField =  7; }"
       "export circuit foo(b: Boolean, x: Field): Field {"
       "  forceProof();"
       "  return 1 + ((b, x) => x ? b - 1 : b + 1)(x + 1, !b);"
@@ -43357,19 +43343,19 @@ groups than for single tests.
                            (ty ((abytes 1)) ((tfield 1))))
                          (argument (%x.0) (ty ((afield)) ((tfield)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.7 (0) write 7))
-          (= %b.2 (+ #f %x.0 1))
-          (= %t.3 (- #f %b.2 1))
-          (= %t.4 (+ #f %b.2 1))
-          (= %t.5 (select %b.1 %t.4 %t.3))
-          (= %t.9 (+ #f 1 %t.5))
+          (= 1 () (public-ledger %forceField.7 (0) write 7))
+          (= 1 %b.2 (+ #f %x.0 1))
+          (= 1 %t.3 (- #f %b.2 1))
+          (= 1 %t.4 (+ #f %b.2 1))
+          (= 1 %t.5 (select %b.1 %t.4 %t.3))
+          (= 1 %t.9 (+ #f 1 %t.5))
           (%t.9))))
     )
 
   (test
     '(
       "witness bar(bv1: Bytes<80>, bv2: Bytes<80>): Bytes<160>;"
-      "ledger forceField: Field; circuit forceProof(): [] { forceField = 7; }"
+      "ledger forceField: Field; circuit forceProof(): [] { forceField =  7; }"
       "export circuit foo(arg: Field) : Bytes<160> { forceProof(); return disclose(bar(arg as Bytes<80>, arg as Bytes<80>)); }"
       )
     (returns
@@ -43424,10 +43410,10 @@ groups than for single tests.
                      452312848583266388373324160190187140051835877600158453279131187530910662655)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
-          (= (%t.11 %t.12) (field->bytes 1 80 %arg.0))
-          (= (%t.13 %t.14 %t.15 %t.16 %t.17 %t.18)
-             (call 1 %bar.3 0 %t.11 %t.12 0 %t.11 %t.12))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
+          (= 1 (%t.11 %t.12) (field->bytes 80 %arg.0))
+          (= 1 (%t.13 %t.14 %t.15 %t.16 %t.17 %t.18)
+             (call %bar.3 0 %t.11 %t.12 0 %t.11 %t.12))
           (%t.13 %t.14 %t.15 %t.16 %t.17 %t.18))))
     )
 
@@ -43453,11 +43439,11 @@ groups than for single tests.
                                  (tfield
                                    452312848583266388373324160190187140051835877600158453279131187530910662655)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.6 (0) write 7))
-          (= %t.1 (== %arg.0 0))
+          (= 1 () (public-ledger %forceField.6 (0) write 7))
+          (= 1 %t.1 (== %arg.0 0))
           (assert %t.1 "bytes value is too big to fit in a field")
-          (= %t.4 (bytes->field 1 80 %arg.3 %arg.2))
-          (= %t.8 (+ #f %t.4 %t.4))
+          (= 1 %t.4 (bytes->field 80 %arg.3 %arg.2))
+          (= 1 %t.8 (+ #f %t.4 %t.4))
           (%t.8))))
     )
 
@@ -43477,7 +43463,7 @@ groups than for single tests.
                            (%arg.0)
                            (ty ((abytes 1)) ((tfield 1)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (%arg.0))))
     )
 
@@ -43498,7 +43484,7 @@ groups than for single tests.
                            (%arg.3)
                            (ty ((abytes 1)) ((tfield 2)))))
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (%arg.3))))
     )
 
@@ -43518,9 +43504,9 @@ groups than for single tests.
                            (%arg.0)
                            (ty ((afield)) ((tfield)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.3 (0) write 7))
-          (= %t.1 (== %arg.0 0))
-          (= %t.5 (select %t.1 0 1))
+          (= 1 () (public-ledger %forceField.3 (0) write 7))
+          (= 1 %t.1 (== %arg.0 0))
+          (= 1 %t.5 (select %t.1 0 1))
           (%t.5))))
     )
 
@@ -43589,21 +43575,21 @@ groups than for single tests.
                                     452312848583266388373324160190187140051835877600158453279131187530910662655)
                                   (tfield 1)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= (%t.22 %t.23 %t.24)
-             (public-ledger 1 %field1.10 (0) lookup %n.18))
-          (= () (public-ledger 1 %field3.12 (2) write %t.24))
-          (= (%q.0 %q.1 %q.4)
-             (public-ledger 1 %field1.10 (0) lookup %n.18))
-          (= %t.3 (== %q.0 0))
-          (= %t.2 (== %q.1 0))
-          (= %t.6 (select %t.3 %t.2 0))
-          (= %t.5 (== %q.4 0))
-          (= %t.7 (select %t.6 %t.5 0))
-          (= %t.8 (select %t.7 0 1))
+          (= 1 (%t.22 %t.23 %t.24)
+             (public-ledger %field1.10 (0) lookup %n.18))
+          (= 1 () (public-ledger %field3.12 (2) write %t.24))
+          (= 1 (%q.0 %q.1 %q.4)
+             (public-ledger %field1.10 (0) lookup %n.18))
+          (= 1 %t.3 (== %q.0 0))
+          (= 1 %t.2 (== %q.1 0))
+          (= 1 %t.6 (select %t.3 %t.2 0))
+          (= 1 %t.5 (== %q.4 0))
+          (= 1 %t.7 (select %t.6 %t.5 0))
+          (= 1 %t.8 (select %t.7 0 1))
           (assert %t.8 "entry not found")
-          (= (%tmp.25) (call 1 %merklePathRoot.13 %q.0 %q.1 %q.4))
-          (= (%t.26)
-             (public-ledger 1 %field2.11 (1) checkRoot %tmp.25))
+          (= 1 (%tmp.25) (call %merklePathRoot.13 %q.0 %q.1 %q.4))
+          (= 1 (%t.26)
+             (public-ledger %field2.11 (1) checkRoot %tmp.25))
           (%t.26))))
    )
 
@@ -43622,7 +43608,7 @@ groups than for single tests.
         (public-ledger-declaration ((%field1.0 (0) (Counter))))
         (circuit %foo.1 ()
              (ty ((afield)) ((tfield)))
-          (= (%t.2) (public-ledger 1 %field1.0 (0) read))
+          (= 1 (%t.2) (public-ledger %field1.0 (0) read))
           (%t.2))))
     )
 
@@ -43714,17 +43700,17 @@ groups than for single tests.
                             (ty ((abytes 1)) ((tfield 1))))
                           (argument (%b.2) (ty ((abytes 1)) ((tfield 1)))))
              (ty ((afield)) ((tfield)))
-          (= %t.1 (select %a.0 0 1))
-          (= %t.3 (select %b.2 %t.1 0))
-          (= %t.4 (select %t.3 0 1))
+          (= 1 %t.1 (select %a.0 0 1))
+          (= 1 %t.3 (select %b.2 %t.1 0))
+          (= 1 %t.4 (select %t.3 0 1))
           (assert %t.4 "a should be false")
-          (= (%t.5 %t.7) (public-ledger 1 %kernel.12 () self))
-          (= (%t.6 %t.8) (public-ledger 1 %kernel.12 () self))
-          (= %t.10 (== %t.5 %t.6))
-          (= %t.9 (== %t.7 %t.8))
-          (= %t.11 (select %t.10 %t.9 0))
+          (= 1 (%t.5 %t.7) (public-ledger %kernel.12 () self))
+          (= 1 (%t.6 %t.8) (public-ledger %kernel.12 () self))
+          (= 1 %t.10 (== %t.5 %t.6))
+          (= 1 %t.9 (== %t.7 %t.8))
+          (= 1 %t.11 (select %t.10 %t.9 0))
           (assert %t.11 "oops")
-          (= (%t.32) (public-ledger 1 %x0.13 (0 0) read))
+          (= 1 (%t.32) (public-ledger %x0.13 (0 0) read))
           (%t.32))))
     )
 
@@ -43770,49 +43756,49 @@ groups than for single tests.
                             (%v.25)
                             (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= (%t.9) (public-ledger 1 %state.17 (2) read))
-          (= %t.10 (== %t.9 0))
+          (= 1 (%t.9) (public-ledger %state.17 (2) read))
+          (= 1 %t.10 (== %t.9 0))
           (assert %t.10 "set: attempted to overwrite recorded value")
-          (= (%sk.26 %sk.27) (call 1 %private$secret_key.23))
-          (= (%apk.28 %apk.29)
-             (call 1 %persistentHash.18
+          (= 1 (%sk.26 %sk.27) (call %private$secret_key.23))
+          (= 1 (%apk.28 %apk.29)
+             (call %persistentHash.18
                0
                1184891903413063782045712785760620
                %sk.26
                %sk.27))
-          (= ()
-             (public-ledger 1 %authority.15 (0) write %apk.28 %apk.29))
-          (= () (public-ledger 1 %value.16 (1) write %v.25))
-          (= () (public-ledger 1 %state.17 (2) write 1))
+          (= 1 ()
+             (public-ledger %authority.15 (0) write %apk.28 %apk.29))
+          (= 1 () (public-ledger %value.16 (1) write %v.25))
+          (= 1 () (public-ledger %state.17 (2) write 1))
           ())
         (circuit %get.30 ()
              (ty ((abytes 1) (afield)) ((tfield 1) (tfield)))
-          (= (%t.11) (public-ledger 1 %state.17 (2) read))
-          (= %t.12 (== %t.11 1))
-          (= (%value.13) (public-ledger %t.12 %value.16 (1) read))
-          (= %t.31 (select %t.12 %value.13 0))
+          (= 1 (%t.11) (public-ledger %state.17 (2) read))
+          (= 1 %t.12 (== %t.11 1))
+          (= %t.12 (%value.13) (public-ledger %value.16 (1) read))
+          (= 1 %t.31 (select %t.12 %value.13 0))
           (%t.12 %t.31))
         (circuit %clear.32 ()
              (ty () ())
-          (= (%t.0) (public-ledger 1 %state.17 (2) read))
-          (= %t.1 (== %t.0 1))
+          (= 1 (%t.0) (public-ledger %state.17 (2) read))
+          (= 1 %t.1 (== %t.0 1))
           (assert %t.1 "clear: no value is currently recorded")
-          (= (%sk.33 %sk.34) (call 1 %private$secret_key.23))
-          (= (%apk.2 %apk.4)
-             (call 1 %persistentHash.18
+          (= 1 (%sk.33 %sk.34) (call %private$secret_key.23))
+          (= 1 (%apk.2 %apk.4)
+             (call %persistentHash.18
                0
                1184891903413063782045712785760620
                %sk.33
                %sk.34))
-          (= (%t.3 %t.5) (public-ledger 1 %authority.15 (0) read))
-          (= %t.7 (== %apk.2 %t.3))
-          (= %t.6 (== %apk.4 %t.5))
-          (= %t.8 (select %t.7 %t.6 0))
+          (= 1 (%t.3 %t.5) (public-ledger %authority.15 (0) read))
+          (= 1 %t.7 (== %apk.2 %t.3))
+          (= 1 %t.6 (== %apk.4 %t.5))
+          (= 1 %t.8 (select %t.7 %t.6 0))
           (assert %t.8
             "clear: attempted clear without proper authorization")
-          (= () (public-ledger 1 %authority.15 (0) write 0 0))
-          (= () (public-ledger 1 %value.16 (1) write 0))
-          (= () (public-ledger 1 %state.17 (2) write 0))
+          (= 1 () (public-ledger %authority.15 (0) write 0 0))
+          (= 1 () (public-ledger %value.16 (1) write 0))
+          (= 1 () (public-ledger %state.17 (2) write 0))
           ())))
     )
 
@@ -43853,7 +43839,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (1))))
     )
 
@@ -43877,13 +43863,13 @@ groups than for single tests.
                            (%x.0)
                            (ty ((abytes 1)) ((tfield 255)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= () (public-ledger 1 %forceField.6 (0) write 7))
-          (= %t.1 (+ 9 %x.0 %x.0))
-          (= %t.2 (< 9 %t.1 %x.0))
-          (= %t.3 (select %t.2 0 1))
+          (= 1 () (public-ledger %forceField.6 (0) write 7))
+          (= 1 %t.1 (+ 9 %x.0 %x.0))
+          (= 1 %t.2 (< 9 %t.1 %x.0))
+          (= 1 %t.3 (select %t.2 0 1))
           (assert %t.3 "result of subtraction would be negative")
-          (= %t.4 (- 9 %t.1 %x.0))
-          (= %t.8 (== %t.4 %x.0))
+          (= 1 %t.4 (- 9 %t.1 %x.0))
+          (= 1 %t.8 (== %t.4 %x.0))
           (%t.8))))
     )
 
@@ -43938,7 +43924,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((abytes 1)) ((tfield 255)))
-          (= 1 () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (0))))
     )
 
@@ -43960,7 +43946,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((abytes 1)) ((tfield 255)))
-          (= 1 () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (assert 0 "result of subtraction would be negative")
           (= 1 %t.3 (- 4 12 13))
           (%t.3))))
@@ -44017,8 +44003,8 @@ groups than for single tests.
                                     452312848583266388373324160190187140051835877600158453279131187530910662655)))))
              (ty ((abytes 1)) ((tfield 1)))
           (= 1 %t.21 (downcast-unsigned #f 4294967295 255 %x.0))
-          (= 1 %t.22 (downcast-unsigned #f 255 %y.1))
-          (= 1 (%t.23) (public-ledger 1 %X.19 (0) read))
+          (= 1 %t.22 (downcast-unsigned #f #f 255 %y.1))
+          (= 1 (%t.23) (public-ledger %X.19 (0) read))
           (= 1 %t1.3 (== %z.2 0))
           (assert %t1.3 "bytes value is too big to fit in a field")
           (= 1 %t1.5 (== %z.4 0))
@@ -44033,8 +44019,8 @@ groups than for single tests.
           (assert %t1.13 "bytes value is too big to fit in a field")
           (= 1 %t1.15 (== %z.14 0))
           (assert %t1.15 "bytes value is too big to fit in a field")
-          (= 1 %t.24 (bytes->field 1 256 %z.17 %z.16))
-          (= 1 (%t.25 %t.26) (field->bytes 1 8 %y.1))
+          (= 1 %t.24 (bytes->field 256 %z.17 %z.16))
+          (= 1 (%t.25 %t.26) (field->bytes 8 %y.1))
           (1))))
     )
 
@@ -44057,8 +44043,8 @@ groups than for single tests.
              (ty ((afield)) ((tfield)))
           (= 1 (%t1.0) (public-ledger %ctr.2 (0) read))
           (= 1 %tmp.4 (downcast-unsigned #f 18446744073709551615 65535 %t1.0))
-          (= 1 () (public-ledger 1 %ctr.2 (0) increment %tmp.4))
-          (= 1 (%t.5) (public-ledger 1 %ctr.2 (0) read))
+          (= 1 () (public-ledger %ctr.2 (0) increment %tmp.4))
+          (= 1 (%t.5) (public-ledger %ctr.2 (0) read))
           (%t.5))))
     )
 
@@ -44083,11 +44069,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                52435875175126190479447740508185965837690552500527637822603658699938581184512))
           (%t4.3))))
@@ -44114,11 +44100,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                52435875175126190479447740508185965837690552500527637822603658699938581184512))
           (%t4.3))))
@@ -44145,11 +44131,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                52435875175126190479447740508185965837690552500527637822603658699938581184512))
           (%t4.3))))
@@ -44193,11 +44179,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                52435875175126190479447740508185965837690552500527637822603658699938581184512))
           (%t4.3))))
@@ -44224,11 +44210,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                452312848583266388373324160190187140051835877600158453279131187530910662656))
           (%t4.3))))
@@ -44255,11 +44241,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                452312848583266388373324160190187140051835877600158453279131187530910662656))
           (%t4.3))))
@@ -44286,11 +44272,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                452312848583266388373324160190187140051835877600158453279131187530910662656))
           (%t4.3))))
@@ -44318,11 +44304,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                452312848583266388373324160190187140051835877600158453279131187530910662656))
           (%t4.3))))
@@ -44349,11 +44335,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                452312848583266388373324160190187140051835877600158453279131187530910662655))
           (%t4.3))))
@@ -44380,11 +44366,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                452312848583266388373324160190187140051835877600158453279131187530910662655))
           (%t4.3))))
@@ -44412,11 +44398,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456789
                452312848583266388373324160190187140051835877600158453279131187530910662655))
           (%t4.3))))
@@ -44445,9 +44431,9 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.3 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
-          (= (%t2.4 %t2.0) (field->bytes 1 4 123456789123456789))
-          (= %t4.5 (downcast-unsigned #f 1 123456789123456789 %t2.0))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
+          (= 1 (%t2.4 %t2.0) (field->bytes 4 123456789123456789))
+          (= 1 %t4.5 (downcast-unsigned #f #f 123456789123456789 %t2.0))
           (%t4.5))))
     )
 
@@ -44472,11 +44458,11 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
              (downcast-unsigned
                #f
-               1
+               #f
                123456789123456788
                52435875175126190479447740508185965837690552500527637822603658699938581184511))
           (%t4.3))))
@@ -44503,9 +44489,9 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
-          (= %t4.3
-             (downcast-unsigned #f 1 123456789123456788 123456789123456789))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
+          (= 1 %t4.3
+             (downcast-unsigned #f #f 123456789123456788 123456789123456789))
           (%t4.3))))
     )
 
@@ -44530,7 +44516,7 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.2 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.1 (0) write 7))
+          (= 1 () (public-ledger %forceField.1 (0) write 7))
           (123456789123456789))))
     )
 
@@ -44554,13 +44540,13 @@ groups than for single tests.
              (__compact_Cell (ty ((afield)) ((tfield)))))))
         (circuit %foo.3 ()
              (ty ((afield)) ((tfield)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
           (assert 0 "bytes value is too big to fit in a field")
-          (= %t3.0
-             (bytes->field 1 256
+          (= 1 %t3.0
+             (bytes->field 256
                63855931564696431299763410850379360948494476837669428698230285298481505316
                63855931564696431299763410850379360948494476837669428698230285298481505316))
-          (= %t4.4 (downcast-unsigned #f 1 123456789123456788 %t3.0))
+          (= 1 %t4.4 (downcast-unsigned #f #f 123456789123456788 %t3.0))
           (%t4.4))))
     )
 
@@ -44689,10 +44675,10 @@ groups than for single tests.
                                     (tfield
                                       452312848583266388373324160190187140051835877600158453279131187530910662655)))))
              (ty () ())
-          (= (%value.45 %value.46)
-             (public-ledger 1 %kernel.0 () self))
-          (= ()
-             (call 1 %createZswapOutput.26
+          (= 1 (%value.45 %value.46)
+             (public-ledger %kernel.0 () self))
+          (= 1 ()
+             (call %createZswapOutput.26
                %coin.38
                %coin.39
                %coin.40
@@ -44703,8 +44689,8 @@ groups than for single tests.
                0
                %value.45
                %value.46))
-          (= (%tmp.47 %tmp.48)
-             (call 1 %persistentHash.4
+          (= 1 (%tmp.47 %tmp.48)
+             (call %persistentHash.4
                136202032268515569762809483864408030127489942841709
                %coin.38
                %coin.39
@@ -44714,22 +44700,22 @@ groups than for single tests.
                0
                %value.45
                %value.46))
-          (= ()
-             (public-ledger 1 %kernel.0 () claimZswapCoinReceive
+          (= 1 ()
+             (public-ledger %kernel.0 () claimZswapCoinReceive
                %tmp.47
                %tmp.48))
-          (= (%selfAddr.49 %selfAddr.50)
-             (public-ledger 1 %kernel.0 () self))
-          (= ()
-             (call 1 %createZswapInput.19
+          (= 1 (%selfAddr.49 %selfAddr.50)
+             (public-ledger %kernel.0 () self))
+          (= 1 ()
+             (call %createZswapInput.19
                %coin.38
                %coin.39
                %coin.40
                %coin.41
                %coin.42
                0))
-          (= (%tmp.51 %tmp.52)
-             (call 1 %persistentHash.4
+          (= 1 (%tmp.51 %tmp.52)
+             (call %persistentHash.4
                136202032272258675798939806962505150809239393167725
                %coin.38
                %coin.39
@@ -44739,19 +44725,19 @@ groups than for single tests.
                0
                %selfAddr.49
                %selfAddr.50))
-          (= ()
-             (public-ledger 1 %kernel.0 () claimZswapNullifier
+          (= 1 ()
+             (public-ledger %kernel.0 () claimZswapNullifier
                %tmp.51
                %tmp.52))
-          (= (%t.53)
-             (call 1 %degradeToTransient.14 %coin.38 %coin.39))
-          (= (%t.54)
-             (call 1 %transientHash.1
+          (= 1 (%t.53)
+             (call %degradeToTransient.14 %coin.38 %coin.39))
+          (= 1 (%t.54)
+             (call %transientHash.1
                10685258091935385184760267925849721347998787314052891846880509847917
                %t.53))
-          (= (%t.55 %t.56) (call 1 %upgradeFromTransient.17 %t.54))
-          (= ()
-             (call 1 %createZswapOutput.26
+          (= 1 (%t.55 %t.56) (call %upgradeFromTransient.17 %t.54))
+          (= 1 ()
+             (call %createZswapOutput.26
                %t.55
                %t.56
                %coin.40
@@ -44762,8 +44748,8 @@ groups than for single tests.
                0
                %target.43
                %target.44))
-          (= (%tmp.57 %tmp.58)
-             (call 1 %persistentHash.4
+          (= 1 (%tmp.57 %tmp.58)
+             (call %persistentHash.4
                136202032268515569762809483864408030127489942841709
                %t.55
                %t.56
@@ -44773,15 +44759,15 @@ groups than for single tests.
                0
                %target.43
                %target.44))
-          (= ()
-             (public-ledger 1 %kernel.0 () claimZswapCoinSpend
+          (= 1 ()
+             (public-ledger %kernel.0 () claimZswapCoinSpend
                %tmp.57
                %tmp.58))
-          (= %t.59 (== %target.43 %selfAddr.49))
-          (= %t.60 (== %target.44 %selfAddr.50))
-          (= %t.61 (select %t.59 %t.60 0))
-          (= (%tmp.62 %tmp.63)
-             (call %t.61 %persistentHash.4
+          (= 1 %t.59 (== %target.43 %selfAddr.49))
+          (= 1 %t.60 (== %target.44 %selfAddr.50))
+          (= 1 %t.61 (select %t.59 %t.60 0))
+          (= %t.61 (%tmp.62 %tmp.63)
+             (call %persistentHash.4
                136202032268515569762809483864408030127489942841709
                %t.55
                %t.56
@@ -44791,8 +44777,8 @@ groups than for single tests.
                0
                %target.43
                %target.44))
-          (= ()
-             (public-ledger %t.61 %kernel.0 () claimZswapCoinReceive
+          (= %t.61 ()
+             (public-ledger %kernel.0 () claimZswapCoinReceive
                %tmp.62
                %tmp.63))
           ())))
@@ -44938,10 +44924,10 @@ groups than for single tests.
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)
                    (tfield 340282366920938463463374607431768211455)))
-          (= (%value.45 %value.46)
-             (public-ledger 1 %kernel.0 () self))
-          (= ()
-             (call 1 %createZswapOutput.26
+          (= 1 (%value.45 %value.46)
+             (public-ledger %kernel.0 () self))
+          (= 1 ()
+             (call %createZswapOutput.26
                %coin.38
                %coin.39
                %coin.40
@@ -44952,8 +44938,8 @@ groups than for single tests.
                0
                %value.45
                %value.46))
-          (= (%tmp.47 %tmp.48)
-             (call 1 %persistentHash.4
+          (= 1 (%tmp.47 %tmp.48)
+             (call %persistentHash.4
                136202032268515569762809483864408030127489942841709
                %coin.38
                %coin.39
@@ -44963,22 +44949,22 @@ groups than for single tests.
                0
                %value.45
                %value.46))
-          (= ()
-             (public-ledger 1 %kernel.0 () claimZswapCoinReceive
+          (= 1 ()
+             (public-ledger %kernel.0 () claimZswapCoinReceive
                %tmp.47
                %tmp.48))
-          (= (%selfAddr.49 %selfAddr.50)
-             (public-ledger 1 %kernel.0 () self))
-          (= ()
-             (call 1 %createZswapInput.19
+          (= 1 (%selfAddr.49 %selfAddr.50)
+             (public-ledger %kernel.0 () self))
+          (= 1 ()
+             (call %createZswapInput.19
                %coin.38
                %coin.39
                %coin.40
                %coin.41
                %coin.42
                0))
-          (= (%tmp.51 %tmp.52)
-             (call 1 %persistentHash.4
+          (= 1 (%tmp.51 %tmp.52)
+             (call %persistentHash.4
                136202032272258675798939806962505150809239393167725
                %coin.38
                %coin.39
@@ -44988,19 +44974,19 @@ groups than for single tests.
                0
                %selfAddr.49
                %selfAddr.50))
-          (= ()
-             (public-ledger 1 %kernel.0 () claimZswapNullifier
+          (= 1 ()
+             (public-ledger %kernel.0 () claimZswapNullifier
                %tmp.51
                %tmp.52))
-          (= (%t.53)
-             (call 1 %degradeToTransient.14 %coin.38 %coin.39))
-          (= (%t.54)
-             (call 1 %transientHash.1
+          (= 1 (%t.53)
+             (call %degradeToTransient.14 %coin.38 %coin.39))
+          (= 1 (%t.54)
+             (call %transientHash.1
                10685258091935385184760267925849721347998787314052891846880509847917
                %t.53))
-          (= (%t.55 %t.56) (call 1 %upgradeFromTransient.17 %t.54))
-          (= ()
-             (call 1 %createZswapOutput.26
+          (= 1 (%t.55 %t.56) (call %upgradeFromTransient.17 %t.54))
+          (= 1 ()
+             (call %createZswapOutput.26
                %t.55
                %t.56
                %coin.40
@@ -45011,8 +44997,8 @@ groups than for single tests.
                0
                %target.43
                %target.44))
-          (= (%tmp.57 %tmp.58)
-             (call 1 %persistentHash.4
+          (= 1 (%tmp.57 %tmp.58)
+             (call %persistentHash.4
                136202032268515569762809483864408030127489942841709
                %t.55
                %t.56
@@ -45022,15 +45008,15 @@ groups than for single tests.
                0
                %target.43
                %target.44))
-          (= ()
-             (public-ledger 1 %kernel.0 () claimZswapCoinSpend
+          (= 1 ()
+             (public-ledger %kernel.0 () claimZswapCoinSpend
                %tmp.57
                %tmp.58))
-          (= %t.59 (== %target.43 %selfAddr.49))
-          (= %t.60 (== %target.44 %selfAddr.50))
-          (= %t.61 (select %t.59 %t.60 0))
-          (= (%tmp.62 %tmp.63)
-             (call %t.61 %persistentHash.4
+          (= 1 %t.59 (== %target.43 %selfAddr.49))
+          (= 1 %t.60 (== %target.44 %selfAddr.50))
+          (= 1 %t.61 (select %t.59 %t.60 0))
+          (= %t.61 (%tmp.62 %tmp.63)
+             (call %persistentHash.4
                136202032268515569762809483864408030127489942841709
                %t.55
                %t.56
@@ -45040,8 +45026,8 @@ groups than for single tests.
                0
                %target.43
                %target.44))
-          (= ()
-             (public-ledger %t.61 %kernel.0 () claimZswapCoinReceive
+          (= %t.61 ()
+             (public-ledger %kernel.0 () claimZswapCoinReceive
                %tmp.62
                %tmp.63))
           (0 0 0 0 0 0 %t.55 %t.56 %coin.40 %coin.41 %coin.42))))
@@ -45079,8 +45065,8 @@ groups than for single tests.
                  ((tfield 255)
                    (tfield
                      452312848583266388373324160190187140051835877600158453279131187530910662655)))
-          (= () (public-ledger 1 %forceField.2 (0) write 7))
-          (= (%t.5 %t.6) (field->bytes 1 32 %x.0))
+          (= 1 () (public-ledger %forceField.2 (0) write 7))
+          (= 1 (%t.5 %t.6) (field->bytes 32 %x.0))
           (%t.5 %t.6))))
     )
 

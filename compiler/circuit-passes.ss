@@ -2707,6 +2707,9 @@
                     [(bytes-ref ,triv ,nat) (bytes-ref ,triv^ ,nat^)
                      (and (eqv? nat nat^)
                           (triv-equal? triv triv^))]
+                    [(bytes->field ,src ,len ,triv1 ,triv2) (bytes->field ,src^ ,len^ ,triv1^ ,triv2^)
+                     (and (eqv? len len^)
+                          (trivs-equal? triv1 triv1^ triv2 triv2^))]
                     [(downcast-unsigned ,src ,safe ,nat? ,nat ,triv) (downcast-unsigned ,src^ ,safe^ ,nat?^ ,nat^ ,triv^)
                      (and (eqv? nat? nat?^)
                           (eqv? nat nat^)
