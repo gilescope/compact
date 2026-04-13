@@ -16916,19 +16916,13 @@ groups than for single tests.
       )
     (returns
       (program
-        (circuit %foo.0 ([%x.1 (tunsigned
-                                 56539106072908298546665520023773392506479484700019806659891398441363832831)])
-             (tunsigned
-               56539106072908298546665520023773392506479484700019806659891398441363832831)
-          (downcast-unsigned #f 56539106072908298546665520023773392506479484700019806659891398441363832831
+        (circuit %foo.0 ([%x.1 (tunsigned ,maxval)])
+             (tunsigned ,maxval)
+          (downcast-unsigned #f ,maxval
             (* #f
-               (safe-cast (tfield)
-                          (tunsigned
-                            56539106072908298546665520023773392506479484700019806659891398441363832831)
+               (safe-cast (tfield) (tunsigned ,maxval)
                  %x.1)
-               (safe-cast (tfield)
-                          (tunsigned
-                            56539106072908298546665520023773392506479484700019806659891398441363832831)
+               (safe-cast (tfield) (tunsigned ,maxval)
                  %x.1))))))
     ))
 
@@ -31117,31 +31111,31 @@ groups than for single tests.
       )
     (returns
       (program
-        (kernel-declaration (%kernel.0 () (Kernel)))
+        (kernel-declaration (%kernel.1 () (Kernel)))
         (public-ledger-declaration
-          ((%counter.1 (0) (Counter)))
+          ((%counter.2 (0) (Counter)))
           (constructor () (tuple)))
-        (circuit %adonis.2 ([%p.3 (tfield)])
+        (circuit %adonis.3 ([%p.4 (tfield)])
              (ttuple)
           (seq
             (fold
-              (circuit ([%t.4 (ttuple)] [%y.5 (tunknown)])
+              (circuit ([%t.5 (ttuple)] [%y.6 (tunknown)])
                    (ttuple)
                 (seq
                   (seq
-                    (let* ([[%tmp.6 (tunsigned 65535)]
-                            (downcast-unsigned #f 65535 %p.3)])
-                      (public-ledger %counter.1 (0) increment %tmp.6))
+                    (let* ([[%tmp.7 (tunsigned 65535)]
+                            (downcast-unsigned #f 65535 %p.4)])
+                      (public-ledger %counter.2 (0) increment %tmp.7))
                     (tuple))
-                  %t.4))
+                  %t.5))
               (tuple)
               (seq
-                (let* ([[%tmp.7 (tunsigned 65535)]
-                        (safe-cast (tunsigned 65535) (tunsigned 7) 7)])
-                  (public-ledger %counter.1 (0) decrement %tmp.7))
                 (let* ([[%tmp.8 (tunsigned 65535)]
+                        (safe-cast (tunsigned 65535) (tunsigned 7) 7)])
+                  (public-ledger %counter.2 (0) decrement %tmp.8))
+                (let* ([[%tmp.9 (tunsigned 65535)]
                         (safe-cast (tunsigned 65535) (tunsigned 3) 3)])
-                  (public-ledger %counter.1 (0) increment %tmp.8))))
+                  (public-ledger %counter.2 (0) increment %tmp.9))))
             (tuple)))))
     )
 
@@ -31159,31 +31153,31 @@ groups than for single tests.
       )
     (returns
       (program
-        (kernel-declaration (%kernel.0 () (Kernel)))
+        (kernel-declaration (%kernel.1 () (Kernel)))
         (public-ledger-declaration
-          ((%counter.1 (0) (Counter)))
+          ((%counter.2 (0) (Counter)))
           (constructor () (tuple)))
-        (circuit %adonis.2 ([%p.3 (tfield)])
+        (circuit %adonis.3 ([%p.4 (tfield)])
              (ttuple)
           (seq
             (fold
-              (circuit ([%t.4 (ttuple)] [%y.5 (tunknown)])
+              (circuit ([%t.5 (ttuple)] [%y.6 (tunknown)])
                    (ttuple)
                 (seq
                   (seq
-                    (let* ([[%tmp.6 (tunsigned 65535)]
-                            (downcast-unsigned #f 65535 %p.3)])
-                      (public-ledger %counter.1 (0) increment %tmp.6))
+                    (let* ([[%tmp.7 (tunsigned 65535)]
+                            (downcast-unsigned #f 65535 %p.4)])
+                      (public-ledger %counter.2 (0) increment %tmp.7))
                     (tuple))
-                  %t.4))
+                  %t.5))
               (tuple)
               (seq
-                (let* ([[%tmp.7 (tunsigned 65535)]
-                        (safe-cast (tunsigned 65535) (tunsigned 7) 7)])
-                  (public-ledger %counter.1 (0) decrement %tmp.7))
                 (let* ([[%tmp.8 (tunsigned 65535)]
+                        (safe-cast (tunsigned 65535) (tunsigned 7) 7)])
+                  (public-ledger %counter.2 (0) decrement %tmp.8))
+                (let* ([[%tmp.9 (tunsigned 65535)]
                         (safe-cast (tunsigned 65535) (tunsigned 3) 3)])
-                  (public-ledger %counter.1 (0) increment %tmp.8))))
+                  (public-ledger %counter.2 (0) increment %tmp.9))))
             (tuple)))))
     )
 
@@ -39670,26 +39664,26 @@ groups than for single tests.
       "}")
     (returns
       (program
-        (kernel-declaration (%kernel.0 () (Kernel)))
+        (kernel-declaration (%kernel.1 () (Kernel)))
         (public-ledger-declaration
-          ((%ledger_counter.1 (0) (Counter))))
-        (circuit %minimal_error_circuit.2 ((argument
-                                             (%n.3)
+          ((%ledger_counter.2 (0) (Counter))))
+        (circuit %minimal_error_circuit.3 ((argument
+                                             (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= 1 %t.4 (== %n.3 0))
+          (= 1 %t.4 (== %n.0 0))
           (= 1 %t.5 (select 1 %t.4 0))
           (= 1 %t.6 %t.5)
           (= 1 %t.7 (select %t.5 1 0))
           (= 1 %t.8 (select %t.5 0 1))
-          (= %t.7 %t.9 (== %n.3 0))
+          (= %t.7 %t.9 (== %n.0 0))
           (= %t.7 %t.10 (select 1 %t.9 0))
           (= %t.7 %t.11 %t.10)
           (= 1 %t.12 (select %t.10 %t.7 0))
           (= 1 %t.13 (select %t.10 0 %t.7))
           (= %t.12 ()
-             (public-ledger %ledger_counter.1 (0) decrement 1))
-          (= %t.13 (%t.14) (public-ledger %ledger_counter.1 (0) read))
+             (public-ledger %ledger_counter.2 (0) decrement 1))
+          (= %t.13 (%t.14) (public-ledger %ledger_counter.2 (0) read))
           ())))
     )
 
@@ -39712,27 +39706,27 @@ groups than for single tests.
       "}")
     (returns
       (program
-        (kernel-declaration (%kernel.0 () (Kernel)))
+        (kernel-declaration (%kernel.1 () (Kernel)))
         (public-ledger-declaration
-          ((%ledger_counter.1 (0) (Counter))))
-        (circuit %minimal_error_circuit.2 ((argument
-                                             (%n.3)
+          ((%ledger_counter.2 (0) (Counter))))
+        (circuit %minimal_error_circuit.3 ((argument
+                                             (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= 1 %t.4 (== %n.3 0))
+          (= 1 %t.4 (== %n.0 0))
           (= 1 %t.5 (select 1 %t.4 0))
           (= 1 %t.6 %t.5)
           (= 1 %t.7 (select %t.5 1 0))
           (= 1 %t.8 (select %t.5 0 1))
-          (= %t.7 %t.9 (== %n.3 0))
+          (= %t.7 %t.9 (== %n.0 0))
           (= %t.7 %t.10 (select 1 %t.9 0))
           (= %t.7 %t.11 %t.10)
           (= 1 %t.12 (select %t.10 %t.7 0))
           (= 1 %t.13 (select %t.10 0 %t.7))
           (= %t.12 ()
-             (public-ledger %ledger_counter.1 (0) decrement 1))
+             (public-ledger %ledger_counter.2 (0) decrement 1))
           (= %t.13 ()
-             (public-ledger %ledger_counter.1 (0) increment 1))
+             (public-ledger %ledger_counter.2 (0) increment 1))
           ())))
     )
 
@@ -39753,25 +39747,25 @@ groups than for single tests.
       "}")
     (returns
       (program
-        (kernel-declaration (%kernel.0 () (Kernel)))
+        (kernel-declaration (%kernel.1 () (Kernel)))
         (public-ledger-declaration
-          ((%ledger_counter.1 (0) (Counter))))
-        (circuit %minimal_error_circuit.2 ((argument
-                                             (%n.3)
+          ((%ledger_counter.2 (0) (Counter))))
+        (circuit %minimal_error_circuit.3 ((argument
+                                             (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= 1 %t.4 (== %n.3 0))
+          (= 1 %t.4 (== %n.0 0))
           (= 1 %t.5 (select 1 %t.4 0))
           (= 1 %t.6 %t.5)
           (= 1 %t.7 (select %t.5 1 0))
           (= 1 %t.8 (select %t.5 0 1))
-          (= %t.7 %t.9 (== %n.3 0))
+          (= %t.7 %t.9 (== %n.0 0))
           (= %t.7 %t.10 (select 1 %t.9 0))
           (= %t.7 %t.11 %t.10)
           (= 1 %t.12 (select %t.10 %t.7 0))
           (= 1 %t.13 (select %t.10 0 %t.7))
           (= %t.12 ()
-             (public-ledger %ledger_counter.1 (0) decrement 1))
+             (public-ledger %ledger_counter.2 (0) decrement 1))
           ())))
     )
 
@@ -39816,25 +39810,25 @@ groups than for single tests.
       "}")
     (returns
       (program
-        (kernel-declaration (%kernel.0 () (Kernel)))
+        (kernel-declaration (%kernel.1 () (Kernel)))
         (public-ledger-declaration
-          ((%ledger_counter.1 (0) (Counter))))
-        (circuit %minimal_error_circuit.2 ((argument
-                                             (%n.3)
+          ((%ledger_counter.2 (0) (Counter))))
+        (circuit %minimal_error_circuit.3 ((argument
+                                             (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= 1 %t.4 (== %n.3 0))
+          (= 1 %t.4 (== %n.0 0))
           (= 1 %t.5 (select 1 %t.4 0))
           (= 1 %t.6 %t.5)
           (= 1 %t.7 (select %t.5 1 0))
           (= 1 %t.8 (select %t.5 0 1))
-          (= %t.7 %t.9 (== %n.3 1))
+          (= %t.7 %t.9 (== %n.0 1))
           (= %t.7 %t.10 (select 1 %t.9 0))
           (= %t.7 %t.11 %t.10)
           (= 1 %t.12 (select %t.10 %t.7 0))
           (= 1 %t.13 (select %t.10 0 %t.7))
           (= %t.12 ()
-             (public-ledger %ledger_counter.1 (0) decrement 1))
+             (public-ledger %ledger_counter.2 (0) decrement 1))
           ())))
     )
 
@@ -39881,39 +39875,39 @@ groups than for single tests.
       "}")
     (returns
       (program
-        (kernel-declaration (%kernel.0 () (Kernel)))
+        (kernel-declaration (%kernel.1 () (Kernel)))
         (public-ledger-declaration
-          ((%ledger_counter.1 (0) (Counter))))
-        (circuit %minimal_error_circuit.2 ((argument
-                                             (%n.3)
+          ((%ledger_counter.2 (0) (Counter))))
+        (circuit %minimal_error_circuit.3 ((argument
+                                             (%n.0)
                                              (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= 1 %t.4 (== %n.3 0))
+          (= 1 %t.4 (== %n.0 0))
           (= 1 %t.5 (select 1 %t.4 0))
           (= 1 %t.6 %t.5)
           (= 1 %t.7 (select %t.5 1 0))
           (= 1 %t.8 (select %t.5 0 1))
-          (= %t.7 %t.9 (== %n.3 0))
+          (= %t.7 %t.9 (== %n.0 0))
           (= %t.7 %t.10 (select 1 %t.9 0))
           (= %t.7 %t.11 %t.10)
           (= 1 %t.12 (select %t.5 %t.10 0))
           (= 1 %t.13 (select %t.12 1 0))
           (= 1 %t.14 (select %t.12 0 1))
           (= %t.13 ()
-             (public-ledger %ledger_counter.1 (0) increment 1))
-          (= %t.14 %t.15 (== %n.3 0))
+             (public-ledger %ledger_counter.2 (0) increment 1))
+          (= %t.14 %t.15 (== %n.0 0))
           (= %t.14 %t.16 (select 1 %t.15 0))
           (= %t.14 %t.17 %t.16)
           (= 1 %t.18 (select %t.16 %t.14 0))
           (= 1 %t.19 (select %t.16 0 %t.14))
-          (= %t.18 %t.20 (== %n.3 1))
+          (= %t.18 %t.20 (== %n.0 1))
           (= %t.18 %t.21 (select 1 %t.20 0))
           (= %t.18 %t.22 %t.21)
           (= %t.14 %t.23 (select %t.16 %t.21 0))
           (= 1 %t.24 (select %t.23 %t.14 0))
           (= 1 %t.25 (select %t.23 0 %t.14))
           (= %t.24 ()
-             (public-ledger %ledger_counter.1 (0) increment 2))
+             (public-ledger %ledger_counter.2 (0) increment 2))
           ())))
     )
 
@@ -39965,27 +39959,27 @@ groups than for single tests.
       )
     (returns
       (program
-        (kernel-declaration (%kernel.0 () (Kernel)))
+        (kernel-declaration (%kernel.1 () (Kernel)))
         (public-ledger-declaration
-          ((%field1.1
+          ((%field1.2
              (0)
              (Map (ty ((afield)) ((tfield)))
                   (ty ((abytes 1)) ((tfield 1)))))))
-        (circuit %foo.2 ((argument
-                           (%n.3)
+        (circuit %foo.3 ((argument
+                           (%n.0)
                            (ty ((afield)) ((tfield)))))
              (ty () ())
-          (= 1 %t.4 (== %n.3 0))
+          (= 1 %t.4 (== %n.0 0))
           (= 1 %t.5 (select 1 %t.4 0))
           (= 1 %t.6 %t.5)
           (= 1 %t.7 (select %t.5 1 0))
           (= 1 %t.8 (select %t.5 0 1))
-          (= %t.7 %t.9 (== %n.3 0))
+          (= %t.7 %t.9 (== %n.0 0))
           (= %t.7 %t.10 (select 1 %t.9 0))
           (= %t.7 %t.11 %t.10)
           (= 1 %t.12 (select %t.10 %t.7 0))
           (= 1 %t.13 (select %t.10 0 %t.7))
-          (= %t.12 () (public-ledger %field1.1 (0) remove 1))
+          (= %t.12 () (public-ledger %field1.2 (0) remove 1))
           ())))
     )
 
@@ -44411,25 +44405,25 @@ groups than for single tests.
                                   (tfield
                                     452312848583266388373324160190187140051835877600158453279131187530910662655)))))
              (ty ((abytes 1)) ((tfield 1)))
-          (= 1 %t.21 (downcast-unsigned #f 4294967295 255 %x.0))
-          (= 1 %t.22 (downcast-unsigned #f #f 255 %y.1))
-          (= 1 (%t.23) (public-ledger %X.19 (0) read))
-          (= 1 %t1.3 (== %z.2 0))
-          (assert %t1.3 "bytes value is too big to fit in a field")
-          (= 1 %t1.5 (== %z.4 0))
-          (assert %t1.5 "bytes value is too big to fit in a field")
-          (= 1 %t1.7 (== %z.6 0))
-          (assert %t1.7 "bytes value is too big to fit in a field")
-          (= 1 %t1.9 (== %z.8 0))
-          (assert %t1.9 "bytes value is too big to fit in a field")
-          (= 1 %t1.11 (== %z.10 0))
-          (assert %t1.11 "bytes value is too big to fit in a field")
-          (= 1 %t1.13 (== %z.12 0))
-          (assert %t1.13 "bytes value is too big to fit in a field")
-          (= 1 %t1.15 (== %z.14 0))
-          (assert %t1.15 "bytes value is too big to fit in a field")
-          (= 1 %t.24 (bytes->field 256 %z.17 %z.16))
-          (= 1 (%t.25 %t.26) (field->bytes 8 %y.1))
+          (= 1 %t1.21 (downcast-unsigned #f 4294967295 255 %x.0))
+          (= 1 %t2.22 (downcast-unsigned #f #f 255 %y.1))
+          (= 1 (%t3.23) (public-ledger %X.19 (0) read))
+          (= 1 %t6.3 (== %z.2 0))
+          (assert %t6.3 "bytes value is too big to fit in a field")
+          (= 1 %t6.5 (== %z.4 0))
+          (assert %t6.5 "bytes value is too big to fit in a field")
+          (= 1 %t6.7 (== %z.6 0))
+          (assert %t6.7 "bytes value is too big to fit in a field")
+          (= 1 %t6.9 (== %z.8 0))
+          (assert %t6.9 "bytes value is too big to fit in a field")
+          (= 1 %t6.11 (== %z.10 0))
+          (assert %t6.11 "bytes value is too big to fit in a field")
+          (= 1 %t6.13 (== %z.12 0))
+          (assert %t6.13 "bytes value is too big to fit in a field")
+          (= 1 %t6.15 (== %z.14 0))
+          (assert %t6.15 "bytes value is too big to fit in a field")
+          (= 1 %t6.24 (bytes->field 256 %z.17 %z.16))
+          (= 1 (%t7.25 %t7.26) (field->bytes 8 %y.1))
           (1))))
     )
 
@@ -47162,17 +47156,17 @@ groups than for single tests.
       )
     (returns
       (program
-        (kernel-declaration (%kernel.11 () (Kernel)))
+        (kernel-declaration (%kernel.9 () (Kernel)))
         (public-ledger-declaration
-          ((%B1.12
+          ((%B1.10
              (0)
              (__compact_Cell
                (ty ((abytes 10)) ((tfield 1208925819614629174706175)))))
-           (%B2.13
+           (%B2.11
              (1)
              (__compact_Cell
                (ty ((abytes 10)) ((tfield 1208925819614629174706175)))))))
-        (circuit %foo.14 ((argument
+        (circuit %foo.12 ((argument
                             (%ia.0)
                             (ty ((abytes 1)) ((tfield 1))))
                           (argument (%ib.3) (ty ((abytes 1)) ((tfield 1))))
@@ -47184,20 +47178,16 @@ groups than for single tests.
           (= 1 %t1.6 (== %q.5 0))
           (= 1 %t2.7 (select %ia.0 %t1.6 1))
           (assert %t2.7 "field value is too large to fit in 10 bytes")
-          (= 1 %t.15 (downcast-unsigned #t #f 0 %q.5))
-          (= 1 %tmp.16 (select %ia.0 %t.2 0))
-          (= 1 () (public-ledger %B1.12 (0) write %tmp.16))
-          (= 1 (%q.8 %t.4) (div-mod-power-of-two %ix.1 80))
-          (= 1 %t1.9 (== %q.8 0))
-          (= 1 %t2.10 (select %ib.3 %t1.9 1))
-          (assert %t2.10
-            "field value is too large to fit in 10 bytes")
-          (= 1 %t.17 (downcast-unsigned #t #f 0 %q.8))
-          (= 1 %tmp.18 (select %ib.3 %t.4 0))
-          (= 1 () (public-ledger %B2.13 (1) write %tmp.18))
-          (= 1 (%t.19) (public-ledger %B1.12 (0) read))
-          (= 1 (%t.20) (public-ledger %B2.13 (1) read))
-          (%t.19 %t.20))))
+          (= 1 %t.13 (downcast-unsigned #t #f 0 %q.5))
+          (= 1 %tmp.14 (select %ia.0 %t.2 0))
+          (= 1 () (public-ledger %B1.10 (0) write %tmp.14))
+          (= 1 %t2.8 (select %ib.3 %t1.6 1))
+          (assert %t2.8 "field value is too large to fit in 10 bytes")
+          (= 1 %tmp.15 (select %ib.3 %t.2 0))
+          (= 1 () (public-ledger %B2.11 (1) write %tmp.15))
+          (= 1 (%t.16) (public-ledger %B1.10 (0) read))
+          (= 1 (%t.17) (public-ledger %B2.11 (1) read))
+          (%t.16 %t.17))))
     )
 
   (test

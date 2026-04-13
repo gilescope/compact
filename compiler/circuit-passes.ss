@@ -2783,6 +2783,7 @@
       (define nontriv-single->var)
       (define ref-ht)
       (define fbexpr->vars)
+      (define dmpot->vars)
       (define bvexpr->vars)
       (define assert-ht)
       (define-syntax with-hashtables
@@ -2793,6 +2794,7 @@
                        [nontriv-single->var (make-hashtable nontriv-single-hash nontriv-single-equal?)]
                        [ref-ht (make-eq-hashtable)]
                        [fbexpr->vars (make-hashtable triv-vec-hash triv-vec-equal?)]
+                       [dmpot->vars (make-hashtable triv-vec-hash triv-vec-equal?)]
                        [bvexpr->vars (make-hashtable triv-vec-hash triv-vec-equal?)]
                        [assert-ht (make-hashtable assert-hash assert-equal?)])
              (let () b1 b2 ...))]))
@@ -2916,7 +2918,22 @@
        (assert (fx= (length var-name*) 2))
        (with-output-language (Lflattened Statement)
          (let ([var-name1 (car var-name*)] [var-name2 (cadr var-name*)])
-           (cons `(= ,test (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)) rstmt*)))]
+           (or (ifconstant triv
+                 (lambda (nat)
+                   (let-values ([(q r) (div-and-mod nat (expt 2 bits))])
+                     (hashtable-set! var->triv var-name1 q)
+                     (hashtable-set! var->triv var-name2 r)
+                     rstmt*)))
+               (let ([a (hashtable-cell dmpot->vars (vector test triv bits) #f)])
+                 (cond
+                   [(cdr a) =>
+                    (lambda (vars)
+                      (hashtable-set! var->triv var-name1 (car vars))
+                      (hashtable-set! var->triv var-name2 (cdr vars))
+                      rstmt*)]
+                   [else
+                    (set-cdr! a (cons var-name1 var-name2))
+                    (cons `(= ,test (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)) rstmt*)])))))]
       [(bytes->vector ,[FWD-Triv : triv])
        (with-output-language (Lflattened Statement)
          (or (ifconstant triv
