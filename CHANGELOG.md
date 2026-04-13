@@ -30,7 +30,8 @@ The size increase arises from conditional use (i.e., use in the `then` or
 - downcasts of Field to Uint types,
 - conversions of byte vectors to and from fields or unsigned integers,
 - conversions of vectors to byte vectors, and
-- uses of relational comparison expressions (<, <=, >=, and >).
+- uses of relational comparison expressions (<, <=, >=, and >) with inputs
+  that might be unknown.
 
 If the increase in circuit size is problematic for a particular contract, developers
 should consider moving downcasts, conversions, and relational comparisons outside
