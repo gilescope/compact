@@ -3142,7 +3142,7 @@
             [(bytes->field ,src ,len ,triv1 ,triv2) (<= len (field-bytes))]
             [(vector->bytes ,triv ,triv* ...) #t]
             [(downcast-unsigned ,src ,safe ,nat? ,nat ,triv) #f])))
-      [(= ,[BWD-Triv : test] ,var-name ,single)
+      [(= ,test ,var-name ,single)
        (guard
          (not (hashtable-contains? ref-ht var-name))
          (pure? single))
@@ -3154,12 +3154,12 @@
        (cons `(= ,test (,var-name* ...) (call ,src ,function-name ,triv* ...)) stmt*)]
       [(= ,[BWD-Triv : test] (,var-name* ...) (contract-call ,src ,elt-name (,[BWD-Triv : triv] ,primitive-type) ,[BWD-Triv : triv*] ...))
        (cons `(= ,test (,var-name* ...) (contract-call ,src ,elt-name (,triv ,primitive-type) ,triv* ...)) stmt*)]
-      [(= ,[BWD-Triv : test] (,var-name* ...) (default ,opaque-type))
+      [(= ,test (,var-name* ...) (default ,opaque-type))
        (guard (andmap (lambda (var-name) (not (hashtable-contains? ref-ht var-name))) var-name*))
        stmt*]
       [(= ,[BWD-Triv : test] (,var-name* ...) (default ,opaque-type))
        (cons `(= ,test (,var-name* ...) (default ,opaque-type)) stmt*)]
-      [(= ,[BWD-Triv : test] (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv))
+      [(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv))
        (guard
          (>= len (field-bytes))
          (not (hashtable-contains? ref-ht var-name1))
@@ -3167,14 +3167,14 @@
        stmt*]
       [(= ,[BWD-Triv : test] (,var-name1 ,var-name2) (field->bytes ,src ,len ,[BWD-Triv : triv]))
        (cons `(= ,test (,var-name1 ,var-name2) (field->bytes ,src ,len ,triv)) stmt*)]
-      [(= ,[BWD-Triv : test] (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits))
+      [(= ,test (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits))
        (guard
          (not (hashtable-contains? ref-ht var-name1))
          (not (hashtable-contains? ref-ht var-name2)))
        stmt*]
       [(= ,[BWD-Triv : test] (,var-name1 ,var-name2) (div-mod-power-of-two ,[BWD-Triv : triv] ,bits))
        (cons `(= ,test (,var-name1 ,var-name2) (div-mod-power-of-two ,triv ,bits)) stmt*)]
-      [(= ,[BWD-Triv : test] (,var-name* ...) (bytes->vector ,triv))
+      [(= ,test (,var-name* ...) (bytes->vector ,triv))
        (guard (not (ormap (lambda (var-name) (hashtable-contains? ref-ht var-name)) var-name*)))
        stmt*]
       [(= ,[BWD-Triv : test] (,var-name* ...) (bytes->vector ,[BWD-Triv : triv]))
