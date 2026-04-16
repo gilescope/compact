@@ -39,7 +39,7 @@ jobs:
           nix develop .#compiler --command yarn test:fuzzer
 
       - name: Upload failed contracts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: failed-contracts
