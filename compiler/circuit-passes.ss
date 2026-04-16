@@ -1946,7 +1946,7 @@
             (cons*
               ; t1 = triv && test
               `(= (quote #t) ,t1 (select ,triv ,test (quote #f)))
-              ; t1 = !triv && test
+              ; t2 = !triv && test
               `(= (quote #t) ,t2 (select ,triv (quote #f) ,test))
               (k t1 t2)))))
       )
@@ -3234,31 +3234,31 @@
     )
 
   (define-pass missing-guard-workarounds : Lflattened (ir) -> Lflattened ()
-    ; this pass implements workarounds for the lack of conditionality of
-    ; certain zkir operators.  the lack of conditionality burns in one of
+    ; This pass implements workarounds for the lack of conditionality of
+    ; certain zkir operators.  The lack of conditionality burns in one of
     ; two ways: explicit checks like constrain_bits fail even when the
     ; conditional says not to execute it, and implicit operand checks, e.g.,
     ; by less_than, fail because an input value is undefined and might have
     ; any value due to the conditionality of the input value's computation.
-    ; to avoid being overly paranoid, the pass records whether a variable
-    ; definitly has a value and skips remediation for unknown values when
-    ; a variable is defined.  it also implements various special cases to
+    ; To avoid being overly paranoid, the pass records whether a variable
+    ; definitely has a value and skips remediation for unknown values when
+    ; a variable is defined.  It also implements various special cases to
     ; avoid generating the worst-case code unless necessary.
     ;
-    ; once zkir implements conditionality for the operators that can fail,
+    ; Once zkir implements conditionality for the operators that can fail,
     ; this pass can simply be removed.
     (definitions
       (define-syntax with-temp-ids
         (syntax-rules ()
           [(_ src (t ...) b1 b2 ...)
            (let* ([t (make-temp-id src 't)] ...) b1 b2 ...)]))
-      (module (defined! defined?)
-        (define def-ht (make-eq-hashtable))
+      (module (def-ht defined! defined?)
+        (define def-ht)
         (define (defined! var-name) (hashtable-set! def-ht var-name #t))
         (define (defined? triv)
           (or (not (id? triv))
               (hashtable-contains? def-ht triv))))
-      (define (insure-defined src test triv k)
+      (define (ensure-defined src test triv k)
         (if (defined? triv)
             (k triv)
             (with-output-language (Lflattened Statement)
@@ -3267,8 +3267,14 @@
                       (k t)))))))
     (Circuit-Definition : Circuit-Definition (ir) -> Circuit-Definition ()
       [(circuit ,src ,function-name (,arg* ...) ,type ,stmt* ... (,triv* ...))
-       (let ([stmt* (apply append (maplr Statement stmt*))])
-         `(circuit ,src ,function-name (,arg* ...) ,type ,stmt* ... (,triv* ...)))])
+       (fluid-let ([def-ht (make-eq-hashtable)])
+         (for-each
+           (lambda (arg)
+             (nanopass-case (Lflattened Argument) arg
+               [(argument (,var-name* ...) ,type) (for-each defined! var-name*)]))
+           arg*)
+         (let ([stmt* (apply append (maplr Statement stmt*))])
+           `(circuit ,src ,function-name (,arg* ...) ,type ,stmt* ... (,triv* ...))))])
     (Statement : Statement (ir) -> * (stmt*)
       [(= ,test ,var-name ,single)
        (when (eqv? test 1) (defined! var-name))
@@ -3297,9 +3303,9 @@
     (Single : Single (ir test var-name) -> * (stmt*)
       [(< ,bits ,triv1 ,triv2)
        (with-output-language (Lflattened Statement)
-         (insure-defined (id-src var-name) test triv1
+         (ensure-defined (id-src var-name) test triv1
            (lambda (triv1)
-             (insure-defined (id-src var-name) test triv2
+             (ensure-defined (id-src var-name) test triv2
                (lambda (triv2)
                  (list `(= 1 ,var-name (< ,bits ,triv1 ,triv2))))))))]
       [(bytes->field ,src ,len ,triv1 ,triv2)
@@ -3314,9 +3320,9 @@
              ; less than or equal to q, and when triv1 = q, triv2 must be less
              ; than or equal to r.
              (let-values ([(q r) (div-and-mod (max-field) (expt 256 (field-bytes)))])
-               (insure-defined (id-src var-name) test triv1
+               (ensure-defined (id-src var-name) test triv1
                  (lambda (triv1)
-                    (insure-defined (id-src var-name) test triv2
+                    (ensure-defined (id-src var-name) test triv2
                       (lambda (triv2)
                         (with-temp-ids (id-src var-name) (t1 t2 t3 t4 t5 t6 t7)
                           (list
@@ -3343,7 +3349,7 @@
            (if (null? triv*)
                (let ([triv* (reverse rtriv*)])
                  (list `(= 1 ,var-name (vector->bytes ,(car triv*) ,(cdr triv*) ...))))
-               (insure-defined (id-src var-name) test (car triv*)
+               (ensure-defined (id-src var-name) test (car triv*)
                  (lambda (triv) (f (cdr triv*) (cons triv rtriv*)))))))]
       [(downcast-unsigned ,src ,safe? ,nat? ,nat ,triv)
        (define (assert-and-cast test)
@@ -3359,7 +3365,7 @@
                  (if (= nat nat?)
                      ; it's probably always the case that nat < nat?, but handle this case anyway
                      (list `(= 1 ,var-name ,triv))
-                     (insure-defined (id-src var-name) test triv
+                     (ensure-defined (id-src var-name) test triv
                        (lambda (triv)
                          ; triv is known to be < nat?
                          (with-temp-ids src (t1 t2)

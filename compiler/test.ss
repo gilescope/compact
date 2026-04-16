@@ -45487,24 +45487,20 @@ groups than for single tests.
       )
     (returns
       (program
-        (kernel-declaration (%kernel.6 () (Kernel)))
+        (kernel-declaration (%kernel.3 () (Kernel)))
         (public-ledger-declaration
-          ((%forceField.7
+          ((%forceField.4
              (0)
              (__compact_Cell (ty ((afield)) ((tfield)))))))
-        (circuit %foo.8 ((argument
+        (circuit %foo.5 ((argument
                            (%x.0)
                            (ty ((abytes 4)) ((tfield 4294967295)))))
              (ty ((abytes 1)) ((tfield 255)))
-          (= 1 () (public-ledger %forceField.7 (0) write 7))
+          (= 1 () (public-ledger %forceField.4 (0) write 7))
           (= 1 %t.1 (< 32 %x.0 256))
-          (= 1 %t.3 (select %t.1 %x.0 0))
-          (= 1 %t1.4 (< 32 %t.3 256))
-          (= 1 %t2.5 (select %t.1 %t1.4 1))
-          (assert %t2.5 "downcast to Uint<0..255> failed")
           (= 1 %t.2 (downcast-unsigned #t 4294967295 255 %x.0))
-          (= 1 %t.9 (select %t.1 %t.2 0))
-          (%t.9))))
+          (= 1 %t.6 (select %t.1 %t.2 0))
+          (%t.6))))
     )
 
   (test
@@ -53348,15 +53344,14 @@ groups than for single tests.
         "    { \"op\": \"declare_pub_input\", \"var\": 9 },"
         "    { \"op\": \"pi_skip\", \"guard\": 5, \"count\": 1 },"
         "    { \"op\": \"add\", \"a\": 3, \"b\": 5 },"
-        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 7, \"b\": 3 },"
-        "    { \"op\": \"less_than\", \"a\": 11, \"b\": 5, \"bits\": 12 },"
-        "    { \"op\": \"cond_select\", \"bit\": 12, \"a\": 7, \"b\": 5 },"
-        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 5, \"b\": 13 },"
-        "    { \"op\": \"assert\", \"cond\": 14 },"
+        "    { \"op\": \"less_than\", \"a\": 3, \"b\": 5, \"bits\": 12 },"
+        "    { \"op\": \"cond_select\", \"bit\": 11, \"a\": 7, \"b\": 5 },"
+        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 5, \"b\": 12 },"
+        "    { \"op\": \"assert\", \"cond\": 13 },"
         "    { \"op\": \"neg\", \"a\": 5 },"
-        "    { \"op\": \"add\", \"a\": 3, \"b\": 15 },"
-        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 10, \"b\": 16 },"
-        "    { \"op\": \"output\", \"var\": 17 }"
+        "    { \"op\": \"add\", \"a\": 3, \"b\": 14 },"
+        "    { \"op\": \"cond_select\", \"bit\": 2, \"a\": 10, \"b\": 15 },"
+        "    { \"op\": \"output\", \"var\": 16 }"
         "  ]"
         "}"))
     (output-file "compiler/testdir/zkir/dos.zkir"
@@ -61865,15 +61860,14 @@ groups than for single tests.
         "    { \"op\": \"constrain_bits\", \"val\": \"%q.3\", \"bits\": 12 },"
         "    { \"op\": \"impact\", \"guard\": \"0x01\", \"inputs\": [\"0x10\", \"0x01\", \"0x01\", \"0x01\", \"0x00\", \"0x11\", \"0x01\", \"0x01\", \"0x01\", \"0x01\", \"0x91\"] },"
         "    { \"op\": \"add\", \"output\": \"%t.5\", \"a\": \"%q.3\", \"b\": \"0x01\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.6\", \"bit\": \"%q.2\", \"a\": \"0x00\", \"b\": \"%q.3\" },"
-        "    { \"op\": \"less_than\", \"output\": \"%t.7\", \"a\": \"%t.6\", \"b\": \"0x01\", \"bits\": 12 },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.8\", \"bit\": \"%t.7\", \"a\": \"0x00\", \"b\": \"0x01\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.9\", \"bit\": \"%q.2\", \"a\": \"0x01\", \"b\": \"%t.8\" },"
-        "    { \"op\": \"assert\", \"cond\": \"%t.9\" },"
-        "    { \"op\": \"neg\", \"output\": \"%neg.10\", \"a\": \"0x01\" },"
-        "    { \"op\": \"add\", \"output\": \"%t.11\", \"a\": \"%q.3\", \"b\": \"%neg.10\" },"
-        "    { \"op\": \"cond_select\", \"output\": \"%t.12\", \"bit\": \"%q.2\", \"a\": \"%t.5\", \"b\": \"%t.11\" },"
-        "    { \"op\": \"output\", \"val\": \"%t.12\" }"
+        "    { \"op\": \"less_than\", \"output\": \"%t.6\", \"a\": \"%q.3\", \"b\": \"0x01\", \"bits\": 12 },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.7\", \"bit\": \"%t.6\", \"a\": \"0x00\", \"b\": \"0x01\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.8\", \"bit\": \"%q.2\", \"a\": \"0x01\", \"b\": \"%t.7\" },"
+        "    { \"op\": \"assert\", \"cond\": \"%t.8\" },"
+        "    { \"op\": \"neg\", \"output\": \"%neg.9\", \"a\": \"0x01\" },"
+        "    { \"op\": \"add\", \"output\": \"%t.10\", \"a\": \"%q.3\", \"b\": \"%neg.9\" },"
+        "    { \"op\": \"cond_select\", \"output\": \"%t.11\", \"bit\": \"%q.2\", \"a\": \"%t.5\", \"b\": \"%t.10\" },"
+        "    { \"op\": \"output\", \"val\": \"%t.11\" }"
         "  ]"
         "}"))
     (output-file "compiler/testdir/zkir/dos.zkir"
