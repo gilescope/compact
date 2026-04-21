@@ -63,6 +63,11 @@ compiler workarounds have been removed.
 
 - Adds `--line-length` flag to fixup.
 
+### Fixed
+
+- JubjubPoint equality is now component-wise; it previously was reference
+  equality.
+
 ## [Toolchain 0.30.104, language 0.22.101, runtime 0.15.101]
 
 ### Changed
