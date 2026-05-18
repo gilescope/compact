@@ -37,7 +37,7 @@ describe('JubJub Schnorr (TypeScript)', () => {
     const msg = sampleMsg();
 
     const sig = runtime.jubjubSchnorrSign(msgType, msg, sk);
-    const badSig = { ...sig, response: (sig.response + 1n) % runtime.JUBJUB_SCALAR_ORDER };
+    const badSig = { ...sig, response: (sig.response + 1n) % runtime.JUBJUB_SCALAR_MODULUS };
 
     expect(runtime.jubjubSchnorrVerify(msgType, msg, pk, badSig)).toBe(false);
   });

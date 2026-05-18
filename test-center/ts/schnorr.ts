@@ -39,7 +39,7 @@ test('Tampered signature fails in-circuit verification', () => {
   const msg = sampleMsg();
 
   const sig = runtime.jubjubSchnorrSign(msgType, msg, sk);
-  const badSig = { ...sig, response: (sig.response + 1n) % runtime.JUBJUB_SCALAR_ORDER };
+  const badSig = { ...sig, response: (sig.response + 1n) % runtime.JUBJUB_SCALAR_MODULUS };
 
   const [c, Ctxt] = startContract(contractCode, {}, 0);
   expect(c.circuits.verifySchnorrN3(Ctxt, msg, badSig, pk).result).toBe(false);

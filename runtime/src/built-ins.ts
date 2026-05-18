@@ -15,7 +15,7 @@
 
 import * as ocrt from '@midnight-ntwrk/onchain-runtime-v3';
 import { keccak_256 } from '@noble/hashes/sha3.js';
-import { MAX_FIELD, JUBJUB_SCALAR_ORDER } from './constants.js';
+import { MAX_FIELD, JUBJUB_SCALAR_MODULUS } from './constants.js';
 import { CompactType, CompactTypeJubjubPoint, JubjubPoint, JubjubSchnorrSignature } from './compact-types.js';
 import { CompactError } from './error.js';
 
@@ -256,7 +256,7 @@ export function alignedConcat(...values: ocrt.AlignedValue[]): ocrt.AlignedValue
 /**
  * Samples a random JubJub scalar.
  *
- * The returned value is in the range [0, JUBJUB_SCALAR_ORDER).
+ * The returned value is in the range [0, JUBJUB_SCALAR_MODULUS).
  */
 export function jubjubSampleScalar(): bigint {
   return ocrt.valueToBigInt(ocrt.jubjubSampleScalar());
@@ -270,10 +270,10 @@ export const sampleJubjubSchnorrSk = jubjubSampleScalar;
 /**
  * Reduce modulo the JubJub scalar field order.
  *
- * The returned value is in the range [0, JUBJUB_SCALAR_ORDER).
+ * The returned value is in the range [0, JUBJUB_SCALAR_MODULUS).
  */
 export function reduceModJubjubOrder(value: bigint): bigint {
-  return value % JUBJUB_SCALAR_ORDER;
+  return value % JUBJUB_SCALAR_MODULUS;
 }
 
 /**
@@ -282,7 +282,7 @@ export function reduceModJubjubOrder(value: bigint): bigint {
  * Equivalent to {@link ecMulGenerator}(signingKey).
  */
 export function jubjubSchnorrVerifyingKey(signingKey: bigint): JubjubPoint {
-  return ecMulGenerator(signingKey);
+  return ecMulGenerator(reduceModJubjubOrder(signingKey));
 }
 
 /**
